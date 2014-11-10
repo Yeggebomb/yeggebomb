@@ -1,0 +1,23 @@
+version: 1
+runtime: go
+api_version: go1
+
+handlers:
+- url: /js
+  static_dir: frontend/static/js_compiled/
+  secure: always
+- url: /css
+  static_dir: frontend/static/styles_compiled/
+  secure: always
+- url: /images
+  static_dir: frontend/static/images/
+  secure: always
+- url: /.*
+  script: _go_app
+  secure: always
+
+
+skip_files:
+- ^(.*/)?.*\.MF$
+- ^(.*/)?.*\.CMF$
+- ^(.*/)?.*\.sourcemap$

@@ -14,3 +14,11 @@ The compile rules are strict and require linted code, closure linter can help wi
 * Run: `gjslint javascript/src/**/*.js --strict`
 * Fix: `fixjsstyle javascript/src/**/*.js`
 * Enjoy clean code :)
+
+## Deployment instructions
+
+To deploy using gCloud
+* gcloud auth login
+* gcloud init `still-entity-760`
+* gcloud components update app
+* gcloud preview app deploy ./default/app.yaml

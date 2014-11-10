@@ -7,14 +7,14 @@ module.exports = function(grunt) {
         }
       },
       all: {
-        src: 'javascript/src/*.js'
+        src: 'frontend/javascript/*.js'
       }
     },
     'closure-compiler': {
       prod: {
         closurePath: '$CLOSURE_PATH',
-        js: 'javascript/src/*.js',
-        jsOutputFile: 'javascript/build/game.min.js',
+        js: 'frontend/javascript/*.js',
+        jsOutputFile: 'static/js_compiled/game.min.js',
         maxBuffer: 500,
         options: {
           compilation_level: 'ADVANCED_OPTIMIZATIONS',
@@ -23,8 +23,8 @@ module.exports = function(grunt) {
       },
       dev: {
         closurePath: '$CLOSURE_PATH',
-        js: 'javascript/src/*.js',
-        jsOutputFile: 'javascript/build/game.js',
+        js: 'frontend/javascript/*.js',
+        jsOutputFile: 'static/js_compiled/game.js',
         maxBuffer: 500,
         options: {
           debug: true,
