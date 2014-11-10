@@ -1,4 +1,4 @@
-# Scortched Sverre (Spehere)
+# Scortched Sverre (Sphere)
 
 ### Instructions on how to build:
 
