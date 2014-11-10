@@ -17,16 +17,7 @@ Game = function() {
  * Kicks off the game
  */
 Game.prototype.init = function() {
-  alert(this.foo(1));
-};
-
-/**
- * Adds
- * @param {number} number
- * @return {string}
- */
-Game.prototype.foo = function(number) {
-  return 'a ' + number;
+  alert(1);
 };
 
 
