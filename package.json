@@ -1,10 +1,15 @@
 {
-  "name": "Scortched Sverre",
+  "name": "scortched-sverre",
   "version": "0.0.1",
   "author": "Jonathan Stanton <jstanton@google.com>",
   "description": "The winning hackathon team presents: Scortched Sverre. pronounce (Sphere).",
   "license": "MIT",
   "dependencies": {},
+  "homepage" : "http://still-entity-760.appspot.google.com",
+  "repository" : {
+    "type": "git",
+    "url": "https://source.developers.google.com/p/still-entity-760"
+  },
   "devDependencies": {
     "closure-linter-wrapper": "^0.2.9",
     "grunt": "^0.4.5",

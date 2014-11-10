@@ -5,4 +5,4 @@ goog.provide('Game');
  */
 Game = function() {
 
-}
+};
