@@ -8,6 +8,7 @@ import (
 
 func init() {
   http.HandleFunc("/", indexHandler)
+
   http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
       http.ServeFile(w, r, r.URL.Path[1:])
   })
