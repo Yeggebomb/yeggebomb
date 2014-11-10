@@ -1,4 +1,4 @@
-# Scortched Sverre
+# Scortched Sverre (Spehere)
 
 ### Instructions on how to build:
 
@@ -6,3 +6,11 @@
 * Install Closure Compiler (https://github.com/gmarty/grunt-closure-compiler) using `$CLOSURE_PATH` as your environment setting that points to closure.
 * Get dependencies: `npm install`
 * Compile with grunt: `grunt`
+
+### Instruction on how to lint (requirement for building):
+
+The compile rules are strict and require linted code, closure linter can help with this:
+* Install https://developers.google.com/closure/utilities/docs/linter_howto
+* Run: `gjslint javascript/src/**/*.js --strict`
+* Fix: `fixjsstyle javascript/src/**/*.js`
+* Enjoy clean code :)
