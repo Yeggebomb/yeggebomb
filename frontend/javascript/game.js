@@ -17,7 +17,7 @@ Game = function() {
  * Kicks off the game
  */
 Game.prototype.init = function() {
-  alert(1);
+  alert('fancy!');
 };
 
 
