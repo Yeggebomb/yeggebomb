@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
   grunt.initConfig({
+
     sass: {
       dist: {
         options: {
@@ -30,11 +31,11 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['frontend/javascript/**/*.js'],
-        tasks: ['gjslint', 'closure-compiler']
+        tasks: ['js']
       },
       sass: {
         files: ['frontend/stylesheets/**/*.sass'],
-        tasks: ['sass', 'cssmin'],
+        tasks: ['css'],
       },
       livereload: {
         options: {
@@ -65,7 +66,9 @@ module.exports = function(grunt) {
         maxBuffer: 500,
         options: {
           compilation_level: 'ADVANCED_OPTIMIZATIONS',
-          language_in: 'ECMASCRIPT5_STRICT'
+          language_in: 'ECMASCRIPT5_STRICT',
+          create_source_map: 'frontend/static/js_compiled/game.min.js.map',
+          source_map_format: 'V3'
         }
       },
       dev: {
@@ -76,19 +79,18 @@ module.exports = function(grunt) {
         options: {
           debug: true,
           warning_level: 'VERBOSE',
-          jscomp_error: ["accessControls", "ambiguousFunctionDecl",
-          "checkEventfulObjectDisposal", "checkRegExp",
-          "checkStructDictInheritance", "checkTypes", "checkVars", "const",
-          "constantProperty", "deprecated", "duplicateMessage", "es3",
-          "es5Strict", "externsValidation", "fileoverviewTags", "globalThis",
-          "inferredConstCheck", "internetExplorerChecks", "invalidCasts",
-          "misplacedTypeAnnotation", "missingGetCssName", "missingProperties",
-          "missingProvide", "missingRequire", "missingReturn","newCheckTypes",
-          "nonStandardJsDocs", "reportUnknownTypes", "suspiciousCode",
-          "strictModuleDepCheck", "typeInvalidation", "undefinedNames",
-          "undefinedVars", "unknownDefines", "uselessCode", "useOfGoogBase",
-          "visibility"],
-          create_source_map: 'frontend/static/js_compiled/game.js.map',
+          jscomp_error: ['accessControls', 'ambiguousFunctionDecl',
+          'checkEventfulObjectDisposal', 'checkRegExp',
+          'checkStructDictInheritance', 'checkTypes', 'checkVars', 'const',
+          'constantProperty', 'deprecated', 'duplicateMessage', 'es3',
+          'es5Strict', 'externsValidation', 'fileoverviewTags', 'globalThis',
+          'inferredConstCheck', 'internetExplorerChecks', 'invalidCasts',
+          'misplacedTypeAnnotation', 'missingGetCssName', 'missingProperties',
+          'missingProvide', 'missingRequire', 'missingReturn','newCheckTypes',
+          'nonStandardJsDocs', 'reportUnknownTypes', 'suspiciousCode',
+          'strictModuleDepCheck', 'typeInvalidation', 'undefinedNames',
+          'undefinedVars', 'unknownDefines', 'uselessCode', 'useOfGoogBase',
+          'visibility'],
           formatting: 'PRETTY_PRINT'
         }
       },
@@ -102,5 +104,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-gjslint');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('default', ['gjslint', 'closure-compiler', 'sass', 'cssmin']);
+  grunt.registerTask('js', ['gjslint', 'closure-compiler']);
+  grunt.registerTask('css', ['sass', 'cssmin']);
+  grunt.registerTask('default', ['js', 'css']);
 };
