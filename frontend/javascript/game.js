@@ -17,7 +17,7 @@ Game = function() {
  * Kicks off the game
  */
 Game.prototype.init = function() {
-  alert('fancy!');
+  console.log('omg it works!!!!');
 };
 
 

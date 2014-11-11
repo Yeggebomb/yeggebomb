@@ -7,7 +7,7 @@ handlers:
   static_dir: frontend/static/js_compiled/
   secure: always
 - url: /css
-  static_dir: frontend/stylesheets
+  static_dir: frontend/static/css_compiled/
   secure: always
 - url: /images
   static_dir: frontend/static/images/

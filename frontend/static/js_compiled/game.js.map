@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"/Users/jstanton/Github/still-entity-760/default/frontend/static/js_compiled/game.js",
+"lineCount":7,
+"mappings":"AAUA,IAAAA,OAAOA,QAAA,OAAQ,EAAG;AAChB,MAAAC,KAAA,EADgB;CAQlBD;IAAAE,UAAAD,KAAA,GAAsBE,QAAA,aAAQ,EAAG;AAC/BC,SAAAC,IAAA,CAAY,kBAAZ,CAD+B;CAMjC;IAAIC,OAAO,IAAIN;",
+"sources":["frontend/javascript/game.js"],
+"names":["Game","init","prototype","Game.prototype.init","console","log","game"]
+}

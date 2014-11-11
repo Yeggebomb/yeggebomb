@@ -5,8 +5,8 @@
   "description": "The winning hackathon team presents: Scortched Sverre. pronounce (Sphere).",
   "license": "MIT",
   "dependencies": {},
-  "homepage" : "http://still-entity-760.appspot.google.com",
-  "repository" : {
+  "homepage": "http://still-entity-760.appspot.google.com",
+  "repository": {
     "type": "git",
     "url": "https://source.developers.google.com/p/still-entity-760"
   },
@@ -14,6 +14,9 @@
     "closure-linter-wrapper": "^0.2.9",
     "grunt": "^0.4.5",
     "grunt-closure-compiler": "^0.0.21",
+    "grunt-contrib-cssmin": "^0.10.0",
+    "grunt-contrib-sass": "^0.8.1",
+    "grunt-contrib-watch": "^0.6.1",
     "grunt-gjslint": "^0.1.4"
   }
 }
