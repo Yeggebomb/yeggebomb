@@ -11,10 +11,8 @@
 ### Instruction on how to lint (requirement for building):
 
 The compile rules are strict and require linted code, closure linter can help with this:
-* Install https://developers.google.com/closure/utilities/docs/linter_howto
-* Run: `gjslint javascript/src/**/*.js --strict`
-* Fix: `fixjsstyle javascript/src/**/*.js`
-* Enjoy clean code :)
+* Run: `grunt gjslint` (This task is run default)
+* Fix: `grunt fixjsstyle`
 
 ## Instructions on runnning locally
 

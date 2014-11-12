@@ -47,8 +47,27 @@ module.exports = function(grunt) {
       }
     },
 
+    fixjsstyle: {
+      options: {
+        flags: [
+          '--strict',
+          '--closurized_namespaces=Game'
+        ],
+        reporter: {
+          name: 'console'
+        }
+      },
+      all: {
+        src: 'frontend/javascript/**/*.js'
+      }
+    },
+
     gjslint: {
       options: {
+        flags: [
+          '--strict',
+          '--closurized_namespaces=Game'
+        ],
         reporter: {
           name: 'console'
         }
@@ -75,6 +94,7 @@ module.exports = function(grunt) {
         jsOutputFile: 'frontend/static/js_compiled/game.js',
         maxBuffer: 500,
         options: {
+          compilation_level: 'SIMPLE_OPTIMIZATIONS',
           debug: true,
           warning_level: 'VERBOSE',
           jscomp_error: ['accessControls', 'ambiguousFunctionDecl',
