@@ -1,4 +1,6 @@
-goog.provide('Game');
+goog.provide('game.Main');
+
+goog.require('game.Entity');
 
 
 
@@ -6,11 +8,10 @@ goog.provide('Game');
  * The game.
  *
  * @constructor
- * @export
  */
-Game = function() {
-  /** @type {!Game.Entity} */
-  this.player = new Game.Entity();
+game.Main = function() {
+  /** @type {!game.Entity} */
+  this.player = new game.Entity();
   this.init();
   this.render();
 };
@@ -19,7 +20,7 @@ Game = function() {
 /**
  * Setup for our app.
  */
-Game.prototype.init = function() {
+game.Main.prototype.init = function() {
   this.player.attach(document.body);
 };
 
@@ -27,11 +28,11 @@ Game.prototype.init = function() {
 /**
  * Main render loop.
  */
-Game.prototype.render = function() {
+game.Main.prototype.render = function() {
   window.requestAnimationFrame(this.render.bind(this));
   // Do all the rendering here
 };
 
 
 // Start
-var game = new Game();
+var main = new game.Main();

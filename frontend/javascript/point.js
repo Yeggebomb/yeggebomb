@@ -1,12 +1,11 @@
-goog.provide('Game');
-goog.provide('Game.Point');
+goog.provide('game.Point');
 
 
 
 /**
  * @constructor
  */
-Game.Point = function() {
+game.Point = function() {
   /** @private {number} */
   this.x_ = 0;
   /** @private {number} */
@@ -18,7 +17,7 @@ Game.Point = function() {
  * @param {boolean=} opt_unit
  * @return {number|string}
  */
-Game.Point.prototype.getX = function(opt_unit) {
+game.Point.prototype.getX = function(opt_unit) {
   var x = this.x_;
   if (opt_unit) x += opt_unit;
   return x;
@@ -29,7 +28,7 @@ Game.Point.prototype.getX = function(opt_unit) {
  * @param {boolean=} opt_unit
  * @return {number|string}
  */
-Game.Point.prototype.getY = function(opt_unit) {
+game.Point.prototype.getY = function(opt_unit) {
   var y = this.y_;
   if (opt_unit) y += opt_unit;
   return y;

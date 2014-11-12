@@ -1,6 +1,7 @@
-goog.provide('Game');
-goog.provide('Game.Entity');
+goog.provide('game.Entity');
+goog.provide('game.Entity.Size');
 
+goog.require('game.Point');
 goog.require('helper.object');
 
 
@@ -11,15 +12,15 @@ goog.require('helper.object');
  *
  * @constructor
  */
-Game.Entity = function() {
+game.Entity = function() {
   /**
    * The position of this entity.
-   * @private {!Game.Point}
+   * @private {!game.Point}
    */
-  this.position_ = new Game.Point();
+  this.position_ = new game.Point();
   /**
    * The size of this object.
-   * @private {!Game.Size}
+   * @private {!game.Entity.Size}
    */
   this.size_ = {
     width: 0,
@@ -29,7 +30,7 @@ Game.Entity = function() {
   /**
    * @private {string}
    */
-  this.id_ = 'entity-' + Game.Entity.ID_COUNT++;
+  this.id_ = 'entity-' + game.Entity.ID_COUNT++;
 
   /**
    * The entity's element.
@@ -44,14 +45,14 @@ Game.Entity = function() {
     width: (number|string),
     height: (number|string)
   }>}  */
-Game.Size;
+game.Entity.Size;
 
 
 /**
  * Global id count.
  * @type {number}
  */
-Game.Entity.ID_COUNT = 0;
+game.Entity.ID_COUNT = 0;
 
 
 /**
@@ -59,7 +60,7 @@ Game.Entity.ID_COUNT = 0;
  * @param {Element|HTMLBodyElement} parent The parent to attach this entity
  *     to.
  */
-Game.Entity.prototype.attach = function(parent) {
+game.Entity.prototype.attach = function(parent) {
   if (!document.getElementById(this.id_)) {
     parent.appendChild(this.el);
   }
@@ -70,9 +71,9 @@ Game.Entity.prototype.attach = function(parent) {
  * Gets the size of the entity.
  *
  * @param {?string=} opt_unit Optional unit to be appending on the size.
- * @return {!Game.Size}
+ * @return {!game.Entity.Size}
  */
-Game.Entity.prototype.getSize = function(opt_unit) {
+game.Entity.prototype.getSize = function(opt_unit) {
   var size = helper.object.clone(this.size_);
 
   if (opt_unit != null) {
@@ -87,8 +88,8 @@ Game.Entity.prototype.getSize = function(opt_unit) {
 /**
  * The position of the entity.
  *
- * @return {!Game.Point}
+ * @return {!game.Point}
  */
-Game.Entity.prototype.getPosition = function() {
+game.Entity.prototype.getPosition = function() {
   return this.position_;
 };
