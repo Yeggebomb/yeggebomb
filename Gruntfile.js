@@ -97,18 +97,6 @@ module.exports = function(grunt) {
           compilation_level: 'SIMPLE_OPTIMIZATIONS',
           debug: true,
           warning_level: 'VERBOSE',
-          jscomp_error: ['accessControls', 'ambiguousFunctionDecl',
-          'checkEventfulObjectDisposal', 'checkRegExp',
-          'checkStructDictInheritance', 'checkTypes', 'checkVars', 'const',
-          'constantProperty', 'deprecated', 'duplicateMessage', 'es3',
-          'es5Strict', 'externsValidation', 'fileoverviewTags', 'globalThis',
-          'inferredConstCheck', 'internetExplorerChecks', 'invalidCasts',
-          'misplacedTypeAnnotation', 'missingGetCssName', 'missingProperties',
-          'missingProvide', 'missingRequire', 'missingReturn', 'newCheckTypes',
-          'nonStandardJsDocs', 'reportUnknownTypes', 'suspiciousCode',
-          'strictModuleDepCheck', 'typeInvalidation', 'undefinedNames',
-          'undefinedVars', 'unknownDefines', 'uselessCode', 'useOfGoogBase',
-          'visibility'],
           formatting: 'PRETTY_PRINT'
         }
       }
