@@ -1,6 +1,6 @@
 goog.provide('game.Main');
 
-goog.require('game.Entity');
+goog.require('game.Player');
 
 
 
@@ -10,8 +10,9 @@ goog.require('game.Entity');
  * @constructor
  */
 game.Main = function() {
-  /** @type {!game.Entity} */
-  this.player = new game.Entity();
+  /** @type {!game.Player} */
+  this.player = new game.Player();
+
   this.init();
   this.render();
 };

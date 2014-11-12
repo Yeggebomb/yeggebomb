@@ -6,6 +6,18 @@ helper.object.clone = function $helper$object$clone$($obj$$) {
   }
   return $res$$;
 };
+helper.extend = function $helper$extend$($childCtor$$, $parentCtor$$) {
+  function $tempCtor$$() {
+  }
+  $tempCtor$$.prototype = $parentCtor$$.prototype;
+  $childCtor$$.superClass_ = $parentCtor$$.prototype;
+  $childCtor$$.prototype = new $tempCtor$$;
+  $childCtor$$.prototype.constructor = $childCtor$$;
+  $childCtor$$.base = function $$childCtor$$$base$($me$$, $methodName$$, $var_args$$) {
+    var $args$$ = Array.prototype.slice.call(arguments, 2);
+    return $parentCtor$$.prototype[$methodName$$].apply($me$$, $args$$);
+  };
+};
 var game = {Point:function() {
   this.y_ = this.x_ = 0;
 }};
@@ -38,8 +50,12 @@ game.Entity.prototype.getSize = function $game$Entity$$getSize$($opt_unit$$) {
 game.Entity.prototype.getPosition = function $game$Entity$$getPosition$() {
   return this.position_;
 };
+game.Player = function $game$Player$() {
+  game.Player.base(this, "constructor");
+};
+helper.extend(game.Player, game.Entity);
 game.Main = function $game$Main$() {
-  this.player = new game.Entity;
+  this.player = new game.Player;
   this.init();
   this.render();
 };
