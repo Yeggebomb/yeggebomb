@@ -10,14 +10,22 @@ goog.provide('Game');
  */
 Game = function() {
   this.init();
+  this.render();
 };
 
 
 /**
- * Kicks off the game
+ * Setup for our app.
  */
 Game.prototype.init = function() {
-  console.log('omg it works!!!!');
+
+};
+
+/**
+ * Main render loop.
+ */
+Game.prototype.render = function() {
+
 };
 
 

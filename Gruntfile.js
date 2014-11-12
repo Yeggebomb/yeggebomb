@@ -5,7 +5,7 @@ module.exports = function(grunt) {
       dist: {
         options: {
           compass: true,
-          style: 'expanded',
+          style: 'expanded'
         },
         files: [{
           expand: true,
@@ -35,7 +35,7 @@ module.exports = function(grunt) {
       },
       sass: {
         files: ['frontend/stylesheets/**/*.sass'],
-        tasks: ['css'],
+        tasks: ['css']
       },
       livereload: {
         options: {
@@ -43,8 +43,8 @@ module.exports = function(grunt) {
         },
         files: [
           'frontend/static/**/*'
-        ],
-      },
+        ]
+      }
     },
 
     gjslint: {
@@ -66,9 +66,7 @@ module.exports = function(grunt) {
         maxBuffer: 500,
         options: {
           compilation_level: 'ADVANCED_OPTIMIZATIONS',
-          language_in: 'ECMASCRIPT5_STRICT',
-          create_source_map: 'frontend/static/js_compiled/game.min.js.map',
-          source_map_format: 'V3'
+          language_in: 'ECMASCRIPT5_STRICT'
         }
       },
       dev: {
@@ -86,14 +84,14 @@ module.exports = function(grunt) {
           'es5Strict', 'externsValidation', 'fileoverviewTags', 'globalThis',
           'inferredConstCheck', 'internetExplorerChecks', 'invalidCasts',
           'misplacedTypeAnnotation', 'missingGetCssName', 'missingProperties',
-          'missingProvide', 'missingRequire', 'missingReturn','newCheckTypes',
+          'missingProvide', 'missingRequire', 'missingReturn', 'newCheckTypes',
           'nonStandardJsDocs', 'reportUnknownTypes', 'suspiciousCode',
           'strictModuleDepCheck', 'typeInvalidation', 'undefinedNames',
           'undefinedVars', 'unknownDefines', 'uselessCode', 'useOfGoogBase',
           'visibility'],
           formatting: 'PRETTY_PRINT'
         }
-      },
+      }
     }
 
   });
@@ -106,5 +104,5 @@ module.exports = function(grunt) {
 
   grunt.registerTask('js', ['gjslint', 'closure-compiler']);
   grunt.registerTask('css', ['sass', 'cssmin']);
-  grunt.registerTask('default', ['js', 'css']);
+  grunt.registerTask('default', ['js', 'css', 'watch']);
 };

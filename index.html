@@ -2,11 +2,9 @@
 <html>
 <head>
   <title>Scorched Sverre</title>
-  <link rel="stylesheet" type="text/css" href="css/game.min.css">
+  {{range $.Assets.css}}<link rel="stylesheet" href="{{.}}">{{end}}
 </head>
 <body>
-  <h1>Scorched Sverre</h1>
-  <img src="images/construction.gif">
-  <script type="text/javascript" src="js/game.min.js"></script>
+  {{range $.Assets.js}}<script src="{{.}}"></script>{{end}}
 </body>
 </html>
