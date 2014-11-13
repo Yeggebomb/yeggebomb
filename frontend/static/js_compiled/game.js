@@ -73,6 +73,8 @@ game.Size.prototype.getHeight = function $game$Size$$getHeight$($opt_unit$$) {
 };
 game.Entity = function $game$Entity$() {
   this.position_ = new game.Point;
+  this.velocity_ = new game.Point;
+  this.acceleration_ = new game.Point;
   this.background = "";
   this.scale_ = 1;
   this.rotation_ = 0;
@@ -115,6 +117,18 @@ game.Entity.prototype.getPosition = function $game$Entity$$getPosition$() {
 game.Entity.prototype.setPosition = function $game$Entity$$setPosition$($position$$) {
   this.position_ = $position$$;
   this.updateTransform_();
+};
+game.Entity.prototype.getVelocity = function $game$Entity$$getVelocity$() {
+  return this.velocity_;
+};
+game.Entity.prototype.setVelocity = function $game$Entity$$setVelocity$($velocity$$) {
+  this.velocity_ = $velocity$$;
+};
+game.Entity.prototype.getAcceleration = function $game$Entity$$getAcceleration$() {
+  return this.acceleration_;
+};
+game.Entity.prototype.setAcceleration = function $game$Entity$$setAcceleration$($acceleration$$) {
+  this.acceleration_ = $acceleration$$;
 };
 game.Entity.prototype.getBackground = function $game$Entity$$getBackground$() {
   return this.background_;
@@ -160,17 +174,29 @@ game.Player = function $game$Player$() {
 helper.extend(game.Player, game.Entity);
 game.Player.CLASS_NAME = "player";
 game.Player.prototype.update = function $game$Player$$update$() {
-  this.keyHandler_.isDown(game.KeyHandler.Keycodes.RIGHT) && this.moveRight();
-  this.keyHandler_.isDown(game.KeyHandler.Keycodes.LEFT) && this.moveLeft();
+  this.keyHandler_.isDown(game.KeyHandler.Keycodes.RIGHT) && this.moveRight_();
+  this.keyHandler_.isDown(game.KeyHandler.Keycodes.LEFT) && this.moveLeft_();
+  this.keyHandler_.isDown(game.KeyHandler.Keycodes.UP) && this.moveUp_();
+  this.keyHandler_.isDown(game.KeyHandler.Keycodes.DOWN) && this.moveDown_();
 };
-game.Player.prototype.moveLeft = function $game$Player$$moveLeft$() {
+game.Player.prototype.moveLeft_ = function $game$Player$$moveLeft_$() {
   var $position$$ = this.getPosition();
-  $position$$.setX($position$$.getX() - 1);
+  $position$$.setX($position$$.getX() - 5);
   this.setPosition($position$$);
 };
-game.Player.prototype.moveRight = function $game$Player$$moveRight$() {
+game.Player.prototype.moveRight_ = function $game$Player$$moveRight_$() {
   var $position$$ = this.getPosition();
-  $position$$.setX($position$$.getX() + 1);
+  $position$$.setX($position$$.getX() + 5);
+  this.setPosition($position$$);
+};
+game.Player.prototype.moveUp_ = function $game$Player$$moveUp_$() {
+  var $position$$ = this.getPosition();
+  $position$$.setY($position$$.getY() - 5);
+  this.setPosition($position$$);
+};
+game.Player.prototype.moveDown_ = function $game$Player$$moveDown_$() {
+  var $position$$ = this.getPosition();
+  $position$$.setY($position$$.getY() + 5);
   this.setPosition($position$$);
 };
 game.Main = function $game$Main$() {

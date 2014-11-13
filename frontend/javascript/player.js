@@ -35,27 +35,51 @@ game.Player.CLASS_NAME = 'player';
  */
 game.Player.prototype.update = function() {
   if (this.keyHandler_.isDown(game.KeyHandler.Keycodes.RIGHT)) {
-    this.moveRight();
+    this.moveRight_();
   }
 
   if (this.keyHandler_.isDown(game.KeyHandler.Keycodes.LEFT)) {
-    this.moveLeft();
+    this.moveLeft_();
+  }
+
+  if (this.keyHandler_.isDown(game.KeyHandler.Keycodes.UP)) {
+    this.moveUp_();
+  }
+
+  if (this.keyHandler_.isDown(game.KeyHandler.Keycodes.DOWN)) {
+    this.moveDown_();
   }
 };
 
 
-/** Move left */
-game.Player.prototype.moveLeft = function() {
+/** @private */
+game.Player.prototype.moveLeft_ = function() {
   var position = this.getPosition();
-  position.setX(position.getX() - 1);
+  position.setX(position.getX() - 5);
   this.setPosition(position);
 };
 
 
-/** Move right */
-game.Player.prototype.moveRight = function() {
+/** @private */
+game.Player.prototype.moveRight_ = function() {
   var position = this.getPosition();
-  position.setX(position.getX() + 1);
+  position.setX(position.getX() + 5);
+  this.setPosition(position);
+};
+
+
+/** @private */
+game.Player.prototype.moveUp_ = function() {
+  var position = this.getPosition();
+  position.setY(position.getY() - 5);
+  this.setPosition(position);
+};
+
+
+/** @private */
+game.Player.prototype.moveDown_ = function() {
+  var position = this.getPosition();
+  position.setY(position.getY() + 5);
   this.setPosition(position);
 };
 

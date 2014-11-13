@@ -15,6 +15,10 @@ goog.require('helper.object');
 game.Entity = function() {
   /** @private {!game.Point} */
   this.position_ = new game.Point();
+  /** @private {!game.Point} */
+  this.velocity_ = new game.Point();
+  /** @private {!game.Point} */
+  this.acceleration_ = new game.Point();
   /** @type {string} */
   this.background = '';
   /**
@@ -162,6 +166,50 @@ game.Entity.prototype.getPosition = function() {
 game.Entity.prototype.setPosition = function(position) {
   this.position_ = position;
   this.updateTransform_();
+};
+
+
+/**
+ * Returns a reference to the velocity of the entity.
+ *
+ * @return {!game.Point}
+ */
+game.Entity.prototype.getVelocity = function() {
+  // It should return a clone, but because this will happen a lot, I'm fine with
+  // modifying the reference. It's cheaper.
+  return this.velocity_;
+};
+
+
+/**
+ * Sets the velocity and updates the style.
+ *
+ * @param {!game.Point} velocity
+ */
+game.Entity.prototype.setVelocity = function(velocity) {
+  this.velocity_ = velocity;
+};
+
+
+/**
+ * Returns a reference to the acceleration of the entity.
+ *
+ * @return {!game.Point}
+ */
+game.Entity.prototype.getAcceleration = function() {
+  // It should return a clone, but because this will happen a lot, I'm fine with
+  // modifying the reference. It's cheaper.
+  return this.acceleration_;
+};
+
+
+/**
+ * Sets the acceleration and updates the style.
+ *
+ * @param {!game.Point} acceleration
+ */
+game.Entity.prototype.setAcceleration = function(acceleration) {
+  this.acceleration_ = acceleration;
 };
 
 
