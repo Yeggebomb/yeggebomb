@@ -22,7 +22,6 @@ game.Entity = function() {
   this.el.id = this.id_;
   this.el.classList.add(game.Entity.CLASS_NAME);
 
-  // Entities have rectangles.
   helper.mixin(this, game.mixins.Rectangle.prototype);
 };
 
@@ -50,10 +49,14 @@ game.Entity.prototype.update = function() {};
 
 /**
  * Creates and attaches the dom of this entity to the parent provided.
- * @param {Element|HTMLBodyElement} parent The parent to attach this entity
- *     to.
+ * @param {Element|HTMLBodyElement|game.Entity} parent The parent to attach this
+ *     entity to.
  */
 game.Entity.prototype.attach = function(parent) {
+  if (parent instanceof game.Entity) {
+    parent = parent.el;
+  }
+
   if (!document.getElementById(this.id_)) {
     parent.appendChild(this.el);
   } else {

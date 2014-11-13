@@ -7,6 +7,5 @@ goog.provide('game.constants.Elements');
  * @enum {!Element}
  */
 game.constants.Elements = {
-  GAME_BOARD_EL: document.getElementById('board'),
   VIEWPORT_EL: document.getElementById('viewport')
 };

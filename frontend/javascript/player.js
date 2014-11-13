@@ -1,10 +1,7 @@
 goog.provide('game.Player');
 
 goog.require('game.Entity');
-goog.require('game.KeyHandler');
-goog.require('game.Size');
 goog.require('game.mixins.Fourway');
-goog.require('game.mixins.Twoway');
 goog.require('helper');
 
 
@@ -17,9 +14,7 @@ goog.require('helper');
  */
 game.Player = function() {
   game.Player.base(this, 'constructor');
-
   this.el.classList.add(game.Player.CLASS_NAME);
-
   helper.mixin(this, game.mixins.Fourway.prototype);
 };
 helper.inherit(game.Player, game.Entity);
