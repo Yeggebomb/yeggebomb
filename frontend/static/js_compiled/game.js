@@ -1,3 +1,23 @@
+var Cocktail = {mixins:{}, mixin:function($klass$$) {
+  var $mixins$$ = _.chain(arguments).toArray().rest().flatten().value(), $obj$$ = $klass$$.prototype || $klass$$, $collisions$$ = {};
+  _($mixins$$).each(function($mixin$$) {
+    _.isString($mixin$$) && ($mixin$$ = Cocktail.mixins[$mixin$$]);
+    _($mixin$$).each(function($value$$, $key$$) {
+      _.isFunction($value$$) ? $obj$$[$key$$] !== $value$$ && ($obj$$[$key$$] && ($collisions$$[$key$$] = $collisions$$.hasOwnProperty($key$$) ? $collisions$$[$key$$] : [$obj$$[$key$$]], $collisions$$[$key$$].push($value$$)), $obj$$[$key$$] = $value$$) : _.isArray($value$$) ? $obj$$[$key$$] = _.union($value$$, $obj$$[$key$$] || []) : _.isObject($value$$) ? $obj$$[$key$$] = _.extend({}, $value$$, $obj$$[$key$$] || {}) : $key$$ in $obj$$ || ($obj$$[$key$$] = $value$$);
+    });
+  });
+  _($collisions$$).each(function($propertyValues$$, $propertyName$$) {
+    $obj$$[$propertyName$$] = function $$obj$$$$propertyName$$$() {
+      var $that$$ = this, $args$$ = arguments, $returnValue$$;
+      _($propertyValues$$).each(function($returnedValue_value$$) {
+        $returnedValue_value$$ = _.isFunction($returnedValue_value$$) ? $returnedValue_value$$.apply($that$$, $args$$) : $returnedValue_value$$;
+        $returnValue$$ = "undefined" === typeof $returnedValue_value$$ ? $returnValue$$ : $returnedValue_value$$;
+      });
+      return $returnValue$$;
+    };
+  });
+  return $klass$$;
+}};
 var game = {constants:{}};
 game.constants.Elements = {GAME_BOARD_EL:document.getElementById("board"), VIEWPORT_EL:document.getElementById("viewport")};
 var helper = {object:{}};
@@ -8,7 +28,7 @@ helper.object.clone = function $helper$object$clone$($obj$$) {
   }
   return $res$$;
 };
-helper.extend = function $helper$extend$($childCtor$$, $parentCtor$$) {
+helper.inherit = function $helper$inherit$($childCtor$$, $parentCtor$$) {
   function $tempCtor$$() {
   }
   $tempCtor$$.prototype = $parentCtor$$.prototype;
@@ -19,6 +39,26 @@ helper.extend = function $helper$extend$($childCtor$$, $parentCtor$$) {
     var $args$$ = Array.prototype.slice.call(arguments, 2);
     return $parentCtor$$.prototype[$methodName$$].apply($me$$, $args$$);
   };
+};
+helper.mixin = function $helper$mixin$($klass$$) {
+  var $mixins$$ = _.chain(arguments).toArray().rest().flatten().value(), $obj$$ = $klass$$.prototype || $klass$$, $collisions$$ = {};
+  _($mixins$$).each(function($mixin$$) {
+    _.isString($mixin$$) && ($mixin$$ = helper.mixins[$mixin$$]);
+    _($mixin$$).each(function($value$$, $key$$) {
+      _.isFunction($value$$) ? $obj$$[$key$$] !== $value$$ && ($obj$$[$key$$] && ($collisions$$[$key$$] = $collisions$$.hasOwnProperty($key$$) ? $collisions$$[$key$$] : [$obj$$[$key$$]], $collisions$$[$key$$].push($value$$)), $obj$$[$key$$] = $value$$) : _.isArray($value$$) ? $obj$$[$key$$] = _.union($value$$, $obj$$[$key$$] || []) : _.isObject($value$$) ? $obj$$[$key$$] = _.extend({}, $value$$, $obj$$[$key$$] || {}) : $key$$ in $obj$$ || ($obj$$[$key$$] = $value$$);
+    });
+  });
+  _($collisions$$).each(function($propertyValues$$, $propertyName$$) {
+    $obj$$[$propertyName$$] = function $$obj$$$$propertyName$$$() {
+      var $that$$ = this, $args$$ = arguments, $returnValue$$;
+      _($propertyValues$$).each(function($returnedValue$$1_value$$) {
+        $returnedValue$$1_value$$ = _.isFunction($returnedValue$$1_value$$) ? $returnedValue$$1_value$$.apply($that$$, $args$$) : $returnedValue$$1_value$$;
+        $returnValue$$ = "undefined" === typeof $returnedValue$$1_value$$ ? $returnValue$$ : $returnedValue$$1_value$$;
+      });
+      return $returnValue$$;
+    };
+  });
+  return $klass$$;
 };
 game.KeyHandler = function $game$KeyHandler$() {
   if (game.KeyHandler.prototype._singletonInstance) {
@@ -39,6 +79,48 @@ game.KeyHandler.prototype.onKeyup_ = function $game$KeyHandler$$onKeyup_$($evt$$
   delete this.pressed_[$evt$$.keyCode];
 };
 game.KeyHandler.Keycodes = {BACKSPACE:8, TAB:9, ENTER:13, SHIFT:16, CTRL:17, ALT:18, ESC:27, SPACE:32, LEFT:37, UP:38, RIGHT:39, DOWN:40};
+game.mixins = {};
+game.mixins.Fourway = function $game$mixins$Fourway$() {
+};
+game.mixins.Fourway.prototype.moveLeft_ = function $game$mixins$Fourway$$moveLeft_$() {
+  var $position$$ = this.getPosition();
+  $position$$.setX($position$$.getX() - 5);
+  this.setPosition($position$$);
+};
+game.mixins.Fourway.prototype.moveRight_ = function $game$mixins$Fourway$$moveRight_$() {
+  var $position$$ = this.getPosition();
+  $position$$.setX($position$$.getX() + 5);
+  this.setPosition($position$$);
+};
+game.mixins.Fourway.prototype.moveUp_ = function $game$mixins$Fourway$$moveUp_$() {
+  var $position$$ = this.getPosition();
+  $position$$.setY($position$$.getY() - 5);
+  this.setPosition($position$$);
+};
+game.mixins.Fourway.prototype.moveDown_ = function $game$mixins$Fourway$$moveDown_$() {
+  var $position$$ = this.getPosition();
+  $position$$.setY($position$$.getY() + 5);
+  this.setPosition($position$$);
+};
+game.mixins.Fourway.prototype.update = function $game$mixins$Fourway$$update$() {
+  this.keyHandler_ || (this.keyHandler_ = new game.KeyHandler);
+  this.keyHandler_.isDown(game.KeyHandler.Keycodes.RIGHT) && this.moveRight_();
+  this.keyHandler_.isDown(game.KeyHandler.Keycodes.LEFT) && this.moveLeft_();
+  this.keyHandler_.isDown(game.KeyHandler.Keycodes.UP) && this.moveUp_();
+  this.keyHandler_.isDown(game.KeyHandler.Keycodes.DOWN) && this.moveDown_();
+};
+game.mixins.Twoway = function $game$mixins$Twoway$() {
+};
+game.mixins.Twoway.prototype.moveLeft = function $game$mixins$Twoway$$moveLeft$() {
+  var $position$$ = this.getPosition();
+  $position$$.setX($position$$.getX() - 5);
+  this.setPosition($position$$);
+};
+game.mixins.Twoway.prototype.moveRight = function $game$mixins$Twoway$$moveRight$() {
+  var $position$$ = this.getPosition();
+  $position$$.setX($position$$.getX() + 5);
+  this.setPosition($position$$);
+};
 game.Point = function $game$Point$($opt_x$$, $opt_y$$) {
   this.x_ = $opt_x$$ || 0;
   this.y_ = $opt_y$$ || 0;
@@ -187,37 +269,11 @@ game.Entity.prototype.updateTransform_ = function $game$Entity$$updateTransform_
 };
 game.Player = function $game$Player$() {
   game.Player.base(this, "constructor");
-  this.keyHandler_ = new game.KeyHandler;
   this.el.classList.add(game.Player.CLASS_NAME);
+  helper.mixin(this, game.mixins.Fourway.prototype);
 };
-helper.extend(game.Player, game.Entity);
+helper.inherit(game.Player, game.Entity);
 game.Player.CLASS_NAME = "player";
-game.Player.prototype.update = function $game$Player$$update$() {
-  this.keyHandler_.isDown(game.KeyHandler.Keycodes.RIGHT) && this.moveRight_();
-  this.keyHandler_.isDown(game.KeyHandler.Keycodes.LEFT) && this.moveLeft_();
-  this.keyHandler_.isDown(game.KeyHandler.Keycodes.UP) && this.moveUp_();
-  this.keyHandler_.isDown(game.KeyHandler.Keycodes.DOWN) && this.moveDown_();
-};
-game.Player.prototype.moveLeft_ = function $game$Player$$moveLeft_$() {
-  var $position$$ = this.getPosition();
-  $position$$.setX($position$$.getX() - 5);
-  this.setPosition($position$$);
-};
-game.Player.prototype.moveRight_ = function $game$Player$$moveRight_$() {
-  var $position$$ = this.getPosition();
-  $position$$.setX($position$$.getX() + 5);
-  this.setPosition($position$$);
-};
-game.Player.prototype.moveUp_ = function $game$Player$$moveUp_$() {
-  var $position$$ = this.getPosition();
-  $position$$.setY($position$$.getY() - 5);
-  this.setPosition($position$$);
-};
-game.Player.prototype.moveDown_ = function $game$Player$$moveDown_$() {
-  var $position$$ = this.getPosition();
-  $position$$.setY($position$$.getY() + 5);
-  this.setPosition($position$$);
-};
 game.Main = function $game$Main$() {
   this.player_ = new game.Player;
   this.camera_ = new game.Camera;
