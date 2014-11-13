@@ -3,4 +3,5 @@ node_modules/*
 *.report.txt
 .gcloud
 .sass-cache/*
-*_compiled/*
+frontend/static/css_compiled/*
+frontend/static/js_compiled/*
