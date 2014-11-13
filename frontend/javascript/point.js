@@ -4,12 +4,14 @@ goog.provide('game.Point');
 
 /**
  * @constructor
+ * @param {?number=} opt_x
+ * @param {?number=} opt_y
  */
-game.Point = function() {
+game.Point = function(opt_x, opt_y) {
   /** @private {number} */
-  this.x_ = 0;
+  this.x_ = opt_x || 0;
   /** @private {number} */
-  this.y_ = 0;
+  this.y_ = opt_y || 0;
 };
 
 

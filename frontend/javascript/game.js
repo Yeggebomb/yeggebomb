@@ -1,6 +1,7 @@
 goog.provide('game.Main');
 
 goog.require('game.Player');
+goog.require('game.Point');
 
 
 
@@ -12,9 +13,11 @@ goog.require('game.Player');
 game.Main = function() {
   /** @type {!game.Player} */
   this.player = new game.Player();
-
   this.init();
   this.render();
+
+  /** @type {number}] */
+  this.x = 0;
 };
 
 
@@ -22,6 +25,9 @@ game.Main = function() {
  * Setup for our app.
  */
 game.Main.prototype.init = function() {
+  this.player.setSize(new game.Size(100, 100));
+  this.player.setPosition(new game.Point(100, 100));
+  this.player.setBackground('white');
   this.player.attach(document.body);
 };
 
@@ -31,7 +37,6 @@ game.Main.prototype.init = function() {
  */
 game.Main.prototype.render = function() {
   window.requestAnimationFrame(this.render.bind(this));
-  // Do all the rendering here
 };
 
 
