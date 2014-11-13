@@ -13,8 +13,10 @@ goog.require('game.Point');
 game.Main = function() {
   /** @type {!game.Player} */
   this.player = new game.Player();
+  /** @type {!Element} The parent game board */
+  this.gameBoard = document.getElementById('board');
   this.init();
-  this.render();
+  this.update();
 };
 
 
@@ -25,15 +27,16 @@ game.Main.prototype.init = function() {
   this.player.setSize(new game.Size(100, 100));
   this.player.setPosition(new game.Point(100, 100));
   this.player.setBackground('white');
-  this.player.attach(document.body);
+  this.player.attach(this.gameBoard);
 };
 
 
 /**
- * Main render loop.
+ * Main update loop.
  */
-game.Main.prototype.render = function() {
-  window.requestAnimationFrame(this.render.bind(this));
+game.Main.prototype.update = function() {
+  window.requestAnimationFrame(this.update.bind(this));
+  this.player.update();
 };
 
 

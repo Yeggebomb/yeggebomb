@@ -66,6 +66,12 @@ game.Entity.ID_COUNT = 0;
 
 
 /**
+ * Updates the entity information.
+ */
+game.Entity.prototype.update = function() {};
+
+
+/**
  * Creates and attaches the dom of this entity to the parent provided.
  * @param {Element|HTMLBodyElement} parent The parent to attach this entity
  *     to.
@@ -76,7 +82,34 @@ game.Entity.prototype.attach = function(parent) {
   } else {
     console.warn('Attempted to attach dom element multiple times:', this.el_);
   }
+  this.setupEventListeners();
 };
+
+
+/**
+ * Detach element from dom.
+ */
+game.Entity.prototype.detach = function() {
+  if (this.el.parentNode) {
+    this.el.parentNode.removeChild(this.el);
+  } else {
+    console.warn(
+        'Attempted to remove dom element when it has no parent', this.el_);
+  }
+  this.destroyEventListeners();
+};
+
+
+/**
+ * Sets up event listeners.
+ */
+game.Entity.prototype.setupEventListeners = function() {};
+
+
+/**
+ * Destroys event listeners.
+ */
+game.Entity.prototype.destroyEventListeners = function() {};
 
 
 /**
@@ -110,22 +143,24 @@ game.Entity.prototype.setSize = function(size) {
 
 
 /**
- * The position of the entity.
+ * Returns a reference to the position of the entity.
  *
  * @return {!game.Point}
  */
 game.Entity.prototype.getPosition = function() {
+  // It should return a clone, but because this will happen a lot, I'm fine with
+  // modifying the reference. It's cheaper.
   return this.position_;
 };
 
 
 /**
- * The position of the entity.
+ * Sets the position and updates the style.
  *
  * @param {!game.Point} position
  */
 game.Entity.prototype.setPosition = function(position) {
-  this.position_ = helper.object.clone(position);
+  this.position_ = position;
   this.updateTransform_();
 };
 
