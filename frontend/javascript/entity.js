@@ -7,8 +7,8 @@ goog.require('helper.object');
 
 
 /**
- * An entity, player, enemy, object or thing. Entity will have things like
- * position, size, a dom element, class & ID etc..
+ * An entity. This can be a player, enemy, object or a thing. Entity will have
+ * properties like position, size, scale, class & ID etc..
  *
  * @constructor
  */
@@ -131,6 +131,16 @@ game.Entity.prototype.setPosition = function(position) {
 
 
 /**
+ * The background of the entity.
+ *
+ * @return {string}
+ */
+game.Entity.prototype.getBackground = function() {
+  return this.background_;
+};
+
+
+/**
  * The background style on the entity.
  *
  * @param {string} background
@@ -138,6 +148,69 @@ game.Entity.prototype.setPosition = function(position) {
 game.Entity.prototype.setBackground = function(background) {
   this.background_ = background;
   this.el.style.background = background;
+};
+
+
+/**
+ * The rotation of the entity.
+ *
+ * @return {number}
+ */
+game.Entity.prototype.getRotation = function() {
+  return this.rotation_;
+};
+
+
+/**
+ * The rotation style on the entity (in degrees).
+ *
+ * @param {number} rotation
+ */
+game.Entity.prototype.setRotation = function(rotation) {
+  this.rotation_ = rotation;
+  this.updateTransform_();
+};
+
+
+/**
+ * The scale of the entity.
+ *
+ * @return {number}
+ */
+game.Entity.prototype.getScale = function() {
+  return this.scale_;
+};
+
+
+/**
+ * The scale style on the entity.
+ *
+ * @param {number} scale
+ */
+game.Entity.prototype.setScale = function(scale) {
+  this.scale_ = scale;
+  this.updateTransform_();
+};
+
+
+/**
+ * The skew of the entity.
+ *
+ * @return {!game.Point}
+ */
+game.Entity.prototype.getSkew = function() {
+  return this.skew_;
+};
+
+
+/**
+ * The skew style on the entity.
+ *
+ * @param {!game.Point} skew
+ */
+game.Entity.prototype.setSkew = function(skew) {
+  this.skew_ = skew;
+  this.updateTransform_();
 };
 
 

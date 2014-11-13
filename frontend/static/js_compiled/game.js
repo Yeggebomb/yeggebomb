@@ -80,9 +80,33 @@ game.Entity.prototype.setPosition = function $game$Entity$$setPosition$($positio
   this.position_ = helper.object.clone($position$$);
   this.updateTransform_();
 };
+game.Entity.prototype.getBackground = function $game$Entity$$getBackground$() {
+  return this.background_;
+};
 game.Entity.prototype.setBackground = function $game$Entity$$setBackground$($background$$) {
   this.background_ = $background$$;
   this.el.style.background = $background$$;
+};
+game.Entity.prototype.getRotation = function $game$Entity$$getRotation$() {
+  return this.rotation_;
+};
+game.Entity.prototype.setRotation = function $game$Entity$$setRotation$($rotation$$) {
+  this.rotation_ = $rotation$$;
+  this.updateTransform_();
+};
+game.Entity.prototype.getScale = function $game$Entity$$getScale$() {
+  return this.scale_;
+};
+game.Entity.prototype.setScale = function $game$Entity$$setScale$($scale$$) {
+  this.scale_ = $scale$$;
+  this.updateTransform_();
+};
+game.Entity.prototype.getSkew = function $game$Entity$$getSkew$() {
+  return this.skew_;
+};
+game.Entity.prototype.setSkew = function $game$Entity$$setSkew$($skew$$) {
+  this.skew_ = $skew$$;
+  this.updateTransform_();
 };
 game.Entity.prototype.updateTransform_ = function $game$Entity$$updateTransform_$() {
   var $transform$$ = "rotate(" + this.rotation_ + "deg) scale(" + this.scale_ + ") skewX(" + this.skew_.getX("deg") + ") skewY(" + this.skew_.getY("deg") + ") translate(" + this.position_.getX("px") + ", " + this.position_.getY("px") + ")";
