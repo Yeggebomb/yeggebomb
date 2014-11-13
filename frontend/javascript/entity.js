@@ -1,8 +1,8 @@
 goog.provide('game.Entity');
 
 goog.require('game.Point');
-goog.require('game.Size');
-goog.require('helper.object');
+goog.require('game.mixins.Rectangle');
+goog.require('helper');
 
 
 
@@ -13,37 +13,17 @@ goog.require('helper.object');
  * @constructor
  */
 game.Entity = function() {
-  /** @private {!game.Point} */
-  this.position_ = new game.Point();
-  /** @private {!game.Point} */
-  this.velocity_ = new game.Point();
-  /** @private {!game.Point} */
-  this.acceleration_ = new game.Point();
   /** @type {string} */
   this.background = '';
-  /**
-   * Scale from 0 to 1.
-   * @private {number}
-   */
-  this.scale_ = 1;
-  /**
-   * Rotation in degrees.
-   * @private {number}
-   */
-  this.rotation_ = 0;
-  /**
-   * Skew (x and y) in degrees.
-   * @private {!game.Point}
-   */
-  this.skew_ = new game.Point();
-  /** @private {!game.Size} */
-  this.size_ = new game.Size();
   /** @private {string} */
   this.id_ = 'entity-' + game.Entity.ID_COUNT++;
   /** @type {!Element} */
   this.el = document.createElement('span');
   this.el.id = this.id_;
   this.el.classList.add(game.Entity.CLASS_NAME);
+
+  // Entities have rectangles.
+  helper.mixin(this, game.mixins.Rectangle.prototype);
 };
 
 
@@ -53,13 +33,6 @@ game.Entity = function() {
  * @const
  */
 game.Entity.CLASS_NAME = 'entity';
-
-
-/** @typedef {Object.<string, {
-    width: (number|string),
-    height: (number|string)
-  }>}  */
-game.Size;
 
 
 /**
@@ -117,103 +90,6 @@ game.Entity.prototype.destroyEventListeners = function() {};
 
 
 /**
- * Gets the size of the entity.
- *
- * @param {?string=} opt_unit Optional unit to be appending on the size.
- * @return {!game.Size}
- */
-game.Entity.prototype.getSize = function(opt_unit) {
-  var size = helper.object.clone(this.size_);
-
-  if (opt_unit != null) {
-    size.width += opt_unit;
-    size.height += opt_unit;
-  }
-
-  return size;
-};
-
-
-/**
- * Sets the size of the entity.
- *
- * @param {!game.Size} size
- */
-game.Entity.prototype.setSize = function(size) {
-  this.size_ = helper.object.clone(size);
-  this.el.style.width = this.size_.getWidth('px');
-  this.el.style.height = this.size_.getHeight('px');
-};
-
-
-/**
- * Returns a reference to the position of the entity.
- *
- * @return {!game.Point}
- */
-game.Entity.prototype.getPosition = function() {
-  // It should return a clone, but because this will happen a lot, I'm fine with
-  // modifying the reference. It's cheaper.
-  return this.position_;
-};
-
-
-/**
- * Sets the position and updates the style.
- *
- * @param {!game.Point} position
- */
-game.Entity.prototype.setPosition = function(position) {
-  this.position_ = position;
-  this.updateTransform_();
-};
-
-
-/**
- * Returns a reference to the velocity of the entity.
- *
- * @return {!game.Point}
- */
-game.Entity.prototype.getVelocity = function() {
-  // It should return a clone, but because this will happen a lot, I'm fine with
-  // modifying the reference. It's cheaper.
-  return this.velocity_;
-};
-
-
-/**
- * Sets the velocity and updates the style.
- *
- * @param {!game.Point} velocity
- */
-game.Entity.prototype.setVelocity = function(velocity) {
-  this.velocity_ = velocity;
-};
-
-
-/**
- * Returns a reference to the acceleration of the entity.
- *
- * @return {!game.Point}
- */
-game.Entity.prototype.getAcceleration = function() {
-  // It should return a clone, but because this will happen a lot, I'm fine with
-  // modifying the reference. It's cheaper.
-  return this.acceleration_;
-};
-
-
-/**
- * Sets the acceleration and updates the style.
- *
- * @param {!game.Point} acceleration
- */
-game.Entity.prototype.setAcceleration = function(acceleration) {
-  this.acceleration_ = acceleration;
-};
-
-
-/**
  * The background of the entity.
  *
  * @return {string}
@@ -231,88 +107,4 @@ game.Entity.prototype.getBackground = function() {
 game.Entity.prototype.setBackground = function(background) {
   this.background_ = background;
   this.el.style.background = background;
-};
-
-
-/**
- * The rotation of the entity.
- *
- * @return {number}
- */
-game.Entity.prototype.getRotation = function() {
-  return this.rotation_;
-};
-
-
-/**
- * The rotation style on the entity (in degrees).
- *
- * @param {number} rotation
- */
-game.Entity.prototype.setRotation = function(rotation) {
-  this.rotation_ = rotation;
-  this.updateTransform_();
-};
-
-
-/**
- * The scale of the entity.
- *
- * @return {number}
- */
-game.Entity.prototype.getScale = function() {
-  return this.scale_;
-};
-
-
-/**
- * The scale style on the entity.
- *
- * @param {number} scale
- */
-game.Entity.prototype.setScale = function(scale) {
-  this.scale_ = scale;
-  this.updateTransform_();
-};
-
-
-/**
- * The skew of the entity.
- *
- * @return {!game.Point}
- */
-game.Entity.prototype.getSkew = function() {
-  return this.skew_;
-};
-
-
-/**
- * The skew style on the entity.
- *
- * @param {!game.Point} skew
- */
-game.Entity.prototype.setSkew = function(skew) {
-  this.skew_ = skew;
-  this.updateTransform_();
-};
-
-
-/**
- * Updates the transform style on the element.
- *
- * @private
- */
-game.Entity.prototype.updateTransform_ = function() {
-  var transform = 'rotate(' + this.rotation_ + 'deg) ' +
-                  'scale(' + this.scale_ + ') ' +
-                  'skewX(' + this.skew_.getX('deg') + ') ' +
-                  'skewY(' + this.skew_.getY('deg') + ') ' +
-                  'translate(' + this.position_.getX('px') +
-                  ', ' + this.position_.getY('px') + ')';
-
-  this.el.style.webkitTransform = transform;
-  this.el.style.MozTransform = transform;
-  this.el.style.msTransform = transform;
-  this.el.style.OTransform = transform;
-  this.el.style.transform = transform;
 };

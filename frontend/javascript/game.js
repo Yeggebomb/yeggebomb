@@ -27,8 +27,7 @@ game.Main = function() {
  * Setup for our app.
  */
 game.Main.prototype.init = function() {
-  this.player_.setSize(new game.Size(100, 100));
-  this.player_.setPosition(new game.Point(100, 100));
+  this.player_.setRect(100, 100, 100, 100);
   this.player_.setBackground('white');
   this.player_.attach(this.gameBoard_);
 };

@@ -5,6 +5,8 @@ goog.require('game.KeyHandler');
 
 
 /**
+ * Requires rectancle mixin.
+ *
  * An entity mixin that gives the an entity the ability to move left, right, up
  * or down.
  *
