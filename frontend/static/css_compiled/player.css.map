@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAEA,OAAO;EC0VL,kBAAwC,EDzVzB,GAAG;ECyVlB,qBAAwC,EC9Sb,GAAuB;ED8SlD,aAAwC,EDzVzB,GAAG",
-"sources": ["../../stylesheets/player.sass","../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/_support.scss","../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/css3/_border-radius.scss"],
-"names": [],
-"file": "player.css"
-}
