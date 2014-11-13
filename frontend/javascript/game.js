@@ -2,6 +2,7 @@ goog.provide('game.Main');
 
 goog.require('game.Player');
 goog.require('game.Point');
+goog.require('game.constants.Elements');
 
 
 
@@ -11,10 +12,12 @@ goog.require('game.Point');
  * @constructor
  */
 game.Main = function() {
-  /** @type {!game.Player} */
-  this.player = new game.Player();
-  /** @type {!Element} The parent game board */
-  this.gameBoard = document.getElementById('board');
+  /** @private {!game.Player} */
+  this.player_ = new game.Player();
+  /** @private {!game.Camera} */
+  this.camera_ = new game.Camera();
+  /** @private {!Element} The parent game board */
+  this.gameBoard_ = game.constants.Elements.GAME_BOARD_EL;
   this.init();
   this.update();
 };
@@ -24,10 +27,10 @@ game.Main = function() {
  * Setup for our app.
  */
 game.Main.prototype.init = function() {
-  this.player.setSize(new game.Size(100, 100));
-  this.player.setPosition(new game.Point(100, 100));
-  this.player.setBackground('white');
-  this.player.attach(this.gameBoard);
+  this.player_.setSize(new game.Size(100, 100));
+  this.player_.setPosition(new game.Point(100, 100));
+  this.player_.setBackground('white');
+  this.player_.attach(this.gameBoard_);
 };
 
 
@@ -36,7 +39,8 @@ game.Main.prototype.init = function() {
  */
 game.Main.prototype.update = function() {
   window.requestAnimationFrame(this.update.bind(this));
-  this.player.update();
+  this.player_.update();
+  this.camera_.update();
 };
 
 

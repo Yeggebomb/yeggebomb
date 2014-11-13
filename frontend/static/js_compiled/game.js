@@ -1,3 +1,5 @@
+var game = {constants:{}};
+game.constants.Elements = {GAME_BOARD_EL:document.getElementById("board"), VIEWPORT_EL:document.getElementById("viewport")};
 var helper = {object:{}};
 helper.object.clone = function $helper$object$clone$($obj$$) {
   var $res$$ = {}, $key$$;
@@ -18,7 +20,7 @@ helper.extend = function $helper$extend$($childCtor$$, $parentCtor$$) {
     return $parentCtor$$.prototype[$methodName$$].apply($me$$, $args$$);
   };
 };
-var game = {KeyHandler:function() {
+game.KeyHandler = function $game$KeyHandler$() {
   if (game.KeyHandler.prototype._singletonInstance) {
     return game.KeyHandler.prototype._singletonInstance;
   }
@@ -26,7 +28,7 @@ var game = {KeyHandler:function() {
   this.pressed_ = {};
   window.addEventListener("keyup", this.onKeyup_.bind(this), !1);
   window.addEventListener("keydown", this.onKeydown_.bind(this), !1);
-}};
+};
 game.KeyHandler.prototype.isDown = function $game$KeyHandler$$isDown$($keyCode$$) {
   return this.pressed_[$keyCode$$];
 };
@@ -56,6 +58,23 @@ game.Point.prototype.getY = function $game$Point$$getY$($opt_unit$$) {
 };
 game.Point.prototype.setY = function $game$Point$$setY$($y$$) {
   this.y_ = $y$$;
+};
+game.Camera = function $game$Camera$() {
+  if (game.Camera.prototype._singletonInstance) {
+    return game.Camera.prototype._singletonInstance;
+  }
+  game.Camera.prototype._singletonInstance = this;
+  this.trackedPoint_ = new game.Point;
+  this.viewPortEl_ = game.constants.Elements.VIEWPORT_EL;
+  this.boardEl_ = game.constants.Elements.GAME_BOARD_EL;
+  this.position_ = new game.Point;
+  this.velocity_ = new game.Point;
+  this.acceleration_ = new game.Point;
+};
+game.Camera.prototype.setTracking = function $game$Camera$$setTracking$($trackedPoint$$) {
+  this.trackedPoint_ = $trackedPoint$$;
+};
+game.Camera.prototype.update = function $game$Camera$$update$() {
 };
 game.Size = function $game$Size$($opt_width$$, $opt_height$$) {
   this.width_ = $opt_width$$ || 0;
@@ -200,20 +219,22 @@ game.Player.prototype.moveDown_ = function $game$Player$$moveDown_$() {
   this.setPosition($position$$);
 };
 game.Main = function $game$Main$() {
-  this.player = new game.Player;
-  this.gameBoard = document.getElementById("board");
+  this.player_ = new game.Player;
+  this.camera_ = new game.Camera;
+  this.gameBoard_ = game.constants.Elements.GAME_BOARD_EL;
   this.init();
   this.update();
 };
 game.Main.prototype.init = function $game$Main$$init$() {
-  this.player.setSize(new game.Size(100, 100));
-  this.player.setPosition(new game.Point(100, 100));
-  this.player.setBackground("white");
-  this.player.attach(this.gameBoard);
+  this.player_.setSize(new game.Size(100, 100));
+  this.player_.setPosition(new game.Point(100, 100));
+  this.player_.setBackground("white");
+  this.player_.attach(this.gameBoard_);
 };
 game.Main.prototype.update = function $game$Main$$update$() {
   window.requestAnimationFrame(this.update.bind(this));
-  this.player.update();
+  this.player_.update();
+  this.camera_.update();
 };
 var main = new game.Main;
 
