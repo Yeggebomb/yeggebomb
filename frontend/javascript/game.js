@@ -15,9 +15,6 @@ game.Main = function() {
   this.player = new game.Player();
   this.init();
   this.render();
-
-  /** @type {number}] */
-  this.x = 0;
 };
 
 

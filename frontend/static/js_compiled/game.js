@@ -126,7 +126,6 @@ game.Main = function $game$Main$() {
   this.player = new game.Player;
   this.init();
   this.render();
-  this.x = 0;
 };
 game.Main.prototype.init = function $game$Main$$init$() {
   this.player.setSize(new game.Size(100, 100));
