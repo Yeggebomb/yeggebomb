@@ -21,6 +21,8 @@ game.Camera = function() {
   this.board_ = new game.Board();
   /** @private {!game.Viewport}*/
   this.viewport_ = new game.Viewport();
+  /** @private {!game.Camera.Axis} */
+  this.axis_ = game.Camera.DEFAULT_AXIS_;
 
   /** @private {number} */
   this.lastX_ = 0;
@@ -43,29 +45,21 @@ game.Camera.Axis = {
 
 
 /**
+ * @private {!game.Camera.Axis}
+ */
+game.Camera.DEFAULT_AXIS_ = game.Camera.Axis.BOTH;
+
+
+/**
  * Sets the reference to the point the camera is tracking.
  *
  * @param {!game.Entity} entity The reference to the point the camera is
  *     tracking. (Really anything that has {@code game.mixins.Rectangle}).
+ * @param {?game.Camera.Axis=} opt_axis
  */
-game.Camera.prototype.watch = function(entity) {
+game.Camera.prototype.watch = function(entity, opt_axis) {
   this.watchedEntity_ = entity;
-
-  // viewport dimensions
-  this.hView = this.viewport_.getHeight();
-  this.wView = this.viewport_.getWidth();
-
-  /** @private {number} */
-  this.xDeadZone_ = this.wView / 2;
-  /** @private {number} */
-  this.yDeadZone_ = this.hView / 2;
-
-  /** @private {game.Camera.Axis} */
-  this.axis_ = game.Camera.Axis.BOTH;
-
-  // object that should be followed
-  /** @private {!game.Entity} */
-  this.watchedEntity_;
+  this.axis_ = opt_axis || game.Camera.DEFAULT_AXIS_;
 };
 
 
@@ -75,14 +69,14 @@ game.Camera.prototype.watch = function(entity) {
 game.Camera.prototype.update = function() {
   var Axis = game.Camera.Axis;
   var axis = this.axis_;
-  var hView = this.hView;
-  var wView = this.wView;
+  var hView = this.viewport_.getHeight();
+  var wView = this.viewport_.getWidth();
   var xView = this.board_.getPosition().getX();
   var yView = this.board_.getPosition().getY();
   var boardWidth = this.board_.getWidth();
   var boardHeight = this.board_.getHeight();
-  var xDeadZone = this.xDeadZone_;
-  var yDeadZone = this.yDeadZone_;
+  var xDeadZone = wView / 2;
+  var yDeadZone = hView / 2;
 
   if (this.watchedEntity_ != null) {
     var followedX = this.watchedEntity_.getPosition().getX();
