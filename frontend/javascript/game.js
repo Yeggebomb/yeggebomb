@@ -38,12 +38,13 @@ game.Main = function() {
  */
 game.Main.prototype.init = function() {
 
-  this.window_.registerResizeCallback(function() {
-    this.viewport_.setRect(
-        0, 0, '50%', '50%',
-        null, null, this.window_,
-        800, 600, 400, 300);
-  }.bind(this), true);
+  this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME,
+      function() {
+        this.viewport_.setRect(
+            0, 0, '50%', '50%',
+            null, null, this.window_,
+            800, 600, 400, 300);
+      }.bind(this), true);
 
   this.board_.setRect(0, 0, 1000, 700);
   this.backDrop_.setRect(0, 0, 1000, 700);
