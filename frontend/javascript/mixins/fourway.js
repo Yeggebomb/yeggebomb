@@ -24,28 +24,28 @@ game.mixins.Fourway.KEY_HANDLER = new game.core.KeyHandler();
 
 
 /** @private */
-game.mixins.Fourway.prototype.moveLeft_ = function() {
+game.mixins.Fourway.prototype.moveLeft = function() {
   var position = this.getPosition();
   this.setPosition(position.getX() - 5, position.getY());
 };
 
 
 /** @private */
-game.mixins.Fourway.prototype.moveRight_ = function() {
+game.mixins.Fourway.prototype.moveRight = function() {
   var position = this.getPosition();
   this.setPosition(position.getX() + 5, position.getY());
 };
 
 
 /** @private */
-game.mixins.Fourway.prototype.moveUp_ = function() {
+game.mixins.Fourway.prototype.moveUp = function() {
   var position = this.getPosition();
   this.setPosition(position.getX(), position.getY() - 5);
 };
 
 
 /** @private */
-game.mixins.Fourway.prototype.moveDown_ = function() {
+game.mixins.Fourway.prototype.moveDown = function() {
   var position = this.getPosition();
   this.setPosition(position.getX(), position.getY() + 5);
 };
@@ -55,8 +55,8 @@ game.mixins.Fourway.prototype.moveDown_ = function() {
 game.mixins.Fourway.prototype.update = function() {
   var KEY_HANDLER = game.mixins.Fourway.KEY_HANDLER;
   var Keycodes = game.core.KeyHandler.Keycodes;
-  if (KEY_HANDLER.isDown(Keycodes.RIGHT)) this.moveRight_();
-  if (KEY_HANDLER.isDown(Keycodes.LEFT)) this.moveLeft_();
-  if (KEY_HANDLER.isDown(Keycodes.UP)) this.moveUp_();
-  if (KEY_HANDLER.isDown(Keycodes.DOWN)) this.moveDown_();
+  if (KEY_HANDLER.isDown(Keycodes.RIGHT)) this.moveRight();
+  if (KEY_HANDLER.isDown(Keycodes.LEFT)) this.moveLeft();
+  if (KEY_HANDLER.isDown(Keycodes.UP)) this.moveUp();
+  if (KEY_HANDLER.isDown(Keycodes.DOWN)) this.moveDown();
 };
