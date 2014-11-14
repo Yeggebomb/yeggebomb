@@ -1,5 +1,6 @@
 goog.provide('game.Main');
 
+goog.require('game.Backdrop');
 goog.require('game.Board');
 goog.require('game.Player');
 goog.require('game.Viewport');
@@ -24,6 +25,8 @@ game.Main = function() {
   this.camera_ = new game.Camera();
   /** @private {!game.Board} */
   this.board_ = new game.Board();
+  /** @private {!game.Board} */
+  this.backDrop_ = new game.Backdrop();
 
   this.attach();
   this.init();
@@ -43,8 +46,9 @@ game.Main.prototype.init = function() {
         800, 600, 400, 300);
   }.bind(this), true);
 
-  this.board_.setRect(0, 0, 1000, 1000);
-  this.player_.setRect(0, 0, 50, 50);
+  this.board_.setRect(0, 0, 1131, 707);
+  this.backDrop_.setRect(0, 0, 1131, 707);
+  this.player_.setRect(500, 500, 40, 50);
   this.camera_.watch(this.player_);
 };
 
@@ -56,6 +60,7 @@ game.Main.prototype.init = function() {
  */
 game.Main.prototype.attach = function() {
   this.viewport_.attach(document.body);
+  this.backDrop_.attach(this.viewport_);
   this.board_.attach(this.viewport_);
   this.player_.attach(this.board_);
 };

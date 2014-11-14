@@ -1,6 +1,8 @@
 goog.provide('game.Camera');
 goog.provide('game.Camera.Axis');
 
+goog.require('game.Backdrop');
+goog.require('game.Board');
 goog.require('game.Point');
 goog.require('game.Viewport');
 goog.require('game.constants.Elements');
@@ -19,6 +21,8 @@ game.Camera = function() {
   game.Camera.prototype._singletonInstance = this;
   /** @private {!game.Board}*/
   this.board_ = new game.Board();
+  /** @private {!game.Backdrop}*/
+  this.backdrop_ = new game.Backdrop();
   /** @private {!game.Viewport}*/
   this.viewport_ = new game.Viewport();
   /** @private {!game.Camera.Axis} */
@@ -117,4 +121,5 @@ game.Camera.prototype.update = function() {
 
   // Yikes 'new' in a loop :( This just screams memory leak.
   this.board_.setPosition(new game.Point(xView, yView));
+  this.backdrop_.setPosition(new game.Point(xView * 0.4, yView * 0.4));
 };
