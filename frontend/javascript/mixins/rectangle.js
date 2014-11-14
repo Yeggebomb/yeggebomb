@@ -246,3 +246,49 @@ game.mixins.Rectangle.prototype.setPosition =
 
   if (callUpdate && _.isFunction(this.updateRect)) this.updateRect();
 };
+
+
+/**
+ * True if the class with this mixed in is within another class with this mixed
+ * in. WARNING: does not take rotation or scale into account.
+ *
+ * @param {!game.core.Entity} target Something that implements rectangle.
+ * @return {boolean}
+ */
+game.mixins.Rectangle.prototype.within = function(target) {
+  var sourcePosition = this.getPosition();
+  var targetPosition = target.getPosition();
+  var x1 = sourcePosition.getX();
+  var y1 = sourcePosition.getY();
+  var right1 = this.right;
+  var bottom1 = this.bottom;
+  var x2 = targetPosition.getX();
+  var y2 = targetPosition.getY();
+  var bottom2 = target.bottom;
+  var right2 = target.right;
+
+  return (x2 <= x1 && right2 >= right1 && y2 <= y1 && bottom2 >= bottom1);
+};
+
+
+/**
+ * True if the class with this mixed in is within another class with this mixed
+ * in. WARNING: does not take rotation or scale into account.
+ *
+ * @param {!game.core.Entity} target Something that implements rectangle.
+ * @return {boolean}
+ */
+game.mixins.Rectangle.prototype.overlaps = function(target) {
+  var sourcePosition = this.getPosition();
+  var targetPosition = target.getPosition();
+  var x1 = sourcePosition.getX();
+  var y1 = sourcePosition.getY();
+  var right1 = this.right;
+  var bottom1 = this.bottom;
+  var x2 = targetPosition.getX();
+  var y2 = targetPosition.getY();
+  var bottom2 = target.bottom;
+  var right2 = target.right;
+
+  return (x1 < right2 && x2 < right1 && y1 < bottom2 && y2 < bottom1);
+};

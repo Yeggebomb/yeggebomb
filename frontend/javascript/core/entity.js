@@ -36,7 +36,17 @@ game.core.Entity = function() {
   this.lastScale_ = 1;
 
   game.core.helper.mixin(this, game.mixins.Rectangle.prototype);
+
+  game.core.Entity.All.push(this);
 };
+
+
+/**
+ * A list of all gaentities
+ *
+ * @type {Array.<!game.core.Entity>}
+ */
+game.core.Entity.All = [];
 
 
 /**

@@ -6,16 +6,23 @@ goog.require('game.core.math.Point');
 
 /**
  * This thing has physical characteristics like velocity & acceleration.
- * acceleration.
+ * acceleration. Also right now it has to have rectangle collision.
  *
  * @constructor
  */
 game.mixins.Physical = function() {
-  /** @private {!game.core.math.Point} */
-  this.velocity_ = new game.core.math.Point();
-  /** @private {!game.core.math.Point} */
-  this.acceleration_ = new game.core.math.Point();
+  // This does nothing other than help with type.
+  /** @type {Array.<string>} Array of colidee's this instance can colide with */
+  this.colliders = {};
 };
+
+
+/**
+ * Global registered Colideer.
+ *
+ * @type {Object.<string, !Game.core.Entity>}
+ */
+game.mixins.Physical.Colideers = {};
 
 
 /**
@@ -24,39 +31,50 @@ game.mixins.Physical = function() {
  * @return {!game.core.math.Point}
  */
 game.mixins.Physical.prototype.getVelocity = function() {
-  // It should return a clone, but because this will happen a lot, I'm fine with
-  // modifying the reference. It's cheaper.
+  if (!this.velocity_) {
+    this.velocity_ = new game.core.math.Point(0, 0);
+  }
   return this.velocity_;
 };
 
 
 /**
- * Sets the velocity and updates the style.
- *
- * @param {!game.core.math.Point} velocity
+ * Checks for collisions and adjust accordingly.
  */
-game.mixins.Physical.prototype.setVelocity = function(velocity) {
-  this.velocity_ = velocity;
+game.mixins.Physical.prototype.update = function() {
+  var collision = false;
+  _.each(game.core.Entity.All, function(entity) {
+    _.each(this.colliders, function(callback, name) {
+      if (entity instanceof game.mixins.Physical.Colideers[name]) {
+        if (this.overlaps(entity)) {
+          callback();
+        }
+      }
+    }.bind(this));
+  }.bind(this));
 };
 
 
 /**
- * Returns a reference to the acceleration of the entity.
- *
- * @return {!game.core.math.Point}
+ * Registeres objects that can be collided with.
+ * @param {string} name
+ * @param {!game.core.Entity} type [description]
  */
-game.mixins.Physical.prototype.getAcceleration = function() {
-  // It should return a clone, but because this will happen a lot, I'm fine with
-  // modifying the reference. It's cheaper.
-  return this.acceleration_;
+game.mixins.Physical.prototype.registerCollider = function(name, type) {
+  game.mixins.Physical.Colideers[name] = type;
 };
 
 
 /**
- * Sets the acceleration and updates the style.
- *
- * @param {!game.core.math.Point} acceleration
+ * Registers names of objects that this instance can colide with.
+ * @param {string} name
+ * @param {Function} callback
  */
-game.mixins.Physical.prototype.setAcceleration = function(acceleration) {
-  this.acceleration_ = acceleration;
+game.mixins.Physical.prototype.registerCollidesWith = function(name, callback) {
+  if (!_.isObject(this.colliders)) this.colliders = {};
+  if (_.isUndefined(game.mixins.Physical.Colideers[name])) {
+    console.warn('Warning:', name, 'Is not registered as a colideer');
+    return;
+  }
+  this.colliders[name] = callback;
 };
