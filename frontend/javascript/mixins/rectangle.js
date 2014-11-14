@@ -78,32 +78,6 @@ game.mixins.Rectangle.prototype.setRect =
 
 
 /**
- * True if the class with this mixed in is within another class with this mixed
- * in. WARNING: does not take rotation or scale into account.
- *
- * @param {*} r
- * @return {boolean}
- */
-game.mixins.Rectangle.prototype.within = function(r) {
-  return (r.left <= this.left && r.right >= this.right &&
-      r.top <= this.top && r.bottom >= this.bottom);
-};
-
-
-/**
- * True if the class with this mixed in is within another class with this mixed
- * in. WARNING: does not take rotation or scale into account.
- *
- * @param {*} r
- * @return {boolean}
- */
-game.mixins.Rectangle.prototype.overlaps = function(r) {
-  return (this.left < r.right && r.left < this.right &&
-      this.top < r.bottom && r.top < this.bottom);
-};
-
-
-/**
  * The rotation of the entity.
  *
  * @return {number}
