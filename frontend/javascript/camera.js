@@ -119,7 +119,6 @@ game.Camera.prototype.update = function() {
   this.lastX_ = xView;
   this.lastY_ = yView;
 
-  // Yikes 'new' in a loop :( This just screams memory leak.
-  this.board_.setPosition(new game.Point(xView, yView));
-  this.backdrop_.setPosition(new game.Point(xView * 0.4, yView * 0.4));
+  this.board_.setPosition(xView, yView);
+  this.backdrop_.setPosition(xView * 0.4, yView * 0.4);
 };

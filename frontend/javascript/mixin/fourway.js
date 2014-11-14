@@ -15,58 +15,57 @@ goog.require('game.KeyHandler');
 game.mixins.Fourway = function() {};
 
 
+/**
+ * Key handler
+ *
+ * @const {!game.KeyHandler}
+ */
+game.mixins.Fourway.KEY_HANDLER = new game.KeyHandler();
+
+
 /** @private */
 game.mixins.Fourway.prototype.moveLeft_ = function() {
   var position = this.getPosition();
-  position.setX(position.getX() - 5);
-  this.setPosition(position);
+  this.setPosition(position.getX() - 5, position.getY());
 };
 
 
 /** @private */
 game.mixins.Fourway.prototype.moveRight_ = function() {
   var position = this.getPosition();
-  position.setX(position.getX() + 5);
-  this.setPosition(position);
+  this.setPosition(position.getX() + 5, position.getY());
 };
 
 
 /** @private */
 game.mixins.Fourway.prototype.moveUp_ = function() {
   var position = this.getPosition();
-  position.setY(position.getY() - 5);
-  this.setPosition(position);
+  this.setPosition(position.getX(), position.getY() - 5);
 };
 
 
 /** @private */
 game.mixins.Fourway.prototype.moveDown_ = function() {
   var position = this.getPosition();
-  position.setY(position.getY() + 5);
-  this.setPosition(position);
+  this.setPosition(position.getX(), position.getY() + 5);
 };
 
 
 /** Update function */
 game.mixins.Fourway.prototype.update = function() {
-  if (!this.keyHandler_) {
-    /** @private {!game.KeyHandler} */
-    this.keyHandler_ = new game.KeyHandler();
-  }
-
-  if (this.keyHandler_.isDown(game.KeyHandler.Keycodes.RIGHT)) {
+  if (game.mixins.Fourway.KEY_HANDLER.isDown(game.KeyHandler.Keycodes.RIGHT)) {
     this.moveRight_();
   }
 
-  if (this.keyHandler_.isDown(game.KeyHandler.Keycodes.LEFT)) {
+  if (game.mixins.Fourway.KEY_HANDLER.isDown(game.KeyHandler.Keycodes.LEFT)) {
     this.moveLeft_();
   }
 
-  if (this.keyHandler_.isDown(game.KeyHandler.Keycodes.UP)) {
+  if (game.mixins.Fourway.KEY_HANDLER.isDown(game.KeyHandler.Keycodes.UP)) {
     this.moveUp_();
   }
 
-  if (this.keyHandler_.isDown(game.KeyHandler.Keycodes.DOWN)) {
+  if (game.mixins.Fourway.KEY_HANDLER.isDown(game.KeyHandler.Keycodes.DOWN)) {
     this.moveDown_();
   }
 };

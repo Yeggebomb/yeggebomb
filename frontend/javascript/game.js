@@ -46,8 +46,8 @@ game.Main.prototype.init = function() {
         800, 600, 400, 300);
   }.bind(this), true);
 
-  this.board_.setRect(0, 0, 1131, 707);
-  this.backDrop_.setRect(0, 0, 1131, 707);
+  this.board_.setRect(0, 0, 1000, 700);
+  this.backDrop_.setRect(0, 0, 1000, 700);
   this.player_.setRect(500, 500, 40, 50);
   this.camera_.watch(this.player_);
 };
