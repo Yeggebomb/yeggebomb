@@ -2,6 +2,7 @@ goog.provide('game.Camera');
 goog.provide('game.Camera.Axis');
 
 goog.require('game.Point');
+goog.require('game.Viewport');
 goog.require('game.constants.Elements');
 
 
@@ -16,34 +17,10 @@ game.Camera = function() {
     return game.Camera.prototype._singletonInstance;
   }
   game.Camera.prototype._singletonInstance = this;
-  this.viewportEl = game.constants.Elements.VIEWPORT_EL;
-
   /** @private {!game.Board}*/
   this.board_ = new game.Board();
-  // distance from followed object to border before camera starts move
-  /** @private {number} */
-  this.xDeadZone_ = this.viewportEl.offsetWidth / 2;
-  /** @private {number} */
-  this.yDeadZone_ = this.viewportEl.offsetHeight / 2;
-
-  // viewport dimensions
-  this.hView = this.viewportEl.offsetHeight;
-  this.wView = this.viewportEl.offsetWidth;
-
-  // allow camera to move in vertical and horizontal axis
-  /** @private {game.Camera.Axis} */
-  this.axis_ = game.Camera.Axis.BOTH;
-
-  // object that should be followed
-  /** @private {!game.Entity} */
-  this.watchedEntity_;
-
-  // // rectangle that represents the viewport
-  // this.viewportRect =
-
-  // // rectangle that represents the world's boundary (room's boundary)
-  // this.worldRect =
-
+  /** @private {!game.Viewport}*/
+  this.viewport_ = new game.Viewport();
 
   /** @private {number} */
   this.lastX_ = 0;
@@ -73,6 +50,22 @@ game.Camera.Axis = {
  */
 game.Camera.prototype.watch = function(entity) {
   this.watchedEntity_ = entity;
+
+  // viewport dimensions
+  this.hView = this.viewport_.getHeight();
+  this.wView = this.viewport_.getWidth();
+
+  /** @private {number} */
+  this.xDeadZone_ = this.wView / 2;
+  /** @private {number} */
+  this.yDeadZone_ = this.hView / 2;
+
+  /** @private {game.Camera.Axis} */
+  this.axis_ = game.Camera.Axis.BOTH;
+
+  // object that should be followed
+  /** @private {!game.Entity} */
+  this.watchedEntity_;
 };
 
 
@@ -86,10 +79,10 @@ game.Camera.prototype.update = function() {
   var wView = this.wView;
   var xView = this.board_.getPosition().getX();
   var yView = this.board_.getPosition().getY();
+  var boardWidth = this.board_.getWidth();
+  var boardHeight = this.board_.getHeight();
   var xDeadZone = this.xDeadZone_;
   var yDeadZone = this.yDeadZone_;
-  // var xDeadZone = 100;
-  // var yDeadZone = 100;
 
   if (this.watchedEntity_ != null) {
     var followedX = this.watchedEntity_.getPosition().getX();
@@ -97,40 +90,27 @@ game.Camera.prototype.update = function() {
     if (axis == Axis.HORIZONTAL || axis == Axis.BOTH) {
       if (followedX > wView - xDeadZone) {
         xView = Math.max(
-            (followedX - (wView - xDeadZone)) * - 1, -1000 + wView);
+            (followedX - (wView - xDeadZone)) * - 1, wView - boardWidth);
       } else if (followedX < xView + xDeadZone) {
         xView = Math.min((followedX - xDeadZone) * -1, 0);
       }
     }
+
     if (axis == Axis.VERTICAL || axis == Axis.BOTH) {
       if (followedY > hView - yDeadZone) {
         yView = Math.max(
-            (followedY - (hView - yDeadZone)) * - 1, -1000 + hView);
+            (followedY - (hView - yDeadZone)) * - 1, hView - boardHeight);
       } else if (followedY < yView + yDeadZone) {
         yView = Math.min((followedY - yDeadZone) * -1, 0);
       }
     }
   }
 
-
+  // Don't update if we don't need to.
   if (this.lastX_ == xView && yView == this.lastY_) return;
   this.lastX_ = xView;
   this.lastY_ = yView;
 
-  // update viewportRect
   // Yikes 'new' in a loop :( This just screams memory leak.
-  // I can make this better.
   this.board_.setPosition(new game.Point(xView, yView));
-
-  // // don't let camera leaves the world's boundary
-  // if (!this.viewportRect.within(this.worldRect)) {
-  //   if (this.viewportRect.left < this.worldRect.left)
-  //     this.xView = this.worldRect.left;
-  //   if (this.viewportRect.top < this.worldRect.top)
-  //     yView = this.worldRect.top;
-  //   if (this.viewportRect.right > this.worldRect.right)
-  //     this.xView = this.worldRect.right - wView;
-  //   if (this.viewportRect.bottom > this.worldRect.bottom)
-  //     yView = this.worldRect.bottom - this.hView;
-  // }
 };

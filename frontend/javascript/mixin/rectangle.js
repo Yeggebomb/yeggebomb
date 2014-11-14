@@ -5,7 +5,9 @@ goog.require('game.Point');
 
 
 /**
- * Requires: Element named this.el
+ * Rectangle mixin, adds properties like width, height, scale, rotation etc..
+ * With some helpers like within, or overlaps etc... This will call updateRect
+ * when the rect has been updated.
  * @constructor
  */
 game.mixins.Rectangle = function() {
@@ -69,30 +71,54 @@ game.mixins.Rectangle.POSITION_DEFAULT_ = new game.Point(
 /**
  * Sets the dimensions of the rectangle.
  *
- * @param {number} left
- * @param {number} top
- * @param {number} width
- * @param {number} height
+ * @param {number|string} left A number for px and a string for percent.
+ * @param {number|string} top A number for px and a string for percent.
+ * @param {number|string} width A number for px and a string for percent.
+ * @param {number|string} height A number for px and a string for percent.
  * @param {number} scale
  * @param {number} rotation
+ * @param {Element|game.Entity} relativeTo
  */
 game.mixins.Rectangle.prototype.setRect =
-    function(left, top, width, height, scale, rotation) {
-  left = _.isNumber(left) ? left : game.mixins.Rectangle.TOP_DEFAULT_;
-  top = _.isNumber(top) ? top : game.mixins.Rectangle.TOP_DEFAULT_;
+    function(left, top, width, height, scale, rotation, relativeTo) {
   rotation = _.isNumber(rotation) ?
       rotation : game.mixins.Rectangle.ROTATION_DEFAULT_;
+
   scale = _.isNumber(scale) ? scale : game.mixins.Rectangle.SCALE_DEFAULT_;
-  width = _.isNumber(width) ? width : game.mixins.Rectangle.WIDTH_DEFAULT_;
-  height = _.isNumber(height) ? height : game.mixins.Rectangle.HEIGHT_DEFAULT_;
+
+  if (_.isNumber(left)) {
+    left = left || game.mixins.Rectangle.LEFT_DEFAULT_;
+  } else if (_.isString(left) && relativeTo) {
+    left = relativeTo.getWidth() * parseInt(left, 10) / 100;
+  }
+
+  if (_.isNumber(top)) {
+    top = top || game.mixins.Rectangle.TOP_DEFAULT_;
+  } else if (_.isString(top) && relativeTo) {
+    top = relativeTo.getHeight() * parseInt(top, 10) / 100;
+  }
+
+  if (_.isNumber(width)) {
+    width = width || game.mixins.Rectangle.WIDTH_DEFAULT_;
+  } else if (_.isString(width) && relativeTo) {
+    width = relativeTo.getWidth() * parseInt(width, 10) / 100;
+  }
+
+  if (_.isNumber(height)) {
+    height = height || game.mixins.Rectangle.HEIGHT_DEFAULT_;
+  } else if (_.isString(height) && relativeTo) {
+    height = relativeTo.getHeight() * parseInt(height, 10) / 100;
+  }
+
 
   var position = new game.Point(left, top);
+
   this.setPosition(position);
   this.setRotation(rotation);
   this.setScale(scale);
   this.setSize(width, height);
 
-  this.updateTransform();
+  if (_.isFunction(this.updateRect)) this.updateRect();
 };
 
 
@@ -139,7 +165,7 @@ game.mixins.Rectangle.prototype.getRotation = function() {
  */
 game.mixins.Rectangle.prototype.setRotation = function(rotation) {
   this.rotation = rotation;
-  this.updateTransform();
+  if (_.isFunction(this.updateRect)) this.updateRect();
 };
 
 
@@ -160,7 +186,7 @@ game.mixins.Rectangle.prototype.getScale = function() {
  */
 game.mixins.Rectangle.prototype.setScale = function(scale) {
   this.scale = scale;
-  this.updateTransform();
+  if (_.isFunction(this.updateRect)) this.updateRect();
 };
 
 
@@ -179,10 +205,7 @@ game.mixins.Rectangle.prototype.setSize = function(width, height) {
   this.right = position.getX() + this.width;
   this.bottom = position.getY() + this.height;
 
-  this.el.style.width = this.width + 'px';
-  this.el.style.height = this.height + 'px';
-
-  this.updateTransform();
+  if (_.isFunction(this.updateRect)) this.updateRect();
 };
 
 
@@ -221,26 +244,5 @@ game.mixins.Rectangle.prototype.setPosition = function(position) {
   this.right = this.position.getX() + this.getWidth();
   this.bottom = this.position.getY() + this.getHeight();
 
-  this.updateTransform();
-};
-
-
-/**
- * Updates the transform style on the element.
- */
-game.mixins.Rectangle.prototype.updateTransform = function() {
-  var position = this.getPosition() || game.mixins.Rectangle.POSITION_DEFAULT_;
-  var rotation = this.getRotation() || game.mixins.Rectangle.ROTATION_DEFAULT_;
-  var scale = this.getScale() || game.mixins.Rectangle.SCALE_DEFAULT_;
-
-  var transform = 'rotate(' + rotation + 'deg) ' +
-                  'scale(' + scale + ') ' +
-                  'translate(' + position.getX('px') +
-                  ', ' + position.getY('px') + ')';
-
-  this.el.style.webkitTransform = transform;
-  this.el.style.MozTransform = transform;
-  this.el.style.msTransform = transform;
-  this.el.style.OTransform = transform;
-  this.el.style.transform = transform;
+  if (_.isFunction(this.updateRect)) this.updateRect();
 };
