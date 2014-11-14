@@ -7,9 +7,6 @@
 * Get dependencies: `npm install`
 * Compile & watch assets for changed with grunt: `grunt`.  This also works with live reload (http://bit.ly/IKI2MY) out of the box, so if livereload is turned on the page will automatically refresh / inject changes.
 
-
-### Instruction on how to lint (requirement for building):
-
 The compile rules are strict and require linted code, closure linter can help with this:
 * Run: `grunt gjslint` (This task is run default)
 * Fix: `grunt fixjsstyle`
