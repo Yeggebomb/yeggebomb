@@ -41,7 +41,7 @@ game.Main.prototype.init = function() {
 
   this.window_.registerResizeCallback(function() {
     this.viewport_.setRect(
-        '25%', '25%', '50%', '50%',
+        0, 0, '50%', '50%',
         null, null, this.window_,
         800, 600, 400, 300);
   }.bind(this), true);
