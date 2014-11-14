@@ -3,7 +3,7 @@ goog.provide('game.core.Camera.Axis');
 
 goog.require('game.Backdrop');
 goog.require('game.Board');
-goog.require('game.core.Viewport');
+goog.require('game.core.Root');
 goog.require('game.core.math.Point');
 
 
@@ -20,8 +20,8 @@ game.core.Camera = function() {
   game.core.Camera.prototype._singletonInstance = this;
   /** @private {!game.Board}*/
   this.board_ = new game.Board();
-  /** @private {!game.core.Viewport}*/
-  this.viewport_ = new game.core.Viewport();
+  /** @private {!game.core.Root}*/
+  this.viewport_ = new game.core.Root();
   /** @private {!game.core.Camera.Axis} */
   this.axis_ = game.core.Camera.DEFAULT_AXIS_;
 

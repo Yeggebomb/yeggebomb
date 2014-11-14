@@ -14,10 +14,8 @@ game.core.KeyHandler = function() {
   }
 
   game.core.KeyHandler.prototype._singletonInstance = this;
-
   /**
    * Object that tracks what is currently being pressed.
-   *
    * @private {!Object.<!game.core.KeyHandler.Keycodes, boolean>}
    */
   this.pressed_ = {};
@@ -25,6 +23,34 @@ game.core.KeyHandler = function() {
   // Add event listeners.
   window.addEventListener('keyup', this.onKeyup_.bind(this), false);
   window.addEventListener('keydown', this.onKeydown_.bind(this), false);
+  // Right clicking
+  document.addEventListener(
+      'visibilitychange', this.visibilityChanged_.bind(this));
+  document.addEventListener('mousedown', this.mouseDown_.bind(this));
+};
+
+
+/**
+ * Checks if the app lost visibility. If it does then we can no longer detect
+ * keyUp events so we will just wipe out all the keys.
+ *
+ * @private
+ */
+game.core.KeyHandler.prototype.visibilityChanged_ = function() {
+  if (document.hidden) {
+    this.pressed_ = [];
+  }
+};
+
+
+/**
+ * @param {!Event} evt
+ * @private
+ */
+game.core.KeyHandler.prototype.mouseDown_ = function(evt) {
+  if (evt.which != 1) {
+    this.pressed_ = [];
+  }
 };
 
 

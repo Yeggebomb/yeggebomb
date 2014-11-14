@@ -3,7 +3,7 @@ goog.provide('game.Main');
 goog.require('game.Backdrop');
 goog.require('game.Board');
 goog.require('game.Player');
-goog.require('game.core.Viewport');
+goog.require('game.core.Root');
 goog.require('game.core.Window');
 
 
@@ -16,8 +16,8 @@ goog.require('game.core.Window');
 game.Main = function() {
   /** @private {!game.core.Window} */
   this.window_ = new game.core.Window();
-  /** @private {!game.core.Viewport} */
-  this.viewport_ = new game.core.Viewport();
+  /** @private {!game.core.Root} */
+  this.viewport_ = new game.core.Root();
   /** @private {!game.Player} */
   this.player_ = new game.Player();
   /** @private {!game.core.Camera} */
