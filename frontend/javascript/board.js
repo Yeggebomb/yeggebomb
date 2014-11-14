@@ -1,8 +1,8 @@
 goog.provide('game.Board');
 
-goog.require('game.Entity');
+goog.require('game.core.Entity');
+goog.require('game.core.helper');
 goog.require('game.mixins.Rectangle');
-goog.require('helper');
 
 
 
@@ -20,9 +20,9 @@ game.Board = function() {
   game.Board.base(this, 'constructor');
   this.el.classList.add(game.Board.CLASS_NAME);
 
-  helper.mixin(this, game.mixins.Rectangle.prototype);
+  game.core.helper.mixin(this, game.mixins.Rectangle.prototype);
 };
-helper.inherit(game.Board, game.Entity);
+game.core.helper.inherit(game.Board, game.core.Entity);
 
 
 /**

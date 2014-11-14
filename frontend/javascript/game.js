@@ -3,9 +3,8 @@ goog.provide('game.Main');
 goog.require('game.Backdrop');
 goog.require('game.Board');
 goog.require('game.Player');
-goog.require('game.Viewport');
-goog.require('game.Window');
-goog.require('game.constants.Elements');
+goog.require('game.core.Viewport');
+goog.require('game.core.Window');
 
 
 
@@ -15,14 +14,14 @@ goog.require('game.constants.Elements');
  * @constructor
  */
 game.Main = function() {
-  /** @private {!game.Window} */
-  this.window_ = new game.Window();
-  /** @private {!game.Viewport} */
-  this.viewport_ = new game.Viewport();
+  /** @private {!game.core.Window} */
+  this.window_ = new game.core.Window();
+  /** @private {!game.core.Viewport} */
+  this.viewport_ = new game.core.Viewport();
   /** @private {!game.Player} */
   this.player_ = new game.Player();
-  /** @private {!game.Camera} */
-  this.camera_ = new game.Camera();
+  /** @private {!game.core.Camera} */
+  this.camera_ = new game.core.Camera();
   /** @private {!game.Board} */
   this.board_ = new game.Board();
   /** @private {!game.Board} */
@@ -50,6 +49,7 @@ game.Main.prototype.init = function() {
   this.backDrop_.setRect(0, 0, 1000, 700);
   this.player_.setRect(500, 500, 40, 50);
   this.camera_.watch(this.player_);
+  this.camera_.addLayer(this.backDrop_, 0.3);
 };
 
 

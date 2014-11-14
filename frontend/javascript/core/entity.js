@@ -1,8 +1,8 @@
-goog.provide('game.Entity');
+goog.provide('game.core.Entity');
 
-goog.require('game.Point');
+goog.require('game.core.helper');
+goog.require('game.core.math.Point');
 goog.require('game.mixins.Rectangle');
-goog.require('helper');
 
 
 
@@ -12,15 +12,15 @@ goog.require('helper');
  *
  * @constructor
  */
-game.Entity = function() {
+game.core.Entity = function() {
   /** @type {string} */
   this.background = '';
   /** @private {string} */
-  this.id_ = 'entity-' + game.Entity.ID_COUNT++;
+  this.id_ = 'entity-' + game.core.Entity.ID_COUNT++;
   /** @type {!Element} */
   this.el = document.createElement('span');
   this.el.id = this.id_;
-  this.el.classList.add(game.Entity.CLASS_NAME);
+  this.el.classList.add(game.core.Entity.CLASS_NAME);
 
   /** @private {number} */
   this.lastWidth_ = 0;
@@ -35,7 +35,7 @@ game.Entity = function() {
   /** @private {number} */
   this.lastScale_ = 1;
 
-  helper.mixin(this, game.mixins.Rectangle.prototype);
+  game.core.helper.mixin(this, game.mixins.Rectangle.prototype);
 };
 
 
@@ -44,29 +44,29 @@ game.Entity = function() {
  * @type {string}
  * @const
  */
-game.Entity.CLASS_NAME = 'entity';
+game.core.Entity.CLASS_NAME = 'entity';
 
 
 /**
  * Global id count.
  * @type {number}
  */
-game.Entity.ID_COUNT = 0;
+game.core.Entity.ID_COUNT = 0;
 
 
 /**
  * Updates the entity information.
  */
-game.Entity.prototype.update = function() {};
+game.core.Entity.prototype.update = function() {};
 
 
 /**
  * Creates and attaches the dom of this entity to the parent provided.
- * @param {Element|HTMLBodyElement|game.Entity} parent The parent to attach this
- *     entity to.
+ * @param {Element|HTMLBodyElement|game.core.Entity} parent The parent to attach
+ *     this entity to.
  */
-game.Entity.prototype.attach = function(parent) {
-  if (parent instanceof game.Entity) {
+game.core.Entity.prototype.attach = function(parent) {
+  if (parent instanceof game.core.Entity) {
     parent = parent.el;
   }
 
@@ -82,7 +82,7 @@ game.Entity.prototype.attach = function(parent) {
 /**
  * Detach element from dom.
  */
-game.Entity.prototype.detach = function() {
+game.core.Entity.prototype.detach = function() {
   if (this.el.parentNode) {
     this.el.parentNode.removeChild(this.el);
   } else {
@@ -96,13 +96,13 @@ game.Entity.prototype.detach = function() {
 /**
  * Sets up event listeners.
  */
-game.Entity.prototype.setupEventListeners = function() {};
+game.core.Entity.prototype.setupEventListeners = function() {};
 
 
 /**
  * Destroys event listeners.
  */
-game.Entity.prototype.destroyEventListeners = function() {};
+game.core.Entity.prototype.destroyEventListeners = function() {};
 
 
 /**
@@ -110,7 +110,7 @@ game.Entity.prototype.destroyEventListeners = function() {};
  *
  * @return {string}
  */
-game.Entity.prototype.getBackground = function() {
+game.core.Entity.prototype.getBackground = function() {
   return this.background_;
 };
 
@@ -120,7 +120,7 @@ game.Entity.prototype.getBackground = function() {
  *
  * @param {string} background
  */
-game.Entity.prototype.setBackground = function(background) {
+game.core.Entity.prototype.setBackground = function(background) {
   this.background_ = background;
   this.el.style.background = background;
 };
@@ -130,7 +130,7 @@ game.Entity.prototype.setBackground = function(background) {
  * This is being called from game.mixins.Rectangle, if there is a rect to
  * update it will.
  */
-game.Entity.prototype.updateRect = function() {
+game.core.Entity.prototype.updateRect = function() {
   var position = this.getPosition() || game.mixins.Rectangle.POSITION_DEFAULT_;
   var rotation = this.getRotation() || game.mixins.Rectangle.ROTATION_DEFAULT_;
   var scale = this.getScale() || game.mixins.Rectangle.SCALE_DEFAULT_;

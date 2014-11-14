@@ -51,7 +51,7 @@ module.exports = function(grunt) {
       options: {
         flags: [
           '--strict',
-          '--closurized_namespaces=Game,helper'
+          '--closurized_namespaces=Game'
         ],
         reporter: {
           name: 'console'
@@ -66,7 +66,7 @@ module.exports = function(grunt) {
       options: {
         flags: [
           '--strict',
-          '--closurized_namespaces=Game,helper'
+          '--closurized_namespaces=Game'
         ],
         reporter: {
           name: 'console'

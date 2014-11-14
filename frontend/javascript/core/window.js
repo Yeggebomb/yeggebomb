@@ -1,8 +1,8 @@
-goog.provide('game.Window');
+goog.provide('game.core.Window');
 
-goog.require('game.Entity');
+goog.require('game.core.Entity');
+goog.require('game.core.helper');
 goog.require('game.mixins.Rectangle');
-goog.require('helper');
 
 
 
@@ -13,12 +13,12 @@ goog.require('helper');
  * @constructor
  * @extends {Game.Entity}
  */
-game.Window = function() {
-  if (game.Window.prototype._singletonInstance) {
-    return game.Window.prototype._singletonInstance;
+game.core.Window = function() {
+  if (game.core.Window.prototype._singletonInstance) {
+    return game.core.Window.prototype._singletonInstance;
   }
-  game.Window.prototype._singletonInstance = this;
-  helper.mixin(this, game.mixins.Rectangle.prototype);
+  game.core.Window.prototype._singletonInstance = this;
+  game.core.helper.mixin(this, game.mixins.Rectangle.prototype);
 
   /**
    * Callbacks to call after window has been resized.
@@ -36,7 +36,7 @@ game.Window = function() {
  *
  * @private
  */
-game.Window.prototype.callRegistered_ = function() {
+game.core.Window.prototype.callRegistered_ = function() {
   for (var i = 0; i < this.resizeCallbacks_.length; i++) {
     this.resizeCallbacks_[i]();
   }
@@ -48,7 +48,7 @@ game.Window.prototype.callRegistered_ = function() {
  *
  * @private
  */
-game.Window.prototype.resize_ = function() {
+game.core.Window.prototype.resize_ = function() {
   this.setSize(document.documentElement.clientWidth,
       document.documentElement.clientHeight);
 };
@@ -60,7 +60,7 @@ game.Window.prototype.resize_ = function() {
  * @param {function()} callback
  * @param {boolean=} opt_callImmediatly Calls this function right away.
  */
-game.Window.prototype.registerResizeCallback =
+game.core.Window.prototype.registerResizeCallback =
     function(callback, opt_callImmediatly) {
   this.resizeCallbacks_.push(callback);
   if (_.isBoolean(opt_callImmediatly) && opt_callImmediatly) {

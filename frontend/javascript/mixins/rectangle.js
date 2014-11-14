@@ -1,12 +1,12 @@
 goog.provide('game.mixins.Rectangle');
 
-goog.require('game.Point');
+goog.require('game.core.math.Point');
 
 
 
 /**
  * Rectangle mixin, adds properties like width, height, scale, rotation etc..
- * With some helpers like within, or overlaps etc... This will call updateRect
+ * With some helpers like within, or overlaps etc... This will callupdateRect
  * when the rect has been updated.
  * @constructor
  */
@@ -45,8 +45,8 @@ game.mixins.Rectangle.SCALE_DEFAULT_ = 1;
 game.mixins.Rectangle.ROTATION_DEFAULT_ = 0;
 
 
-/** @private {!game.Point} */
-game.mixins.Rectangle.POSITION_DEFAULT_ = new game.Point(0, 0);
+/** @private {!game.core.math.Point} */
+game.mixins.Rectangle.POSITION_DEFAULT_ = new game.core.math.Point(0, 0);
 
 
 /**
@@ -58,7 +58,7 @@ game.mixins.Rectangle.POSITION_DEFAULT_ = new game.Point(0, 0);
  * @param {number|string} height A number for px and a string for percent.
  * @param {number} scale
  * @param {number} rotation
- * @param {Element=|game.Entity=} opt_relativeTo
+ * @param {Element=|game.core.Entity=} opt_relativeTo
  * @param {number=} opt_maxWidth
  * @param {number=} opt_maxHeight
  * @param {number=} opt_minWidth
@@ -162,7 +162,7 @@ game.mixins.Rectangle.prototype.setScale = function(scale, opt_callUpdate) {
  *
  * @param {number|string} width
  * @param {number|string} height
- * @param {Element=|game.Entity=} opt_relativeTo
+ * @param {Element=|game.core.Entity=} opt_relativeTo
  * @param {number=} opt_maxWidth
  * @param {number=} opt_maxHeight
  * @param {number=} opt_minWidth
@@ -226,7 +226,7 @@ game.mixins.Rectangle.prototype.getHeight = function() {
 /**
  * Returns a reference to the position of the entity.
  *
- * @return {!game.Point}
+ * @return {!game.core.math.Point}
  */
 game.mixins.Rectangle.prototype.getPosition = function() {
   // It should return a clone, but because this will happen a lot, I'm fine with
@@ -240,7 +240,7 @@ game.mixins.Rectangle.prototype.getPosition = function() {
  *
  * @param {number|string} x X-coord or sometimes referred to as left.
  * @param {number|string} y Y-coord or sometimes referred to as top.
- * @param {Element=|game.Entity=} opt_relativeTo
+ * @param {Element=|game.core.Entity=} opt_relativeTo
  * @param {boolean=} opt_callUpdate Default is true which will call the update
  *    function.
  */
@@ -264,7 +264,7 @@ game.mixins.Rectangle.prototype.setPosition =
     this.position.setX(x);
     this.position.setY(y);
   } else {
-    this.position = new game.Point(x, y);
+    this.position = new game.core.math.Point(x, y);
   }
 
   this.right = x + this.getWidth();

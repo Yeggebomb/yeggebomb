@@ -1,6 +1,6 @@
 goog.provide('game.mixins.Fourway');
 
-goog.require('game.KeyHandler');
+goog.require('game.core.KeyHandler');
 
 
 
@@ -18,9 +18,9 @@ game.mixins.Fourway = function() {};
 /**
  * Key handler
  *
- * @const {!game.KeyHandler}
+ * @const {!game.core.KeyHandler}
  */
-game.mixins.Fourway.KEY_HANDLER = new game.KeyHandler();
+game.mixins.Fourway.KEY_HANDLER = new game.core.KeyHandler();
 
 
 /** @private */
@@ -53,19 +53,10 @@ game.mixins.Fourway.prototype.moveDown_ = function() {
 
 /** Update function */
 game.mixins.Fourway.prototype.update = function() {
-  if (game.mixins.Fourway.KEY_HANDLER.isDown(game.KeyHandler.Keycodes.RIGHT)) {
-    this.moveRight_();
-  }
-
-  if (game.mixins.Fourway.KEY_HANDLER.isDown(game.KeyHandler.Keycodes.LEFT)) {
-    this.moveLeft_();
-  }
-
-  if (game.mixins.Fourway.KEY_HANDLER.isDown(game.KeyHandler.Keycodes.UP)) {
-    this.moveUp_();
-  }
-
-  if (game.mixins.Fourway.KEY_HANDLER.isDown(game.KeyHandler.Keycodes.DOWN)) {
-    this.moveDown_();
-  }
+  var KEY_HANDLER = game.mixins.Fourway.KEY_HANDLER;
+  var Keycodes = game.core.KeyHandler.Keycodes;
+  if (KEY_HANDLER.isDown(Keycodes.RIGHT)) this.moveRight_();
+  if (KEY_HANDLER.isDown(Keycodes.LEFT)) this.moveLeft_();
+  if (KEY_HANDLER.isDown(Keycodes.UP)) this.moveUp_();
+  if (KEY_HANDLER.isDown(Keycodes.DOWN)) this.moveDown_();
 };

@@ -1,11 +1,10 @@
-goog.provide('game.Camera');
-goog.provide('game.Camera.Axis');
+goog.provide('game.core.Camera');
+goog.provide('game.core.Camera.Axis');
 
 goog.require('game.Backdrop');
 goog.require('game.Board');
-goog.require('game.Point');
-goog.require('game.Viewport');
-goog.require('game.constants.Elements');
+goog.require('game.core.Viewport');
+goog.require('game.core.math.Point');
 
 
 
@@ -14,24 +13,28 @@ goog.require('game.constants.Elements');
  *
  * @constructor
  */
-game.Camera = function() {
-  if (game.Camera.prototype._singletonInstance) {
-    return game.Camera.prototype._singletonInstance;
+game.core.Camera = function() {
+  if (game.core.Camera.prototype._singletonInstance) {
+    return game.core.Camera.prototype._singletonInstance;
   }
-  game.Camera.prototype._singletonInstance = this;
+  game.core.Camera.prototype._singletonInstance = this;
   /** @private {!game.Board}*/
   this.board_ = new game.Board();
-  /** @private {!game.Backdrop}*/
-  this.backdrop_ = new game.Backdrop();
-  /** @private {!game.Viewport}*/
-  this.viewport_ = new game.Viewport();
-  /** @private {!game.Camera.Axis} */
-  this.axis_ = game.Camera.DEFAULT_AXIS_;
+  /** @private {!game.core.Viewport}*/
+  this.viewport_ = new game.core.Viewport();
+  /** @private {!game.core.Camera.Axis} */
+  this.axis_ = game.core.Camera.DEFAULT_AXIS_;
 
   /** @private {number} */
   this.lastX_ = 0;
   /** @private {number} */
   this.lastY_ = 0;
+
+  /** @private {array.<!game.core.Entity>} */
+  this.layers_ = [];
+
+  // Add the board as the first layer.
+  this.addLayer(this.board_, 1);
 };
 
 
@@ -40,7 +43,7 @@ game.Camera = function() {
  *
  * @enum {number}
  */
-game.Camera.Axis = {
+game.core.Camera.Axis = {
   NONE: 0,
   HORIZONTAL: 1,
   VERTICAL: 2,
@@ -49,29 +52,44 @@ game.Camera.Axis = {
 
 
 /**
- * @private {!game.Camera.Axis}
+ * @private {!game.core.Camera.Axis}
  */
-game.Camera.DEFAULT_AXIS_ = game.Camera.Axis.BOTH;
+game.core.Camera.DEFAULT_AXIS_ = game.core.Camera.Axis.BOTH;
 
 
 /**
  * Sets the reference to the point the camera is tracking.
  *
- * @param {!game.Entity} entity The reference to the point the camera is
+ * @param {!game.core.Entity} entity The reference to the point the camera is
  *     tracking. (Really anything that has {@code game.mixins.Rectangle}).
- * @param {?game.Camera.Axis=} opt_axis
+ * @param {?game.core.Camera.Axis=} opt_axis
  */
-game.Camera.prototype.watch = function(entity, opt_axis) {
+game.core.Camera.prototype.watch = function(entity, opt_axis) {
   this.watchedEntity_ = entity;
-  this.axis_ = opt_axis || game.Camera.DEFAULT_AXIS_;
+  this.axis_ = opt_axis || game.core.Camera.DEFAULT_AXIS_;
+};
+
+
+/**
+ * Registers a layer to be displayed behind the board.
+ *
+ * @param {!game.core.Entity} layer
+ * @param {number} distance A number from 0 - 1 determines how far away form the
+ *     camera it appears to be.
+ */
+game.core.Camera.prototype.addLayer = function(layer, distance) {
+  this.layers_.push({
+    layer: layer,
+    distance: distance
+  });
 };
 
 
 /**
  * Update the camera's position.
  */
-game.Camera.prototype.update = function() {
-  var Axis = game.Camera.Axis;
+game.core.Camera.prototype.update = function() {
+  var Axis = game.core.Camera.Axis;
   var axis = this.axis_;
   var hView = this.viewport_.getHeight();
   var wView = this.viewport_.getWidth();
@@ -119,6 +137,7 @@ game.Camera.prototype.update = function() {
   this.lastX_ = xView;
   this.lastY_ = yView;
 
-  this.board_.setPosition(xView, yView);
-  this.backdrop_.setPosition(xView * 0.4, yView * 0.4);
+  _.each(this.layers_, function(l) {
+    l.layer.setPosition(xView * l.distance, yView * l.distance);
+  });
 };

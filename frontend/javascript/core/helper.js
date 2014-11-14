@@ -1,5 +1,5 @@
-goog.provide('helper');
-goog.provide('helper.object');
+goog.provide('game.core.helper');
+goog.provide('game.core.helper.object');
 
 
 /**
@@ -9,7 +9,7 @@ goog.provide('helper.object');
  * @return {!Object.<K,V>} Clone of the input object.
  * @template K,V
  */
-helper.object.clone = function(obj) {
+game.core.helper.object.clone = function(obj) {
   var res = {};
   for (var key in obj) {
     res[key] = obj[key];
@@ -29,7 +29,7 @@ helper.object.clone = function(obj) {
  * function ChildClass(a, b, c) {
  *   ChildClass.base(this, 'constructor', a, b);
  * }
- * helper.inherit(ChildClass, ParentClass);
+ * game.core.helper.inherit(ChildClass, ParentClass);
  *
  * var child = new ChildClass('a', 'b', 'see');
  * child.foo(); // This works.
@@ -38,7 +38,7 @@ helper.object.clone = function(obj) {
  * @param {Function} childCtor Child class.
  * @param {Function} parentCtor Parent class.
  */
-helper.inherit = function(childCtor, parentCtor) {
+game.core.helper.inherit = function(childCtor, parentCtor) {
   /** @constructor */
   function tempCtor() {};
   tempCtor.prototype = parentCtor.prototype;
@@ -81,7 +81,7 @@ helper.inherit = function(childCtor, parentCtor) {
  * @param {Function} klass
  * @return {Function}
  */
-helper.mixin = function(klass) {
+game.core.helper.mixin = function(klass) {
   var mixins = _.chain(arguments).toArray().rest().flatten().value();
   // Allows mixing into the constructor's prototype or the dynamic instance
   var obj = klass.prototype || klass;
@@ -90,7 +90,7 @@ helper.mixin = function(klass) {
 
   _(mixins).each(function(mixin) {
     if (_.isString(mixin)) {
-      mixin = helper.mixins[mixin];
+      mixin = game.core.helper.mixins[mixin];
     }
     _(mixin).each(function(value, key) {
       if (_.isFunction(value)) {

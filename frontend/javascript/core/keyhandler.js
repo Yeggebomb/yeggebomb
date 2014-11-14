@@ -1,5 +1,5 @@
-goog.provide('game.KeyHandler');
-goog.provide('game.KeyHandler.Keycodes');
+goog.provide('game.core.KeyHandler');
+goog.provide('game.core.KeyHandler.Keycodes');
 
 
 
@@ -8,17 +8,17 @@ goog.provide('game.KeyHandler.Keycodes');
  *
  * @constructor
  */
-game.KeyHandler = function() {
-  if (game.KeyHandler.prototype._singletonInstance) {
-    return game.KeyHandler.prototype._singletonInstance;
+game.core.KeyHandler = function() {
+  if (game.core.KeyHandler.prototype._singletonInstance) {
+    return game.core.KeyHandler.prototype._singletonInstance;
   }
 
-  game.KeyHandler.prototype._singletonInstance = this;
+  game.core.KeyHandler.prototype._singletonInstance = this;
 
   /**
    * Object that tracks what is currently being pressed.
    *
-   * @private {!Object.<!game.KeyHandler.Keycodes, boolean>}
+   * @private {!Object.<!game.core.KeyHandler.Keycodes, boolean>}
    */
   this.pressed_ = {};
 
@@ -31,10 +31,10 @@ game.KeyHandler = function() {
 /**
  * Returns true if the given keycode is currently being pressed.
  *
- * @param {!game.KeyHandler.Keycodes} keyCode
+ * @param {!game.core.KeyHandler.Keycodes} keyCode
  * @return {boolean} true if key is down.
  */
-game.KeyHandler.prototype.isDown = function(keyCode) {
+game.core.KeyHandler.prototype.isDown = function(keyCode) {
   return this.pressed_[keyCode];
 };
 
@@ -45,7 +45,7 @@ game.KeyHandler.prototype.isDown = function(keyCode) {
  * @param {!Event} evt
  * @private
  */
-game.KeyHandler.prototype.onKeydown_ = function(evt) {
+game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
   this.pressed_[evt.keyCode] = true;
 };
 
@@ -56,7 +56,7 @@ game.KeyHandler.prototype.onKeydown_ = function(evt) {
  * @param {!Event} evt
  * @private
  */
-game.KeyHandler.prototype.onKeyup_ = function(evt) {
+game.core.KeyHandler.prototype.onKeyup_ = function(evt) {
   delete this.pressed_[evt.keyCode];
 };
 
@@ -66,7 +66,7 @@ game.KeyHandler.prototype.onKeyup_ = function(evt) {
  *
  * @enum {number}
  */
-game.KeyHandler.Keycodes = {
+game.core.KeyHandler.Keycodes = {
   BACKSPACE: 8,
   TAB: 9,
   ENTER: 13,
