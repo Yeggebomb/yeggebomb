@@ -78,6 +78,16 @@ game.Camera.prototype.update = function() {
   var xDeadZone = wView / 2;
   var yDeadZone = hView / 2;
 
+  if (wView > boardWidth) {
+    // I could scale here but it might look crappy. It would be cool though.
+    console.warn('width is too large');
+  }
+
+  if (hView > boardHeight) {
+    // I could scale here but it might look crappy. It would be cool though.
+    console.warn('height is too large');
+  }
+
   if (this.watchedEntity_ != null) {
     var followedX = this.watchedEntity_.getPosition().getX();
     var followedY = this.watchedEntity_.getPosition().getY();

@@ -40,7 +40,7 @@ game.Main.prototype.init = function() {
     this.viewport_.setRect(
         '25%', '25%', '50%', '50%',
         null, null, this.window_,
-        250, 250, 650, 450);
+        800, 600, 400, 300);
   }.bind(this), true);
 
   this.board_.setRect(0, 0, 1000, 1000);

@@ -77,10 +77,16 @@ game.mixins.Rectangle.POSITION_DEFAULT_ = new game.Point(
  * @param {number|string} height A number for px and a string for percent.
  * @param {number} scale
  * @param {number} rotation
- * @param {Element|game.Entity} relativeTo
+ * @param {Element=|game.Entity=} opt_relativeTo
+ * @param {number=} opt_maxWidth
+ * @param {number=} opt_maxHeight
+ * @param {number=} opt_minWidth
+ * @param {number=} opt_minHeight
  */
 game.mixins.Rectangle.prototype.setRect =
-    function(left, top, width, height, scale, rotation, relativeTo) {
+    function(left, top, width, height, scale, rotation, opt_relativeTo,
+            opt_maxWidth, opt_maxHeight, opt_minWidth, opt_minHeight) {
+
   rotation = _.isNumber(rotation) ?
       rotation : game.mixins.Rectangle.ROTATION_DEFAULT_;
 
@@ -88,26 +94,38 @@ game.mixins.Rectangle.prototype.setRect =
 
   if (_.isNumber(left)) {
     left = left || game.mixins.Rectangle.LEFT_DEFAULT_;
-  } else if (_.isString(left) && relativeTo) {
-    left = relativeTo.getWidth() * parseInt(left, 10) / 100;
+  } else if (_.isString(left) && opt_relativeTo) {
+    left = opt_relativeTo.getWidth() * parseInt(left, 10) / 100;
   }
 
   if (_.isNumber(top)) {
     top = top || game.mixins.Rectangle.TOP_DEFAULT_;
-  } else if (_.isString(top) && relativeTo) {
-    top = relativeTo.getHeight() * parseInt(top, 10) / 100;
+  } else if (_.isString(top) && opt_relativeTo) {
+    top = opt_relativeTo.getHeight() * parseInt(top, 10) / 100;
   }
 
   if (_.isNumber(width)) {
     width = width || game.mixins.Rectangle.WIDTH_DEFAULT_;
-  } else if (_.isString(width) && relativeTo) {
-    width = relativeTo.getWidth() * parseInt(width, 10) / 100;
+  } else if (_.isString(width) && opt_relativeTo) {
+    width = opt_relativeTo.getWidth() * parseInt(width, 10) / 100;
+    if (_.isNumber(opt_maxWidth)) {
+      width = Math.min(opt_maxWidth, width);
+    }
+    if (_.isNumber(opt_minWidth)) {
+      width = Math.max(opt_minWidth, width);
+    }
   }
 
   if (_.isNumber(height)) {
     height = height || game.mixins.Rectangle.HEIGHT_DEFAULT_;
-  } else if (_.isString(height) && relativeTo) {
-    height = relativeTo.getHeight() * parseInt(height, 10) / 100;
+  } else if (_.isString(height) && opt_relativeTo) {
+    height = opt_relativeTo.getHeight() * parseInt(height, 10) / 100;
+    if (_.isNumber(opt_maxHeight)) {
+      height = Math.min(opt_maxHeight, height);
+    }
+    if (_.isNumber(opt_minHeight)) {
+      height = Math.max(opt_minHeight, height);
+    }
   }
 
 
