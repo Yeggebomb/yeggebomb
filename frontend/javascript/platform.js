@@ -2,8 +2,6 @@ goog.provide('game.Platform');
 
 goog.require('game.core.Entity');
 goog.require('game.core.helper');
-goog.require('game.mixins.Physical');
-goog.require('game.mixins.Rectangle');
 
 
 
@@ -18,7 +16,7 @@ game.Platform = function() {
   this.el.classList.add(game.Platform.CLASS_NAME);
 
   game.core.helper.mixin(this,
-      game.mixins.Rectangle.prototype, game.mixins.Physical.prototype);
+      game.mixins.Rectangle.prototype, 'physical');
 };
 game.core.helper.inherit(game.Platform, game.core.Entity);
 

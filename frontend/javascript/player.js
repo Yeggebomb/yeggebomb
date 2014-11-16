@@ -3,8 +3,6 @@ goog.provide('game.Player');
 goog.require('game.constants');
 goog.require('game.core.Entity');
 goog.require('game.core.helper');
-goog.require('game.mixins.Fourway');
-goog.require('game.mixins.Physical');
 
 
 
@@ -17,8 +15,7 @@ goog.require('game.mixins.Physical');
 game.Player = function() {
   game.Player.base(this, 'constructor');
   this.el.classList.add(game.Player.CLASS_NAME);
-  game.core.helper.mixin(
-      this, game.mixins.Fourway.prototype, game.mixins.Physical.prototype);
+  game.core.helper.mixin(this, 'fourway', 'physical');
 
   /**
    * How bouncy this object is. (0 being nothing 1 being forever bouncy)
@@ -43,7 +40,7 @@ game.Player.CLASS_NAME = 'player';
  */
 game.Player.prototype.update = function(deltaTime) {
   var velocity = this.getVelocity();
-  velocity.setY(velocity.getY() + game.constants.Gravity);
+  velocity.setY(velocity.getY() + game.constants.Gravity * deltaTime);
 
   var position = this.getPosition();
   this.setPosition(

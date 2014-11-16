@@ -2,7 +2,6 @@ goog.provide('game.Backdrop');
 
 goog.require('game.core.Entity');
 goog.require('game.core.helper');
-goog.require('game.mixins.Rectangle');
 
 
 
@@ -20,7 +19,7 @@ game.Backdrop = function() {
   game.Backdrop.base(this, 'constructor');
   this.el.classList.add(game.Backdrop.CLASS_NAME);
 
-  game.core.helper.mixin(this, game.mixins.Rectangle.prototype);
+  game.core.helper.mixin(this, 'rectangle');
 };
 game.core.helper.inherit(game.Backdrop, game.core.Entity);
 

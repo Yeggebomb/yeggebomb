@@ -72,6 +72,14 @@ game.core.helper.inherit = function(childCtor, parentCtor) {
 
 
 /**
+ * Global registry of mixins.
+ *
+ * @type {Object}
+ */
+game.core.helper.mixins = {};
+
+
+/**
  * Mixes in functionality form one object another while handling collisions:
  * https://github.com/onsi/cocktail
  *

@@ -1,6 +1,7 @@
 goog.provide('game.mixins.Fourway');
 
 goog.require('game.core.KeyHandler');
+goog.require('game.core.helper');
 
 
 
@@ -13,6 +14,12 @@ goog.require('game.core.KeyHandler');
  * @constructor
  */
 game.mixins.Fourway = function() {};
+
+
+/**
+ * Register mixin globally.
+ */
+game.core.helper.mixins['fourway'] = game.mixins.Fourway.prototype;
 
 
 /**

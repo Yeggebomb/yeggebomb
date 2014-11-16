@@ -1,5 +1,6 @@
 goog.provide('game.mixins.Rectangle');
 
+goog.require('game.core.helper');
 goog.require('game.core.math.Point');
 
 
@@ -11,6 +12,12 @@ goog.require('game.core.math.Point');
  * @constructor
  */
 game.mixins.Rectangle = function() {};
+
+
+/**
+ * Register mixin globally.
+ */
+game.core.helper.mixins['rectangle'] = game.mixins.Rectangle.prototype;
 
 
 /** @private {number} */

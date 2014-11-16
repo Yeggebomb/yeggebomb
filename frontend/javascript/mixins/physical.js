@@ -1,5 +1,6 @@
 goog.provide('game.mixins.Physical');
 
+goog.require('game.core.helper');
 goog.require('game.core.math.Point');
 
 
@@ -15,6 +16,12 @@ game.mixins.Physical = function() {
   /** @type {Array.<string>} Array of colidee's this instance can colide with */
   this.colliders = {};
 };
+
+
+/**
+ * Register mixin globally.
+ */
+game.core.helper.mixins['physical'] = game.mixins.Physical.prototype;
 
 
 /**

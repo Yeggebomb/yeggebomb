@@ -87,8 +87,9 @@ game.core.Camera.prototype.addLayer = function(layer, distance) {
 
 /**
  * Update the camera's position.
+ * @param {number} deltaTime
  */
-game.core.Camera.prototype.update = function() {
+game.core.Camera.prototype.update = function(deltaTime) {
   var Axis = game.core.Camera.Axis;
   var axis = this.axis_;
   var hView = this.viewport_.getHeight();
@@ -110,25 +111,28 @@ game.core.Camera.prototype.update = function() {
     console.warn('height is too large');
   }
 
+
   if (this.watchedEntity_ != null) {
     var followedX = this.watchedEntity_.getPosition().getX();
     var followedY = this.watchedEntity_.getPosition().getY();
     if (axis == Axis.HORIZONTAL || axis == Axis.BOTH) {
       if (followedX > wView - xDeadZone) {
-        xView = Math.max(
-            (followedX - (wView - xDeadZone)) * - 1, wView - boardWidth);
+        xView = (followedX - (wView - xDeadZone)) * - 1;
       } else if (followedX < xView + xDeadZone) {
-        xView = Math.min((followedX - xDeadZone) * -1, 0);
+        xView = (followedX - xDeadZone) * -1;
       }
+      // Clip to the bounds of our viewport.
+      xView = Math.min(Math.max(xView, wView - boardWidth), 0);
     }
 
     if (axis == Axis.VERTICAL || axis == Axis.BOTH) {
       if (followedY > hView - yDeadZone) {
-        yView = Math.max(
-            (followedY - (hView - yDeadZone)) * - 1, hView - boardHeight);
+        yView = (followedY - (hView - yDeadZone)) * - 1;
       } else if (followedY < yView + yDeadZone) {
-        yView = Math.min((followedY - yDeadZone) * -1, 0);
+        yView = (followedY - yDeadZone) * -1;
       }
+      // Clip to the bounds of our viewport.
+      yView = Math.min(Math.max(yView, hView - boardHeight), 0);
     }
   }
 
