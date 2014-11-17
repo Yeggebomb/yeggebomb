@@ -44,6 +44,21 @@ game.core.helper.poly2path = function(polygon) {
 
 
 /**
+ * Updates the translate transform on a given element.
+ * @param {Element} element
+ * @param  {!game.core.math.Vector} position
+ */
+game.core.helper.updateTranslate = function(element, position) {
+  var transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
+  element.style.webkitTransform = transform;
+  element.style.MozTransform = transform;
+  element.style.msTransform = transform;
+  element.style.OTransform = transform;
+  element.style.transform = transform;
+};
+
+
+/**
  * Does a flat clone of the object.
  *
  * @param {Object.<K,V>} obj Object to clone.
