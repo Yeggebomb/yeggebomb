@@ -57,8 +57,10 @@ game.mixins.Physical.prototype.update = function() {
     _.each(this.colliders, function(callback, name) {
       if (entity instanceof game.mixins.Physical.Colideers[name]) {
         var response = new game.core.math.Response();
-        game.core.math.collision.testPolygonPolygon(this, entity, response);
-        callback(entity, response);
+        var collision = game.core.math.collision;
+        if (collision.testPolygonPolygon(this, entity, response)) {
+          callback(entity, response);
+        }
       }
     }.bind(this));
   }.bind(this));

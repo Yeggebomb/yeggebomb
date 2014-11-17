@@ -22,7 +22,7 @@ game.Player = function() {
    *
    * @type {number}
    */
-  this.bouncyness = 0.6;
+  this.bouncyness = 0.3;
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
