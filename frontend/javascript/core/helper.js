@@ -23,6 +23,27 @@ game.core.helper.scope = function(fn) {
 
 
 /**
+ * Converts a polygon to a path, the pos should translate the container element
+ * so we don't have to redraw the polygon every frame.
+ *
+ * @param {!game.core.Entity} polygon
+ * @return {string}
+ */
+game.core.helper.poly2path = function(polygon) {
+  var pos = polygon.pos;
+  var points = polygon.calcPoints;
+  var result = 'M' + 0 + ' ' + 0;
+  result += 'M' + points[0].x + ' ' + points[0].y;
+  for (var i = 1; i < points.length; i++) {
+    var point = points[i];
+    result += 'L' + point.x + ' ' + point.y;
+  }
+  result += 'Z';
+  return result;
+};
+
+
+/**
  * Does a flat clone of the object.
  *
  * @param {Object.<K,V>} obj Object to clone.

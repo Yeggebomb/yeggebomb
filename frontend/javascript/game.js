@@ -54,15 +54,14 @@ game.Main.State = {
 game.Main.prototype.init = function() {
   this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME,
       function() {
-        debugger;
-        this.viewport_.setRect(
+        this.viewport_.setRectangle(
             '25%', '25%', '50%', '50%', this.window_, 800, 600, 400, 300);
       }.bind(this), true);
 
-  this.platform_.setRect(0, 600, 1000, 100);
-  this.board_.setRect(0, 0, 1000, 700);
-  this.backDrop_.setRect(0, 0, 1000, 700);
-  this.player_.setRect(0, 0, 40, 50);
+  this.platform_.setRectangle(0, 600, 1000, 100);
+  this.board_.setRectangle(0, 0, 1000, 700);
+  this.backDrop_.setRectangle(0, 0, 1000, 700);
+  this.player_.setRectangle(0, 0, 40, 50);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
 

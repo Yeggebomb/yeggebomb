@@ -19,7 +19,7 @@ game.core.Root = function() {
   game.core.Root.base(this, 'constructor');
   this.el.classList.add(game.core.Root.CLASS_NAME);
 
-  game.core.helper.mixin(this, 'rectangle');
+  game.core.helper.mixin(this, 'shape');
 };
 game.core.helper.inherit(game.core.Root, game.core.Entity);
 

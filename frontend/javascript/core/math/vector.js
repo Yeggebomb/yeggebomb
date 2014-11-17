@@ -6,7 +6,7 @@ goog.provide('game.core.math.Vector');
  * Create a new Vector, optionally passing in the `x` and `y` coordinates. If
  * a coordinate is not specified, it will be set to `0`.
  *
- * This was stolen from SAT.js: https://github.com/jriecken/sat-js
+ * This was stolen and modified from SAT.js: https://github.com/jriecken/sat-js
  *
 * @param {?number=} opt_x The x position.
 * @param {?number=} opt_y The y position.

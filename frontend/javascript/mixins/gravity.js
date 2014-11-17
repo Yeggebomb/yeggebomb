@@ -6,7 +6,7 @@ goog.require('game.core.helper');
 
 
 /**
- * Gravity mixin.
+ * Gravity mixin. Physical mixin is a dependency.
  *
  * @constructor
  */
@@ -26,6 +26,7 @@ game.core.helper.mixins['gravity'] = game.mixins.entity.Gravity.prototype;
  */
 game.mixins.entity.Gravity.prototype.update = function(deltaTime) {
   var velocity = this.getVelocity();
+  console.log(velocity.y);
   velocity.y += game.constants.Gravity * deltaTime;
 
   var position = this.getPosition();

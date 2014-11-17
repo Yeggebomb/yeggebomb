@@ -1,6 +1,7 @@
 goog.provide('game.mixins.Physical');
 
 goog.require('game.core.helper');
+goog.require('game.core.math.Response');
 goog.require('game.core.math.Vector');
 goog.require('game.core.math.collision');
 
@@ -55,10 +56,9 @@ game.mixins.Physical.prototype.update = function() {
   _.each(game.core.Entity.All, function(entity) {
     _.each(this.colliders, function(callback, name) {
       if (entity instanceof game.mixins.Physical.Colideers[name]) {
-        // game.core.math.collision.testPolygonPolygon()
-        // if (this.overlaps(entity)) {
-        //   callback();
-        // }
+        var response = new game.core.math.Response();
+        game.core.math.collision.testPolygonPolygon(this, entity, response);
+        callback(entity, response);
       }
     }.bind(this));
   }.bind(this));

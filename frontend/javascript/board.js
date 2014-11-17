@@ -19,7 +19,7 @@ game.Board = function() {
   game.Board.base(this, 'constructor');
   this.el.classList.add(game.Board.CLASS_NAME);
 
-  game.core.helper.mixin(this, 'rectangle');
+  game.core.helper.mixin(this, 'shape');
 };
 game.core.helper.inherit(game.Board, game.core.Entity);
 

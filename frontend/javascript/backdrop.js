@@ -19,7 +19,7 @@ game.Backdrop = function() {
   game.Backdrop.base(this, 'constructor');
   this.el.classList.add(game.Backdrop.CLASS_NAME);
 
-  game.core.helper.mixin(this, 'rectangle');
+  game.core.helper.mixin(this, 'shape');
 };
 game.core.helper.inherit(game.Backdrop, game.core.Entity);
 

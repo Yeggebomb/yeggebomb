@@ -4,10 +4,10 @@ goog.provide('game.core.math.collision.helper');
 goog.require('game.core.helper');
 goog.require('game.core.math.Response');
 goog.require('game.core.math.Vector');
-goog.require('game.mixins.Polygon');
+goog.require('game.mixins.Shape');
 
 
-// This was stolen from SAT.js: https://github.com/jriecken/sat-js
+// This was stolen and modified from SAT.js: https://github.com/jriecken/sat-js
 game.core.helper.scope(function() {
   // Alias to help life be easy!
   var helper = game.core.math.collision.helper;
@@ -44,8 +44,7 @@ game.core.helper.scope(function() {
    *
    * @type {Polygon}
    */
-  var UNIT_SQUARE = new game.mixins.Polygon().setShape(
-      new game.core.math.Vector(), 1, 1);
+  var UNIT_SQUARE = new game.mixins.Shape().setRectangle(0, 0, 1, 1);
 
 
   /**

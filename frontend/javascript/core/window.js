@@ -17,7 +17,7 @@ game.core.Window = function() {
     return game.core.Window.prototype._singletonInstance;
   }
   game.core.Window.prototype._singletonInstance = this;
-  game.core.helper.mixin(this, 'rectangle', 'listenable');
+  game.core.helper.mixin(this, 'shape', 'listenable');
 
   /**
    * Callbacks to call after window has been resized.
