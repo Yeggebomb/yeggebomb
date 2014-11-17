@@ -52,10 +52,12 @@ game.Main.State = {
  * Setup for our app.
  */
 game.Main.prototype.init = function() {
+  // Lets do this with CSS instead.
+  this.viewport_.drawPosition = false;
   this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME,
       function() {
         this.viewport_.setRect(
-            0, 0, '50%', '50%', this.window_, 800, 600, 400, 300);
+            null, null, '50%', '50%', this.window_, 800, 600, 400, 300);
       }.bind(this), true);
 
   this.platform_.setRect(0, 600, 1000, 100);

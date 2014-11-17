@@ -30,7 +30,9 @@ game.core.Entity = function(opt_pos, opt_w, opt_h) {
 
   /** @type {!game.core.math.Vector} */
   this.position = opt_pos || new game.core.math.Vector(0, 0);
-
+  /** @type {boolean} Draws the position of the Entity. Disable if you want
+  to override with CSS for example. */
+  this.drawPosition = true;
   /** @private {number} */
   this.lastWidth_ = 0;
   /** @private {number} */
@@ -74,13 +76,8 @@ game.core.Entity.prototype.getPosition = function() {
  * @param {number|string} x X-coord or sometimes referred to as left.
  * @param {number|string} y Y-coord or sometimes referred to as top.
  * @param {Element=|game.core.Entity=} opt_relativeTo
- * @param {boolean=} opt_callUpdate Default is true which will call the update
- *    function.
  */
-game.core.Entity.prototype.setPosition =
-    function(x, y, opt_relativeTo, opt_callUpdate) {
-  var callUpdate = _.isBoolean(opt_callUpdate) ? opt_callUpdate : true;
-
+game.core.Entity.prototype.setPosition = function(x, y, opt_relativeTo) {
   if (_.isString(x) && opt_relativeTo) {
     x = opt_relativeTo.getWidth() * parseInt(x, 10) / 100;
   }
@@ -89,15 +86,17 @@ game.core.Entity.prototype.setPosition =
     y = opt_relativeTo.getHeight() * parseInt(y, 10) / 100;
   }
 
-  if (this.position) {
-    this.position.x = x;
-    this.position.y = y;
-  } else {
-    this.position = new game.core.math.Vector(x, y);
-  }
+  if (_.isNumber(x) && _.isNumber(y)) {
+    if (this.position) {
+      this.position.x = x;
+      this.position.y = y;
+    } else {
+      this.position = new game.core.math.Vector(x, y);
+    }
 
-  this.right = x + this.getWidth();
-  this.bottom = y + this.getHeight();
+    this.right = x + this.getWidth();
+    this.bottom = y + this.getHeight();
+  }
 
   this.isDirty = true;
 };
@@ -201,11 +200,13 @@ game.core.Entity.prototype.draw = function() {
   this.el.style.width = this.width + 'px';
   this.el.style.height = this.height + 'px';
 
-  var position = this.getPosition();
-  var transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
-  this.el.style.webkitTransform = transform;
-  this.el.style.MozTransform = transform;
-  this.el.style.msTransform = transform;
-  this.el.style.OTransform = transform;
-  this.el.style.transform = transform;
+  if (this.drawPosition) {
+    var position = this.getPosition();
+    var transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
+    this.el.style.webkitTransform = transform;
+    this.el.style.MozTransform = transform;
+    this.el.style.msTransform = transform;
+    this.el.style.OTransform = transform;
+    this.el.style.transform = transform;
+  }
 };
