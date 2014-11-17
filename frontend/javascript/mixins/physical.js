@@ -17,6 +17,7 @@ game.mixins.Physical = function() {
   // This does nothing other than help with type.
   /** @type {Array.<string>} Array of colidee's this instance can colide with */
   this.colliders = {};
+  // Ask about later.
 };
 
 
@@ -27,11 +28,11 @@ game.core.helper.mixins['physical'] = game.mixins.Physical.prototype;
 
 
 /**
- * Global registered Colideer.
+ * Global registered Collider.
  *
  * @type {Object.<string, !Game.core.Entity>}
  */
-game.mixins.Physical.Colideers = {};
+game.mixins.Physical.Colliders = {};
 
 
 /**
@@ -48,22 +49,45 @@ game.mixins.Physical.prototype.getVelocity = function() {
 
 
 /**
- * Checks for collisions and adjust accordingly.
+ * Returns a reference to the mass of the entity.
+ *
+ * @return {!number}
  */
-game.mixins.Physical.prototype.update = function() {
+game.mixins.Physical.prototype.getMass = function() {
+  if (!this.mass_) {
+    this.mass_ = 0;
+  }
+  return this.mass_;
+};
+
+
+/**
+ * Checks for collisions and adjust accordingly.
+ * @param {number} delta
+ */
+game.mixins.Physical.prototype.update = function(delta) {
   if (!_.isObject(this.colliders)) this.colliders = {};
   var collision = false;
   _.each(game.core.Entity.All, function(entity) {
     _.each(this.colliders, function(callback, name) {
-      if (entity instanceof game.mixins.Physical.Colideers[name]) {
+      if (entity instanceof game.mixins.Physical.Colliders[name]) {
         var response = new game.core.math.Response();
         var collision = game.core.math.collision;
         if (collision.testPolygonPolygon(this, entity, response)) {
-          callback(entity, response);
+          callback(entity, response, delta);
         }
       }
     }.bind(this));
   }.bind(this));
+};
+
+
+/**
+ * Registers the mass of the object.
+ * @param {!number} mass
+ */
+game.mixins.Physical.prototype.setMass = function(mass) {
+  this.mass = mass;
 };
 
 
@@ -73,7 +97,7 @@ game.mixins.Physical.prototype.update = function() {
  * @param {!game.core.Entity} type [description]
  */
 game.mixins.Physical.prototype.registerCollider = function(name, type) {
-  game.mixins.Physical.Colideers[name] = type;
+  game.mixins.Physical.Colliders[name] = type;
 };
 
 
@@ -84,7 +108,7 @@ game.mixins.Physical.prototype.registerCollider = function(name, type) {
  */
 game.mixins.Physical.prototype.registerCollidesWith = function(name, callback) {
   if (!_.isObject(this.colliders)) this.colliders = {};
-  if (_.isUndefined(game.mixins.Physical.Colideers[name])) {
+  if (_.isUndefined(game.mixins.Physical.Colliders[name])) {
     console.warn('Warning:', name, 'Is not registered as a colideer');
     return;
   }

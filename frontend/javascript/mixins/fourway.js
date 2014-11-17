@@ -50,7 +50,7 @@ game.mixins.Fourway.prototype.moveUp = function() {
 
 /** moveDown */
 game.mixins.Fourway.prototype.moveDown = function() {
-  this.getVelocity().y += 1;
+  this.getVelocity().y += 2;
 };
 
 
