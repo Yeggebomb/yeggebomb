@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,SAAS;EACP,UAAU,EAAE,IAAI;EAChB,MAAM,EAAE,eAAe",
+"sources": ["../../stylesheets/platform.sass"],
+"names": [],
+"file": "platform.css"
+}
