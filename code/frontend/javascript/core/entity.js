@@ -115,7 +115,7 @@ game.core.Entity.prototype.destroyEventListeners = function() {};
 game.core.Entity.prototype.draw = function() {
   if (!this.isDirty) return;
   this.isDirty = false;
-  if (this.type != game.mixins.Shape.Type.POLYGON) return;
+  if (this.type == game.mixins.Shape.Type.RECTANGLE) return;
 
   var svg = this.el.getElementsByTagName('svg');
   if (svg.length == 1) {
@@ -125,16 +125,29 @@ game.core.Entity.prototype.draw = function() {
     this.el.appendChild(svg);
   }
 
-  var path = svg.getElementsByTagName('path');
-  if (path.length == 1) {
-    path = path[0];
-  } else {
-    path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    svg.appendChild(path);
+  if (this.type == game.mixins.Shape.Type.POLYGON) {
+    var path = svg.getElementsByTagName('path');
+    if (path.length == 1) {
+      path = path[0];
+    } else {
+      path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      svg.appendChild(path);
+    }
+    path.setAttributeNS(null, 'd', game.core.helper.poly2path(this));
   }
 
-  path.setAttributeNS(null, 'd', game.core.helper.poly2path(this));
-  path.setAttributeNS(null, 'fill', 'black');
+  if (this.type == game.mixins.Shape.Type.CIRCLE) {
+    var circle = svg.getElementsByTagName('circle');
+    if (circle.length == 1) {
+      circle = circle[0];
+    } else {
+      circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      svg.appendChild(circle);
+    }
+    circle.setAttributeNS(null, 'r', this.r);
+    circle.setAttributeNS(null, 'fill', 'black');
+  }
+
 
   game.core.helper.updateTranslate(svg, this.pos);
 };

@@ -4,6 +4,7 @@ goog.require('game.core.helper');
 goog.require('game.core.math.Response');
 goog.require('game.core.math.Vector');
 goog.require('game.core.math.collision');
+goog.require('game.mixins.Shape.Type');
 
 
 
@@ -73,7 +74,26 @@ game.mixins.Physical.prototype.update = function(delta) {
       if (entity instanceof game.mixins.Physical.Colliders[name]) {
         var response = new game.core.math.Response();
         var collision = game.core.math.collision;
-        if (collision.testPolygonPolygon(this, entity, response)) {
+        var ShapeType = game.mixins.Shape.Type;
+        var didCollide = false;
+
+        if ((this.type == ShapeType.POLYGON ||
+            this.type == ShapeType.RECTANGLE) &&
+            (entity.type == ShapeType.POLYGON ||
+            entity.type == ShapeType.RECTANGLE)) {
+          didCollide = collision.testPolygonPolygon(this, entity, response);
+        } else if (this.type == ShapeType.CIRCLE &&
+            (entity.type == ShapeType.POLYGON ||
+            entity.type == ShapeType.RECTANGLE)) {
+          didCollide = collision.testCirclePolygon(this, entity, response);
+          if (didCollide) debugger;
+        } else if ((this.type == ShapeType.POLYGON ||
+            this.type == ShapeType.RECTANGLE) &&
+            entity.type == ShapeType.CIRCLE) {
+          didCollide = collision.testPolygonCircle(this, entity, response);
+        }
+
+        if (didCollide) {
           callback(entity, response, delta);
         }
       }
