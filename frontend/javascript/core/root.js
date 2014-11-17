@@ -2,7 +2,6 @@ goog.provide('game.core.Root');
 
 goog.require('game.core.Entity');
 goog.require('game.core.helper');
-goog.require('game.mixins.Rectangle');
 
 
 
@@ -20,7 +19,7 @@ game.core.Root = function() {
   game.core.Root.base(this, 'constructor');
   this.el.classList.add(game.core.Root.CLASS_NAME);
 
-  game.core.helper.mixin(this, game.mixins.Rectangle.prototype);
+  game.core.helper.mixin(this, 'rectangle');
 };
 game.core.helper.inherit(game.core.Root, game.core.Entity);
 

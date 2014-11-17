@@ -3,6 +3,26 @@ goog.provide('game.core.helper.object');
 
 
 /**
+ * Reference to the global context.  In most cases this will be 'window'.
+ */
+game.core.helper.global = this;
+
+
+/**
+ * Allow for aliasing within scope functions.  This function exists for
+ * uncompiled code - in compiled code the calls will be inlined and the aliases
+ * applied.  In uncompiled code the function is simply run since the aliases as
+ * written are valid JavaScript.
+ * @param {function()} fn Function to call.  This function can contain aliases
+ *     to namespaces (e.g. "var dom = goog.dom") or classes
+ *     (e.g. "var Timer = goog.Timer").
+ */
+game.core.helper.scope = function(fn) {
+  fn.call(game.core.helper.global);
+};
+
+
+/**
  * Does a flat clone of the object.
  *
  * @param {Object.<K,V>} obj Object to clone.

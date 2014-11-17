@@ -33,28 +33,28 @@ game.mixins.Fourway.KEY_HANDLER = new game.core.KeyHandler();
 /** moveLeft */
 game.mixins.Fourway.prototype.moveLeft = function() {
   var position = this.getPosition();
-  this.setPosition(position.getX() - 5, position.getY());
+  this.setPosition(position.x - 5, position.y);
 };
 
 
 /** moveRight */
 game.mixins.Fourway.prototype.moveRight = function() {
   var position = this.getPosition();
-  this.setPosition(position.getX() + 5, position.getY());
+  this.setPosition(position.x + 5, position.y);
 };
 
 
 /** moveUp */
 game.mixins.Fourway.prototype.moveUp = function() {
   var position = this.getPosition();
-  this.setPosition(position.getX(), position.getY() - 5);
+  this.setPosition(position.x, position.y - 5);
 };
 
 
 /** moveDown */
 game.mixins.Fourway.prototype.moveDown = function() {
   var position = this.getPosition();
-  this.setPosition(position.getX(), position.getY() + 5);
+  this.setPosition(position.x, position.y + 5);
 };
 
 

@@ -2,6 +2,7 @@ goog.provide('game.core.Entity');
 
 goog.require('game.core.helper');
 goog.require('game.core.math.Point');
+goog.require('game.core.math.Vector');
 goog.require('game.mixins.Rectangle');
 
 
@@ -10,9 +11,14 @@ goog.require('game.mixins.Rectangle');
  * An entity. This can be a player, enemy, object or a thing. Entity will have
  * properties like position, size, scale, class & ID etc..
  *
+ * @param {game.core.math.Vector=} opt_pos A vector representing the top-left of
+ *     the box.
+ * @param {?number=} opt_w The width of the box.
+ * @param {?number=} opt_h The height of the box.
+ *
  * @constructor
  */
-game.core.Entity = function() {
+game.core.Entity = function(opt_pos, opt_w, opt_h) {
   /** @type {string} */
   this.background = '';
   /** @private {string} */
@@ -21,6 +27,9 @@ game.core.Entity = function() {
   this.el = document.createElement('span');
   this.el.id = this.id_;
   this.el.classList.add(game.core.Entity.CLASS_NAME);
+
+  /** @type {!game.core.math.Vector} */
+  this.position = opt_pos || new game.core.math.Vector(0, 0);
 
   /** @private {number} */
   this.lastWidth_ = 0;
@@ -47,6 +56,49 @@ game.core.Entity = function() {
  * @type {Array.<!game.core.Entity>}
  */
 game.core.Entity.All = [];
+
+
+/**
+ * Returns a reference to the position of the entity.
+ *
+ * @return {!game.core.math.Point}
+ */
+game.core.Entity.prototype.getPosition = function() {
+  return this.position;
+};
+
+
+/**
+ * Sets the position and updates the style.
+ *
+ * @param {number|string} x X-coord or sometimes referred to as left.
+ * @param {number|string} y Y-coord or sometimes referred to as top.
+ * @param {Element=|game.core.Entity=} opt_relativeTo
+ * @param {boolean=} opt_callUpdate Default is true which will call the update
+ *    function.
+ */
+game.core.Entity.prototype.setPosition =
+    function(x, y, opt_relativeTo, opt_callUpdate) {
+  var callUpdate = _.isBoolean(opt_callUpdate) ? opt_callUpdate : true;
+
+  if (_.isString(x) && opt_relativeTo) {
+    x = opt_relativeTo.getWidth() * parseInt(x, 10) / 100;
+  }
+
+  if (_.isString(y) && opt_relativeTo) {
+    y = opt_relativeTo.getHeight() * parseInt(y, 10) / 100;
+  }
+
+  if (this.position) {
+    this.position.x = x;
+    this.position.y = y;
+  } else {
+    this.position = new game.core.math.Vector(x, y);
+  }
+
+  this.right = x + this.getWidth();
+  this.bottom = y + this.getHeight();
+};
 
 
 /**
@@ -141,9 +193,7 @@ game.core.Entity.prototype.setBackground = function(background) {
  * update it will.
  */
 game.core.Entity.prototype.updateRect = function() {
-  var position = this.getPosition() || game.mixins.Rectangle.POSITION_DEFAULT_;
-  var rotation = this.getRotation() || game.mixins.Rectangle.ROTATION_DEFAULT_;
-  var scale = this.getScale() || game.mixins.Rectangle.SCALE_DEFAULT_;
+  var position = this.getPosition() || new game.core.math.Vector(0, 0);
 
   if (this.lastWidth_ != this.width) {
     this.el.style.width = this.width + 'px';
@@ -155,14 +205,9 @@ game.core.Entity.prototype.updateRect = function() {
     this.lastHeight_ = this.height;
   }
 
-  if (this.lastPositionX_ != position.getX() ||
-      this.lastPositionY_ != position.getY() ||
-      this.lastRotation_ != rotation ||
-      this.lastScale_ != scale) {
-    var transform = 'rotate(' + rotation + 'deg) ' +
-                    'scale(' + scale + ') ' +
-                    'translate(' + position.getX('px') +
-                    ', ' + position.getY('px') + ')';
+  if (this.lastPositionX_ != position.x ||
+      this.lastPositionY_ != position.y) {
+    var transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
 
     this.el.style.webkitTransform = transform;
     this.el.style.MozTransform = transform;
@@ -171,9 +216,7 @@ game.core.Entity.prototype.updateRect = function() {
     this.el.style.transform = transform;
 
     // Reset for next time.
-    this.lastPositionX_ = position.getX();
-    this.lastPositionY_ = position.getY();
-    this.lastRotation_ = rotation;
-    this.lastScale_ = scale;
+    this.lastPositionX_ = position.x;
+    this.lastPositionY_ = position.y;
   }
 };

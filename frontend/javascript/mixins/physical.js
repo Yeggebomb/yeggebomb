@@ -49,13 +49,14 @@ game.mixins.Physical.prototype.getVelocity = function() {
  * Checks for collisions and adjust accordingly.
  */
 game.mixins.Physical.prototype.update = function() {
+  if (!_.isObject(this.colliders)) this.colliders = {};
   var collision = false;
   _.each(game.core.Entity.All, function(entity) {
     _.each(this.colliders, function(callback, name) {
       if (entity instanceof game.mixins.Physical.Colideers[name]) {
-        if (this.overlaps(entity)) {
-          callback();
-        }
+        // if (this.overlaps(entity)) {
+        //   callback();
+        // }
       }
     }.bind(this));
   }.bind(this));

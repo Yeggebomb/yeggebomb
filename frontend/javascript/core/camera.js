@@ -94,8 +94,8 @@ game.core.Camera.prototype.update = function(deltaTime) {
   var axis = this.axis_;
   var hView = this.viewport_.getHeight();
   var wView = this.viewport_.getWidth();
-  var xView = this.board_.getPosition().getX();
-  var yView = this.board_.getPosition().getY();
+  var xView = this.board_.getPosition().x;
+  var yView = this.board_.getPosition().y;
   var boardWidth = this.board_.getWidth();
   var boardHeight = this.board_.getHeight();
   var xDeadZone = wView / 2;
@@ -113,8 +113,8 @@ game.core.Camera.prototype.update = function(deltaTime) {
 
 
   if (this.watchedEntity_ != null) {
-    var followedX = this.watchedEntity_.getPosition().getX();
-    var followedY = this.watchedEntity_.getPosition().getY();
+    var followedX = this.watchedEntity_.getPosition().x;
+    var followedY = this.watchedEntity_.getPosition().y;
     if (axis == Axis.HORIZONTAL || axis == Axis.BOTH) {
       if (followedX > wView - xDeadZone) {
         xView = (followedX - (wView - xDeadZone)) * - 1;

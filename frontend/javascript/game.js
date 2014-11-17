@@ -6,6 +6,7 @@ goog.require('game.Platform');
 goog.require('game.Player');
 goog.require('game.core.Root');
 goog.require('game.core.Window');
+goog.require('game.core.math.Vector');
 
 
 
@@ -54,15 +55,13 @@ game.Main.prototype.init = function() {
   this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME,
       function() {
         this.viewport_.setRect(
-            0, 0, '50%', '50%',
-            null, null, this.window_,
-            800, 600, 400, 300);
+            0, 0, '50%', '50%', this.window_, 800, 600, 400, 300);
       }.bind(this), true);
 
-  this.platform_.setRect(0, 600, 1000, 100);
+  this.platform_.setShape(new game.core.math.Vector(0, 600), 1000, 100);
   this.board_.setRect(0, 0, 1000, 700);
   this.backDrop_.setRect(0, 0, 1000, 700);
-  this.player_.setRect(0, 0, 40, 50);
+  this.player_.setShape(new game.core.math.Vector(), 40, 50);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
 
