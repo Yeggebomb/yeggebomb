@@ -17,6 +17,8 @@ goog.require('game.core.math.Vector');
  * @constructor
  */
 game.core.Entity = function(opt_pos, opt_w, opt_h) {
+  /** @type {boolean} Dirty bit to denote if this should be drawn. */
+  this.isDirty = true;
   /** @type {string} */
   this.background = '';
   /** @private {string} */
@@ -97,7 +99,7 @@ game.core.Entity.prototype.setPosition =
   this.right = x + this.getWidth();
   this.bottom = y + this.getHeight();
 
-  this.updateRect();
+  this.isDirty = true;
 };
 
 
@@ -192,31 +194,18 @@ game.core.Entity.prototype.setBackground = function(background) {
  * This is being called from game.mixins.Rectangle, if there is a rect to
  * update it will.
  */
-game.core.Entity.prototype.updateRect = function() {
-  var position = this.getPosition() || new game.core.math.Vector(0, 0);
+game.core.Entity.prototype.draw = function() {
+  if (!this.isDirty) return;
+  this.isDirty = false;
 
-  if (this.lastWidth_ != this.width) {
-    this.el.style.width = this.width + 'px';
-    this.lastWidth_ = this.width;
-  }
+  this.el.style.width = this.width + 'px';
+  this.el.style.height = this.height + 'px';
 
-  if (this.lastHeight_ != this.height) {
-    this.el.style.height = this.height + 'px';
-    this.lastHeight_ = this.height;
-  }
-
-  if (this.lastPositionX_ != position.x ||
-      this.lastPositionY_ != position.y) {
-    var transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
-
-    this.el.style.webkitTransform = transform;
-    this.el.style.MozTransform = transform;
-    this.el.style.msTransform = transform;
-    this.el.style.OTransform = transform;
-    this.el.style.transform = transform;
-
-    // Reset for next time.
-    this.lastPositionX_ = position.x;
-    this.lastPositionY_ = position.y;
-  }
+  var position = this.getPosition();
+  var transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
+  this.el.style.webkitTransform = transform;
+  this.el.style.MozTransform = transform;
+  this.el.style.msTransform = transform;
+  this.el.style.OTransform = transform;
+  this.el.style.transform = transform;
 };

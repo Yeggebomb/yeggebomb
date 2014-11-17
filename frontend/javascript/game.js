@@ -93,8 +93,21 @@ game.Main.prototype.update = function() {
   window.requestAnimationFrame(this.update.bind(this));
   var deltaTime = +new Date() - this.gameTime_;
   this.gameTime_ = +new Date();
-  this.player_.update(deltaTime);
+
+  // Camera isn't an entity.
   this.camera_.update(deltaTime);
+
+  // Update loop
+  _.each(game.core.Entity.All, function(entity) {
+    entity.update(deltaTime);
+  });
+
+  // Draw loop
+  _.each(game.core.Entity.All, function(entity) {
+    if (entity.isDirty) {
+      entity.draw();
+    }
+  });
 };
 
 

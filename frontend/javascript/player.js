@@ -15,7 +15,7 @@ goog.require('game.core.helper');
 game.Player = function() {
   game.Player.base(this, 'constructor');
   this.el.classList.add(game.Player.CLASS_NAME);
-  game.core.helper.mixin(this, 'rectangle', 'gravity', 'fourway', 'physical');
+  game.core.helper.mixin(this, 'rectangle', 'fourway', 'physical');
 
   /**
    * How bouncy this object is. (0 being nothing 1 being forever bouncy)

@@ -68,13 +68,10 @@ game.mixins.Polygon.prototype.setShape = function(opt_pos, opt_points) {
 game.mixins.Polygon.prototype.setRect =
     function(x, y, width, height, opt_relativeTo, opt_maxWidth, opt_maxHeight,
         opt_minWidth, opt_minHeight) {
-
+  // these call makes the entity dirty.
   this.setSize(width, height, opt_relativeTo, opt_maxWidth, opt_maxHeight,
       opt_minWidth, opt_minHeight, false);
-
   this.setPosition(x, y, opt_relativeTo, false);
-
-  if (_.isFunction(this.updateRect)) this.updateRect();
 };
 
 
@@ -122,6 +119,8 @@ game.mixins.Polygon.prototype.setSize =
 
   this.right = position.x + this.width;
   this.bottom = position.y + this.height;
+
+  this.isDirty = true;
 };
 
 
