@@ -35,3 +35,5 @@ COPY \
   /home/yegge/bomb/
 RUN npm install
 RUN ln -s /workspace/code code
+
+ENTRYPOINT ["goapp", "serve", "-host=0.0.0.0", "code"]
