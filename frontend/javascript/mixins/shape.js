@@ -1,4 +1,5 @@
 goog.provide('game.mixins.Shape');
+goog.provide('game.mixins.Shape.Type');
 
 goog.require('game.core.math.Vector');
 

@@ -2,6 +2,7 @@ goog.provide('game.core.Entity');
 
 goog.require('game.core.helper');
 goog.require('game.core.math.Vector');
+goog.require('game.mixins.Shape.Type');
 
 
 
@@ -114,4 +115,26 @@ game.core.Entity.prototype.destroyEventListeners = function() {};
 game.core.Entity.prototype.draw = function() {
   if (!this.isDirty) return;
   this.isDirty = false;
+  if (this.type != game.mixins.Shape.Type.POLYGON) return;
+
+  var svg = this.el.getElementsByTagName('svg');
+  if (svg.length == 1) {
+    svg = svg[0];
+  } else {
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this.el.appendChild(svg);
+  }
+
+  var path = svg.getElementsByTagName('path');
+  if (path.length == 1) {
+    path = path[0];
+  } else {
+    path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    svg.appendChild(path);
+  }
+
+  path.setAttributeNS(null, 'd', game.core.helper.poly2path(this));
+  path.setAttributeNS(null, 'fill', 'black');
+
+  game.core.helper.updateTranslate(svg, this.pos);
 };
