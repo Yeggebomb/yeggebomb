@@ -30,9 +30,6 @@ game.core.Entity = function(opt_pos, opt_w, opt_h) {
 
   /** @type {!game.core.math.Vector} */
   this.position = opt_pos || new game.core.math.Vector(0, 0);
-  /** @type {boolean} Draws the position of the Entity. Disable if you want
-  to override with CSS for example. */
-  this.drawPosition = true;
   /** @private {number} */
   this.lastWidth_ = 0;
   /** @private {number} */
@@ -200,13 +197,11 @@ game.core.Entity.prototype.draw = function() {
   this.el.style.width = this.width + 'px';
   this.el.style.height = this.height + 'px';
 
-  if (this.drawPosition) {
-    var position = this.getPosition();
-    var transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
-    this.el.style.webkitTransform = transform;
-    this.el.style.MozTransform = transform;
-    this.el.style.msTransform = transform;
-    this.el.style.OTransform = transform;
-    this.el.style.transform = transform;
-  }
+  var position = this.getPosition();
+  var transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
+  this.el.style.webkitTransform = transform;
+  this.el.style.MozTransform = transform;
+  this.el.style.msTransform = transform;
+  this.el.style.OTransform = transform;
+  this.el.style.transform = transform;
 };
