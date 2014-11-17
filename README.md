@@ -14,7 +14,7 @@ The compile rules are strict and require linted code, closure linter can help wi
 
 ## Instructions on runnning locally
 
-To serve the app locally using goapp (http://bit.ly/1oHZcPV):
+To serve the app locally using goapp (http://bit.ly/1yeaxXT):
 * goapp serve
 
 This can be coupled with `grunt watch` for a very nice experience. Go will auto update the serve on file changes, and so will any styles or scripts.
