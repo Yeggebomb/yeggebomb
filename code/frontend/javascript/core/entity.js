@@ -145,6 +145,8 @@ game.core.Entity.prototype.draw = function() {
       svg.appendChild(circle);
     }
     circle.setAttributeNS(null, 'r', this.r);
+    circle.setAttributeNS(null, 'cx', this.r);
+    circle.setAttributeNS(null, 'cy', this.r);
     circle.setAttributeNS(null, 'fill', 'black');
   }
 
