@@ -23,6 +23,13 @@ game.Player = function() {
    * @type {number}
    */
   this.bouncyness = 0.3;
+
+  /**
+   * How frictiony the object is.
+   *
+   * @type {number}
+   */
+  this.friction = 0.4;
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
@@ -41,6 +48,14 @@ game.Player.CLASS_NAME = 'player';
  */
 game.Player.prototype.collisionWithPlatform = function(other, response) {
   var position = this.pos.sub(response.overlapV);
-  this.getVelocity().y *= -this.bouncyness;
+  var velocity = this.getVelocity();
+  velocity.y *= -this.bouncyness;
+  if (velocity.x > 0) {
+    velocity.x -= this.friction;
+    if (velocity.x < 0) velocity.x = 0;
+  } else {
+    velocity.x += this.friction;
+    if (velocity.x > 0) velocity.x = 0;
+  }
   this.setPosition(position.x, position.y);
 };
