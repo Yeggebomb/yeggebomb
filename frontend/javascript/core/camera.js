@@ -4,7 +4,6 @@ goog.provide('game.core.Camera.Axis');
 goog.require('game.Backdrop');
 goog.require('game.Board');
 goog.require('game.core.Root');
-goog.require('game.core.math.Point');
 
 
 

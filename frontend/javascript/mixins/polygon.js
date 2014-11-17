@@ -27,47 +27,121 @@ game.mixins.Polygon = function() {};
  * Register mixin globally.
  */
 game.core.helper.mixins['polygon'] = game.mixins.Polygon.prototype;
-game.core.helper.mixins['box'] = game.mixins.Polygon.prototype;
+game.core.helper.mixins['rectangle'] = game.mixins.Polygon.prototype;
 
 
 /**
- * Creates a convex pologyon or a rectangle (as a convex polygon).
+ * Creates a convex pologyon.
  *
- * This function has two signatures for creating wither a convex polygon or a
- * rectangle.
- *
- * (game.core.math.Vector, Array.<game.core.math.Vector>) to create a polygon.
- * - OR -
- * (game.core.math.Vector, number, number) to create a box (which in turn
- * creates a polygon).
  *
  * @param {game.core.math.Vector=} opt_pos A vector representing the origin of
  *     the polygon. (all other points are relative to this one)
- * @param {Array.<game.core.math.Vector>=|number=} opt_pointsOrWidth An array of
+ * @param {Array.<game.core.math.Vector>=|number=} opt_points An array of
  *     vectors representing the points in the polygon, in counter-clockwise
- *     order. Or the width (if this is provided we are creating a box).
- * @param {number=} opt_height If this is provided we are creating a box.
+ *     order.
  * @return {game.mixins.Polygon} This for chaining.
  */
-game.mixins.Polygon.prototype.setShape =
-    function(opt_pos, opt_pointsOrWidth, opt_height) {
+game.mixins.Polygon.prototype.setShape = function(opt_pos, opt_points) {
   this.pos = opt_pos || new game.core.math.Vector();
-
-  if (_.isNumber(opt_pointsOrWidth) && _.isNumber(opt_height)) {
-    var w = opt_pointsOrWidth;
-    var h = opt_height;
-    opt_pointsOrWidth = [
-      new game.core.math.Vector(), new game.core.math.Vector(w, 0),
-      new game.core.math.Vector(w, h), new game.core.math.Vector(0, h)
-    ];
-  }
-
-  this.points = opt_pointsOrWidth || [];
+  this.points = opt_points || [];
   this.angle = 0;
   this.offset = new game.core.math.Vector();
   this.recalc();
 
   return this;
+};
+
+
+/**
+ * Sets the dimensions of the rectangle.
+ *
+ * @param {number|string} x A number for px and a string for percent.
+ * @param {number|string} y A number for px and a string for percent.
+ * @param {number|string} width A number for px and a string for percent.
+ * @param {number|string} height A number for px and a string for percent.
+ * @param {Element=|game.core.Entity=} opt_relativeTo
+ * @param {number=} opt_maxWidth
+ * @param {number=} opt_maxHeight
+ * @param {number=} opt_minWidth
+ * @param {number=} opt_minHeight
+ */
+game.mixins.Polygon.prototype.setRect =
+    function(x, y, width, height, opt_relativeTo, opt_maxWidth, opt_maxHeight,
+        opt_minWidth, opt_minHeight) {
+
+  this.setSize(width, height, opt_relativeTo, opt_maxWidth, opt_maxHeight,
+      opt_minWidth, opt_minHeight, false);
+
+  this.setPosition(x, y, opt_relativeTo, false);
+
+  if (_.isFunction(this.updateRect)) this.updateRect();
+};
+
+
+/**
+ * For rectangles. Sets the size of the entity.
+ *
+ * @param {number|string} width
+ * @param {number|string} height
+ * @param {Element=|game.core.Entity=} opt_relativeTo
+ * @param {number=} opt_maxWidth
+ * @param {number=} opt_maxHeight
+ * @param {number=} opt_minWidth
+ * @param {number=} opt_minHeight
+ * @param {boolean=} opt_callUpdate Default is true which will call the update
+ *    function.
+ */
+game.mixins.Polygon.prototype.setSize =
+    function(width, height, opt_relativeTo, opt_maxWidth, opt_maxHeight,
+    opt_minWidth, opt_minHeight, opt_callUpdate) {
+
+  if (_.isString(width) && opt_relativeTo) {
+    width = opt_relativeTo.getWidth() * parseInt(width, 10) / 100;
+    if (_.isNumber(opt_maxWidth)) {
+      width = Math.min(opt_maxWidth, width);
+    }
+    if (_.isNumber(opt_minWidth)) {
+      width = Math.max(opt_minWidth, width);
+    }
+  }
+
+  if (_.isString(height) && opt_relativeTo) {
+    height = opt_relativeTo.getHeight() * parseInt(height, 10) / 100;
+    if (_.isNumber(opt_maxHeight)) {
+      height = Math.min(opt_maxHeight, height);
+    }
+    if (_.isNumber(opt_minHeight)) {
+      height = Math.max(opt_minHeight, height);
+    }
+  }
+
+  this.width = width;
+  this.height = height;
+
+  var position = this.position || new game.core.math.Vector(0, 0);
+
+  this.right = position.x + this.width;
+  this.bottom = position.y + this.height;
+};
+
+
+/**
+ * For rectangles.
+ *
+ * @return {number}
+ */
+game.mixins.Polygon.prototype.getWidth = function() {
+  return this.width;
+};
+
+
+/**
+ * For rectangles.
+ *
+ * @return {number}
+ */
+game.mixins.Polygon.prototype.getHeight = function() {
+  return this.height;
 };
 
 
@@ -79,7 +153,7 @@ game.mixins.Polygon.prototype.setShape =
  * @param {Array.<game.core.math.Vector>=} opt_points An array of vectors
  *     representing the points in the polygon, in counter-clockwise order.
  *
- * @return {Polygon} This for chaining.
+ * @return {!game.mixins.Polygon} This for chaining.
  */
 game.mixins.Polygon.prototype.setPoints = function(opt_points) {
   this.points = opt_points;
@@ -94,7 +168,7 @@ game.mixins.Polygon.prototype.setPoints = function(opt_points) {
  * Note: This calls `recalc` for you.
  *
  * @param {number} angle The current rotation angle (in radians).
- * @return {Polygon} This for chaining.
+ * @return {!game.mixins.Polygon} This for chaining.
  */
 game.mixins.Polygon.prototype.setAngle = function(angle) {
   this.angle = angle;
@@ -110,7 +184,7 @@ game.mixins.Polygon.prototype.setAngle = function(angle) {
  * Note: This calls `recalc` for you.
  *
  * @param {game.core.math.Vector} offset The new offset vector.
- * @return {Polygon} This for chaining.
+ * @return {!game.mixins.Polygon} This for chaining.
  */
 game.mixins.Polygon.prototype.setOffset = function(offset) {
   this.offset = offset;
@@ -127,7 +201,7 @@ game.mixins.Polygon.prototype.setOffset = function(offset) {
  * on top of this rotation) Note: This calls `recalc` for you.
  *
  * @param {number} angle The angle to rotate (in radians)
- * @return {Polygon} This for chaining.
+ * @return {!game.mixins.Polygon} This for chaining.
  */
 game.mixins.Polygon.prototype.rotate = function(angle) {
   var points = this.points;
@@ -150,7 +224,7 @@ game.mixins.Polygon.prototype.rotate = function(angle) {
  *
  * @param {number} x The horizontal amount to translate.
  * @param {number} y The vertical amount to translate.
- * @return {Polygon} This for chaining.
+ * @return {!game.mixins.Polygon} This for chaining.
  */
 game.mixins.Polygon.prototype.translate = function(x, y) {
   var points = this.points;
@@ -172,7 +246,7 @@ game.mixins.Polygon.prototype.translate = function(x, y) {
  * This **must** be called if the `points` array, `angle`, or `offset` is
  * modified manualy.
  *
- * @return {Polygon} This for chaining.
+ * @return {!game.mixins.Polygon} This for chaining.
  */
 game.mixins.Polygon.prototype.recalc = function() {
   var i;

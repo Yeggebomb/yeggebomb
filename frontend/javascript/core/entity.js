@@ -1,9 +1,7 @@
 goog.provide('game.core.Entity');
 
 goog.require('game.core.helper');
-goog.require('game.core.math.Point');
 goog.require('game.core.math.Vector');
-goog.require('game.mixins.Rectangle');
 
 
 
@@ -44,7 +42,7 @@ game.core.Entity = function(opt_pos, opt_w, opt_h) {
   /** @private {number} */
   this.lastScale_ = 1;
 
-  game.core.helper.mixin(this, game.mixins.Rectangle.prototype);
+  game.core.helper.mixin(this, 'rectangle');
 
   game.core.Entity.All.push(this);
 };
@@ -61,7 +59,7 @@ game.core.Entity.All = [];
 /**
  * Returns a reference to the position of the entity.
  *
- * @return {!game.core.math.Point}
+ * @return {!game.core.math.Vector}
  */
 game.core.Entity.prototype.getPosition = function() {
   return this.position;
@@ -98,6 +96,8 @@ game.core.Entity.prototype.setPosition =
 
   this.right = x + this.getWidth();
   this.bottom = y + this.getHeight();
+
+  this.updateRect();
 };
 
 

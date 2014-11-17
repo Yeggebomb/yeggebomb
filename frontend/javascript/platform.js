@@ -15,7 +15,7 @@ game.Platform = function() {
   game.Platform.base(this, 'constructor');
   this.el.classList.add(game.Platform.CLASS_NAME);
 
-  game.core.helper.mixin(this, 'box', 'physical');
+  game.core.helper.mixin(this, 'rectangle', 'physical');
 };
 game.core.helper.inherit(game.Platform, game.core.Entity);
 

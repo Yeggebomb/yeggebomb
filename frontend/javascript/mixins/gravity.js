@@ -26,7 +26,7 @@ game.core.helper.mixins['gravity'] = game.mixins.entity.Gravity.prototype;
  */
 game.mixins.entity.Gravity.prototype.update = function(deltaTime) {
   var velocity = this.getVelocity();
-  velocity.setY(velocity.y + game.constants.Gravity * deltaTime);
+  velocity.y += game.constants.Gravity * deltaTime;
 
   var position = this.getPosition();
   this.setPosition(position.x + velocity.x, position.y + velocity.y);

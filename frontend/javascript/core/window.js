@@ -2,8 +2,6 @@ goog.provide('game.core.Window');
 
 goog.require('game.core.Entity');
 goog.require('game.core.helper');
-goog.require('game.mixins.Listenable');
-goog.require('game.mixins.Rectangle');
 
 
 
@@ -12,15 +10,14 @@ goog.require('game.mixins.Rectangle');
  * dimensions.
  *
  * @constructor
- * @extends {Game.Entity}
+ * @extends {!game.core.Entity}
  */
 game.core.Window = function() {
   if (game.core.Window.prototype._singletonInstance) {
     return game.core.Window.prototype._singletonInstance;
   }
   game.core.Window.prototype._singletonInstance = this;
-  game.core.helper.mixin(
-      this, game.mixins.Rectangle.prototype, game.mixins.Listenable.prototype);
+  game.core.helper.mixin(this, 'rectangle', 'listenable');
 
   /**
    * Callbacks to call after window has been resized.

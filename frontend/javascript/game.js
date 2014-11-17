@@ -58,10 +58,10 @@ game.Main.prototype.init = function() {
             0, 0, '50%', '50%', this.window_, 800, 600, 400, 300);
       }.bind(this), true);
 
-  this.platform_.setShape(new game.core.math.Vector(0, 600), 1000, 100);
+  this.platform_.setRect(0, 600, 1000, 100);
   this.board_.setRect(0, 0, 1000, 700);
   this.backDrop_.setRect(0, 0, 1000, 700);
-  this.player_.setShape(new game.core.math.Vector(), 40, 50);
+  this.player_.setRect(0, 0, 40, 50);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
 

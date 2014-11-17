@@ -15,7 +15,7 @@ goog.require('game.core.helper');
 game.Player = function() {
   game.Player.base(this, 'constructor');
   this.el.classList.add(game.Player.CLASS_NAME);
-  game.core.helper.mixin(this, 'box', 'gravity', 'fourway', 'physical');
+  game.core.helper.mixin(this, 'rectangle', 'gravity', 'fourway', 'physical');
 
   /**
    * How bouncy this object is. (0 being nothing 1 being forever bouncy)
@@ -37,6 +37,5 @@ game.Player.CLASS_NAME = 'player';
  * Callback for when player collides with platform.
  */
 game.Player.prototype.collisionWithPlatform = function() {
-  var velocity = this.getVelocity();
-  velocity.setY(velocity.getY() * -this.bouncyness);
+  this.getVelocity().y *= -this.bouncyness;
 };

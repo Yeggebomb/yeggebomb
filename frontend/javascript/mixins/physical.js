@@ -1,7 +1,7 @@
 goog.provide('game.mixins.Physical');
 
 goog.require('game.core.helper');
-goog.require('game.core.math.Point');
+goog.require('game.core.math.Vector');
 
 
 
@@ -39,7 +39,7 @@ game.mixins.Physical.Colideers = {};
  */
 game.mixins.Physical.prototype.getVelocity = function() {
   if (!this.velocity_) {
-    this.velocity_ = new game.core.math.Point(0, 0);
+    this.velocity_ = new game.core.math.Vector(0, 0);
   }
   return this.velocity_;
 };
