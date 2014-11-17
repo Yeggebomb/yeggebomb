@@ -64,6 +64,12 @@ game.core.Entity.prototype.update = function() {};
 
 
 /**
+ * Resolves any collisions if they exist.
+ */
+game.core.Entity.prototype.resolveCollisions = function() {};
+
+
+/**
  * Creates and attaches the dom of this entity to the parent provided.
  * @param {Element|HTMLBodyElement|game.core.Entity} parent The parent to attach
  *     this entity to.

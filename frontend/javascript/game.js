@@ -107,8 +107,9 @@ game.Main.prototype.attach = function() {
 game.Main.prototype.update = function() {
   if (this.gameState_ == game.Main.State.PAUSED) return;
   window.requestAnimationFrame(this.update.bind(this));
-  var deltaTime = +new Date() - this.gameTime_;
-  this.gameTime_ = +new Date();
+  var newTime = +new Date();
+  var deltaTime = (newTime - this.gameTime_) / (100);
+  this.gameTime_ = newTime;
 
   // Camera isn't an entity.
   this.camera_.update(deltaTime);
@@ -116,6 +117,7 @@ game.Main.prototype.update = function() {
   // Update loop
   _.each(game.core.Entity.All, function(entity) {
     entity.update(deltaTime);
+    entity.resolveCollisions(deltaTime);
   });
 
   // Draw loop

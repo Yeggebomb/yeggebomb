@@ -25,6 +25,7 @@ game.core.helper.mixins['gravity'] = game.mixins.entity.Gravity.prototype;
  * @param {number} deltaTime
  */
 game.mixins.entity.Gravity.prototype.update = function(deltaTime) {
+  this.addForce(game.constants.Gravity);
   var velocity = this.getVelocity();
   velocity.y += game.constants.Gravity * deltaTime;
 

@@ -15,28 +15,30 @@ goog.require('game.core.helper');
 game.Player = function() {
   game.Player.base(this, 'constructor');
   this.el.classList.add(game.Player.CLASS_NAME);
-  game.core.helper.mixin(this, 'shape', 'fourway', 'gravity', 'physical');
+  game.core.helper.mixin(this, 'shape', 'reset', 'fourway', 'physical');
 
   /**
    * How bouncy this object is. (0 being nothing 1 being forever bouncy)
    *
    * @type {number}
    */
-  this.bouncyness = 0.3;
+  this.bouncyness = 0.5;
 
   /**
    * How frictiony the object is.
    *
    * @type {number}
    */
-  this.friction = 0.01;
+  this.friction = 0.5;
 
   /**
    * The error for zero.
    *
    * @type {number}
    */
-  this.epsilon = 0.001;
+  this.epsilon = 0.01;
+
+  this.setMass(3);
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
@@ -58,9 +60,6 @@ game.Player.prototype.collisionWithPlatform = function(other, response, delta) {
   var position = this.pos.sub(response.overlapV);
   var velocity = this.getVelocity();
   velocity.y *= -this.bouncyness;
-  //if (velocity.y > 0) {
-  //  velocity.y = 0;
-  // }
 
   if (velocity.x > this.epsilon) {
     velocity.x -= 9.8 * this.friction * delta;
