@@ -123,7 +123,6 @@ game.Main.prototype.attach = function() {
  * Game state switcher.
  */
 game.Main.prototype.gameStateSwitcher = function() {
-  console.log('gameStateSwitcher', this.gameState_);
   var label = '';
   var remainingTime = 0;
   switch (this.gameState_) {
@@ -152,6 +151,7 @@ game.Main.prototype.gameStateSwitcher = function() {
   }
   this.userInterface_.drawCountDown(label, +new Date() + remainingTime);
 
+  // remainingTime is relavant to the server time, not implemented
   setTimeout(this.gameStateSwitcher.bind(this), remainingTime);
 };
 
@@ -161,15 +161,17 @@ game.Main.prototype.gameStateSwitcher = function() {
  */
 game.Main.prototype.physicsLoop = function() {
   var currTime = +new Date();
-  if (!this.gameTime_) this.gameTime_ = +new Date() + 10;
-  var dt = (currTime - this.gameTime_) / 10000;
+  if (!this.gameTime_) this.gameTime_ = +new Date();
+  var dt = (currTime - this.gameTime_) / 100;
+
+  this.camera_.update();
 
   // Update loop
   _.each(game.core.Entity.All, function(entity) {
     entity.update(dt);
     entity.resolveCollisions(dt);
   });
-
+  this.gameTime_ = +new Date();
   setTimeout(this.physicsLoop.bind(this), 0);
 };
 
