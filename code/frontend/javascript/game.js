@@ -132,10 +132,7 @@ game.Main.prototype.update = function() {
   var currTime = +new Date();
   var deltaMs = currTime - this.gameTime_;
   this.loopTime_ = this.loopTime_ - (deltaMs / 1000);
-<<<<<<< HEAD
   if (this.gameState_ == game.Main.State.RECORDING) {
-=======
-  if (this.gameState_ == game.Main.State.RUNNING) {
 
     // Record the intial state of every entity so that we can reset them when
     // we are done.
@@ -146,7 +143,6 @@ game.Main.prototype.update = function() {
       this.hasRecordedInitialState_ = true;
       this.keyHandler_.startRecording();
     }
->>>>>>> 760a56fc9659c499a28290842b0b1c26269092a6
     // Generate your play for this loop.
     var dt = deltaMs / 100;
 
