@@ -95,7 +95,6 @@ game.Main.prototype.init = function() {
   this.player_.getVelocity().x = 5;
 
   this.player_.setRectangle(0, 0, 40, 50);
-  this.player_.setMass(5);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
 
@@ -143,6 +142,7 @@ game.Main.prototype.update = function() {
       this.hasRecordedInitialState_ = true;
       this.keyHandler_.startRecording();
     }
+
     // Generate your play for this loop.
     var dt = deltaMs / 100;
 
