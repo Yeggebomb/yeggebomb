@@ -123,7 +123,6 @@ game.core.Entity.prototype.draw = function() {
 
   this.isDirty = false;
   if (this.type == game.mixins.Shape.Type.RECTANGLE) return;
-  debugger;
 
   var svg = this.el.getElementsByTagName('svg');
   if (svg.length == 1) {

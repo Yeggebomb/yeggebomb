@@ -202,12 +202,22 @@ game.mixins.Physical.prototype.update = function(delta) {
         var ShapeType = game.mixins.Shape.Type;
         var didCollide = false;
 
-
-        didCollide = collision.testPolygonPolygon(this, entity, response);
-
+        if ((this.type == ShapeType.POLYGON ||
+            this.type == ShapeType.RECTANGLE) &&
+            (entity.type == ShapeType.POLYGON ||
+            entity.type == ShapeType.RECTANGLE)) {
+          didCollide = collision.testPolygonPolygon(this, entity, response);
+        } else if (this.type == ShapeType.CIRCLE &&
+            (entity.type == ShapeType.POLYGON ||
+            entity.type == ShapeType.RECTANGLE)) {
+          didCollide = collision.testCirclePolygon(this, entity, response);
+        } else if ((this.type == ShapeType.POLYGON ||
+            this.type == ShapeType.RECTANGLE) &&
+            entity.type == ShapeType.CIRCLE) {
+          didCollide = collision.testPolygonCircle(this, entity, response);
+        }
 
         if (didCollide) {
-          console.log('tes');
           callback(entity, response, delta);
         }
       }
