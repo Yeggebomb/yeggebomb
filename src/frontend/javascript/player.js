@@ -17,6 +17,7 @@ game.Player = function() {
       this, 'shape', 'reset', 'fourway', 'physical', 'projectilecreator');
   game.Player.base(this, 'constructor');
   this.el.classList.add(game.Player.CLASS_NAME);
+
   /**
    * How bouncy this object is. (0 being nothing 1 being forever bouncy)
    *

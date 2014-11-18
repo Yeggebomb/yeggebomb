@@ -1,5 +1,6 @@
 goog.provide('game.mixins.ProjectileCreator');
 
+goog.require('game.ProjectilePool');
 goog.require('game.core.KeyHandler');
 goog.require('game.core.helper');
 
@@ -10,7 +11,8 @@ goog.require('game.core.helper');
  *
  * @constructor
  */
-game.mixins.ProjectileCreator = function() {};
+game.mixins.ProjectileCreator = function() {
+};
 
 
 /**
@@ -18,6 +20,14 @@ game.mixins.ProjectileCreator = function() {};
  */
 game.core.helper.mixins['projectilecreator'] =
     game.mixins.ProjectileCreator.prototype;
+
+
+/**
+ * Initialize the projectile creator.
+ */
+game.mixins.ProjectileCreator.prototype.init = function() {
+  this.projectilePool = new game.ProjectilePool();
+};
 
 
 /**
@@ -31,7 +41,7 @@ game.mixins.ProjectileCreator.KEY_HANDLER = new game.core.KeyHandler();
 /** create and throw new projectile */
 game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
   var vel = this.getVelocity();
-  var projectile = new game.Projectile();
+  var projectile = this.projectilePool.get();
   projectile.create(this.getPosition(), vel);
   projectile.attach(this.el.parentNode);
 };

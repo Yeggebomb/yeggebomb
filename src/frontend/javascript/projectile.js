@@ -8,16 +8,18 @@ goog.require('game.core.helper');
 /**
  * Projectile singleton class.
  *
+ * @param {!game.ProjectilePool} projectilePool
  * @constructor
  * @extends {game.core.Entity}
  */
-game.Projectile = function() {
+game.Projectile = function(projectilePool) {
   game.core.helper.mixin(this, 'shape', 'reset', 'physical', 'dissapearing');
 
   game.Projectile.base(this, 'constructor');
   this.el.classList.add(game.Projectile.CLASS_NAME);
 
-  this.bounciness = 1;
+  this.projectilePool = projectilePool;
+  this.bouncyness = 0.7;
   this.friction = 0.1;
 };
 game.core.helper.inherit(game.Projectile, game.core.Entity);
@@ -26,8 +28,8 @@ game.core.helper.inherit(game.Projectile, game.core.Entity);
 /**
  * Initialize projectile.
  *
- * @param {game.core.math.Vector} pos
- * @param {game.core.math.Vector} vel
+ * @param {!game.core.math.Vector} pos
+ * @param {!game.core.math.Vector} vel
  */
 game.Projectile.prototype.create = function(pos, vel) {
   this.setMass(1);
