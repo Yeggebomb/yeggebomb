@@ -112,5 +112,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('js', ['gjslint', 'closure-compiler']);
   grunt.registerTask('css', ['sass', 'cssmin']);
+  grunt.registerTask('build', ['js', 'css']);
   grunt.registerTask('default', ['js', 'css', 'watch']);
 };

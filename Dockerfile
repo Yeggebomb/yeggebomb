@@ -32,8 +32,9 @@ COPY \
   README.md \
   package.json \
   Gruntfile.js \
+  build.sh \
   /home/yegge/bomb/
 RUN npm install
 RUN ln -s /workspace/code code
 
-ENTRYPOINT ["goapp", "serve", "-host=0.0.0.0", "code"]
+ENTRYPOINT ./build.sh && goapp serve -host=0.0.0.0 code
