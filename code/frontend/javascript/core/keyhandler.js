@@ -13,6 +13,12 @@ game.core.KeyHandler = function() {
     return game.core.KeyHandler.prototype._singletonInstance;
   }
 
+  /**
+   * True if we should record events.
+   * @type {Boolean}
+   */
+  this.isRecording = true;
+
   game.core.KeyHandler.prototype._singletonInstance = this;
   /**
    * Object that tracks what is currently being pressed.
@@ -31,6 +37,13 @@ game.core.KeyHandler = function() {
 
 
 /**
+ * A record of key events.
+ * @type {Array.<Object>}
+ */
+game.core.KeyHandler.record = [];
+
+
+/**
  * Checks if the app lost visibility. If it does then we can no longer detect
  * keyUp events so we will just wipe out all the keys.
  *
@@ -38,6 +51,9 @@ game.core.KeyHandler = function() {
  */
 game.core.KeyHandler.prototype.visibilityChanged_ = function() {
   if (document.hidden) {
+    _.each(this.pressed_, function(keycode) {
+      this.endRecord(keycode);
+    }.bind(this));
     this.pressed_ = [];
   }
 };
@@ -49,6 +65,9 @@ game.core.KeyHandler.prototype.visibilityChanged_ = function() {
  */
 game.core.KeyHandler.prototype.mouseDown_ = function(evt) {
   if (evt.which != 1) {
+    _.each(this.pressed_, function(keycode) {
+      this.endRecord(keycode);
+    }.bind(this));
     this.pressed_ = [];
   }
 };
@@ -72,6 +91,18 @@ game.core.KeyHandler.prototype.isDown = function(keyCode) {
  * @private
  */
 game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
+  var skipRecord = false;
+  _.each(game.core.KeyHandler.record, function(record) {
+    if (record.keyCode == evt.keyCode && record.end == null) {
+      skipRecord = true;
+    }
+  });
+  // We should skip recording this entry if we already found an event with this
+  // entry.
+  if (!skipRecord) {
+    this.startRecord(evt.keyCode);
+  }
+
   this.pressed_[evt.keyCode] = true;
 };
 
@@ -83,7 +114,59 @@ game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
  * @private
  */
 game.core.KeyHandler.prototype.onKeyup_ = function(evt) {
+  this.endRecord(evt.keyCode);
   delete this.pressed_[evt.keyCode];
+};
+
+
+/**
+ * Clears the recorded key strokes.
+ */
+game.core.KeyHandler.prototype.clearRecords = function() {
+  game.core.KeyHandler.record = [];
+};
+
+
+/**
+ * Starts recording the key stroke.
+ *
+ * @param {number} keyCode
+ */
+game.core.KeyHandler.prototype.startRecord = function(keyCode) {
+  game.core.KeyHandler.record.push({
+    keyCode: keyCode,
+    start: +new Date(),
+    end: null
+  });
+};
+
+
+/**
+ * Ends the key.
+ *
+ * @param {number} keyCode
+ */
+game.core.KeyHandler.prototype.endRecord = function(keyCode) {
+  var foundRecord = null;
+
+  _.each(game.core.KeyHandler.record, function(record) {
+    if (record.keyCode == keyCode && record.end == null) {
+      if (foundRecord) {
+        console.warn('Crap we found multiple records that we havent ended ' +
+            'for this key');
+      }
+      foundRecord = record;
+    }
+  });
+
+  if (!foundRecord) {
+    console.warn('Crap we couldn\'t find that last record');
+    return;
+  }
+
+  foundRecord.end = +new Date();
+  foundRecord.duration = foundRecord.end - foundRecord.start;
+  console.log(game.core.KeyHandler.record);
 };
 
 
