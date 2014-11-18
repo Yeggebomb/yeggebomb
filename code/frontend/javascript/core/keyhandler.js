@@ -37,10 +37,11 @@ game.core.KeyHandler = function() {
 
 
 /**
- * A record of key events.
+ * Records of key events.
+ *
  * @type {Array.<Object>}
  */
-game.core.KeyHandler.record = [];
+game.core.KeyHandler.records = [];
 
 
 /**
@@ -52,7 +53,7 @@ game.core.KeyHandler.record = [];
 game.core.KeyHandler.prototype.visibilityChanged_ = function() {
   if (document.hidden) {
     _.each(this.pressed_, function(keycode) {
-      this.endRecord(keycode);
+      this.endRecordEvent_(keycode);
     }.bind(this));
     this.pressed_ = [];
   }
@@ -66,7 +67,7 @@ game.core.KeyHandler.prototype.visibilityChanged_ = function() {
 game.core.KeyHandler.prototype.mouseDown_ = function(evt) {
   if (evt.which != 1) {
     _.each(this.pressed_, function(keycode) {
-      this.endRecord(keycode);
+      this.endRecordEvent_(keycode);
     }.bind(this));
     this.pressed_ = [];
   }
@@ -92,7 +93,7 @@ game.core.KeyHandler.prototype.isDown = function(keyCode) {
  */
 game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
   var skipRecord = false;
-  _.each(game.core.KeyHandler.record, function(record) {
+  _.each(game.core.KeyHandler.records, function(record) {
     if (record.keyCode == evt.keyCode && record.end == null) {
       skipRecord = true;
     }
@@ -100,7 +101,7 @@ game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
   // We should skip recording this entry if we already found an event with this
   // entry.
   if (!skipRecord) {
-    this.startRecord(evt.keyCode);
+    this.recordEvent_(evt.keyCode);
   }
 
   this.pressed_[evt.keyCode] = true;
@@ -114,16 +115,29 @@ game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
  * @private
  */
 game.core.KeyHandler.prototype.onKeyup_ = function(evt) {
-  this.endRecord(evt.keyCode);
+  this.endRecordEvent_(evt.keyCode);
   delete this.pressed_[evt.keyCode];
 };
 
 
 /**
- * Clears the recorded key strokes.
+ * Disallows the recording of key stroked and ends recording of any keys.
  */
-game.core.KeyHandler.prototype.clearRecords = function() {
-  game.core.KeyHandler.record = [];
+game.core.KeyHandler.prototype.stopRecording = function() {
+  _.each(this.pressed_, function(keycode) {
+    this.endRecordEvent_(keycode);
+  }.bind(this));
+  this.isRecording = false;
+  game.core.KeyHandler.records = [];
+};
+
+
+/**
+ * Allows recording of keys
+ */
+game.core.KeyHandler.prototype.startRecording = function() {
+  game.core.KeyHandler.records = [];
+  this.isRecording = true;
 };
 
 
@@ -131,9 +145,11 @@ game.core.KeyHandler.prototype.clearRecords = function() {
  * Starts recording the key stroke.
  *
  * @param {number} keyCode
+ * @private
  */
-game.core.KeyHandler.prototype.startRecord = function(keyCode) {
-  game.core.KeyHandler.record.push({
+game.core.KeyHandler.prototype.recordEvent_ = function(keyCode) {
+  if (!this.isRecording) return;
+  game.core.KeyHandler.records.push({
     keyCode: keyCode,
     start: +new Date(),
     end: null
@@ -145,11 +161,13 @@ game.core.KeyHandler.prototype.startRecord = function(keyCode) {
  * Ends the key.
  *
  * @param {number} keyCode
+ * @private
  */
-game.core.KeyHandler.prototype.endRecord = function(keyCode) {
+game.core.KeyHandler.prototype.endRecordEvent_ = function(keyCode) {
+  if (!this.isRecording) return;
   var foundRecord = null;
 
-  _.each(game.core.KeyHandler.record, function(record) {
+  _.each(game.core.KeyHandler.records, function(record) {
     if (record.keyCode == keyCode && record.end == null) {
       if (foundRecord) {
         console.warn('Crap we found multiple records that we havent ended ' +
@@ -166,7 +184,7 @@ game.core.KeyHandler.prototype.endRecord = function(keyCode) {
 
   foundRecord.end = +new Date();
   foundRecord.duration = foundRecord.end - foundRecord.start;
-  console.log(game.core.KeyHandler.record);
+  console.log(game.core.KeyHandler.records);
 };
 
 
