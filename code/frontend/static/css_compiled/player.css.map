@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAEA,OAAO;EACL,gBAAgB,EAAE,OAAO;EACzB,MAAM,EAAE,eAAe",
-"sources": ["../../stylesheets/player.sass"],
-"names": [],
-"file": "player.css"
-}

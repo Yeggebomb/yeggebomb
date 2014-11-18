@@ -120,8 +120,10 @@ game.core.Entity.prototype.destroyEventListeners = function() {};
  */
 game.core.Entity.prototype.draw = function() {
   if (!this.isDirty) return;
+
   this.isDirty = false;
   if (this.type == game.mixins.Shape.Type.RECTANGLE) return;
+  debugger;
 
   var svg = this.el.getElementsByTagName('svg');
   if (svg.length == 1) {
@@ -157,5 +159,5 @@ game.core.Entity.prototype.draw = function() {
   }
 
 
-  game.core.helper.updateTranslate(svg, this.pos);
+  // game.core.helper.updateTranslate(svg, this.pos);
 };

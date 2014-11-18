@@ -1,9 +1,0 @@
-.entity {
-  -moz-backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  display: block;
-  position: absolute;
-}
-
-/*# sourceMappingURL=entity.css.map */

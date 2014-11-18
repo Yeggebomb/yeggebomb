@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAEA,OAAO;EC0VL,wBAAwC,EDtVnB,MAAM;ECsV3B,2BAAwC,EDtVnB,MAAM;ECsV3B,mBAAwC,EDtVnB,MAAM;EAC3B,OAAO,EAAE,KAAK;EACd,QAAQ,EAAE,QAAQ",
-"sources": ["../../../stylesheets/core/entity.sass","../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/_support.scss"],
-"names": [],
-"file": "entity.css"
-}
