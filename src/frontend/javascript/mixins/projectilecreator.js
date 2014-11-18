@@ -31,8 +31,9 @@ game.mixins.ProjectileCreator.KEY_HANDLER = new game.core.KeyHandler();
 /** create and throw new projectile */
 game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
   var vel = this.getVelocity();
-  var projectile = new game.Projectile(this.getPosition(), vel);
-  projectile.attach(this);
+  var projectile = new game.Projectile();
+  projectile.create(this.getPosition(), vel);
+  projectile.attach(this.el.parentNode);
 };
 
 

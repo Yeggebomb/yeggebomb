@@ -14,7 +14,7 @@ goog.require('game.core.helper');
  */
 game.Player = function() {
   game.core.helper.mixin(
-      this, 'shape', 'reset', 'projectilecreator', 'fourway', 'physical');
+      this, 'shape', 'reset', 'fourway', 'physical', 'projectilecreator');
   game.Player.base(this, 'constructor');
   this.el.classList.add(game.Player.CLASS_NAME);
   /**
