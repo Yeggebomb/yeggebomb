@@ -36,5 +36,6 @@ COPY \
   /home/yegge/bomb/
 RUN npm install
 RUN ln -s /workspace/code code
+ENV GOPATH /home/yegge/bomb/code
 
 ENTRYPOINT ./build.sh && goapp serve -host=0.0.0.0 code
