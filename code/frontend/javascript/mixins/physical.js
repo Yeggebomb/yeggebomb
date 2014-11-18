@@ -211,7 +211,6 @@ game.mixins.Physical.prototype.update = function(delta) {
             (entity.type == ShapeType.POLYGON ||
             entity.type == ShapeType.RECTANGLE)) {
           didCollide = collision.testCirclePolygon(this, entity, response);
-          if (didCollide) debugger;
         } else if ((this.type == ShapeType.POLYGON ||
             this.type == ShapeType.RECTANGLE) &&
             entity.type == ShapeType.CIRCLE) {

@@ -74,7 +74,7 @@ game.Main.prototype.init = function() {
     new game.core.math.Vector(0, 80)
   ]);
 
-  this.sphereObject_.setCircle(new game.core.math.Vector(200, 0), 20);
+  // this.sphereObject_.setCircle(new game.core.math.Vector(200, 0), 20);
 
   this.platform_.setRectangle(0, 600, 1000, 100);
   this.platform_.el.classList.add('ground');
@@ -91,9 +91,9 @@ game.Main.prototype.init = function() {
   this.platform_.registerCollider('platform', game.Platform);
   this.player_.registerCollidesWith(
       'platform', this.player_.collisionWithPlatform.bind(this.player_));
-  this.sphereObject_.registerCollidesWith(
-      'platform', this.sphereObject_.collisionWithPlatform.bind(
-          this.sphereObject_));
+  // this.sphereObject_.registerCollidesWith(
+  //     'platform', this.sphereObject_.collisionWithPlatform.bind(
+  //         this.sphereObject_));
 };
 
 
@@ -109,7 +109,7 @@ game.Main.prototype.attach = function() {
   this.player_.attach(this.board_);
   this.platform_.attach(this.board_);
   this.rotatedPlatform_.attach(this.board_);
-  this.sphereObject_.attach(this.board_);
+  // this.sphereObject_.attach(this.board_);
 };
 
 

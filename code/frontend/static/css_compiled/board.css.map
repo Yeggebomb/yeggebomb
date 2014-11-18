@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAEA,MAAM;EACJ,UAAU,EAAE,8BAA8B",
-"sources": ["../../stylesheets/board.sass"],
-"names": [],
-"file": "board.css"
-}

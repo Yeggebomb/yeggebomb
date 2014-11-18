@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAEA,SAAS;EACP,UAAU,EAAE,gCAAgC",
-"sources": ["../../stylesheets/backdrop.sass"],
-"names": [],
-"file": "backdrop.css"
-}
