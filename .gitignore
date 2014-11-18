@@ -6,3 +6,4 @@ node_modules/*
 src/frontend/static/css_compiled/*
 src/frontend/static/js_compiled/*
 *~
+/pkg
