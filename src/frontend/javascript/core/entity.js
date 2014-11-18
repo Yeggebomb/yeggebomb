@@ -45,6 +45,15 @@ game.core.Entity.All = [];
 
 
 /**
+ * Iterates through all the entities.
+ * @param {function()} cb
+ */
+game.core.Entity.forEach = function(cb) {
+  _.each(game.core.Entity.All, cb);
+};
+
+
+/**
  * Class name's for all entities.
  * @type {string}
  * @const

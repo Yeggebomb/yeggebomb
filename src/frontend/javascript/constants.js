@@ -14,14 +14,14 @@ game.constants.Epsilon = 0.01;
 
 
 /**
- * 'Turn' length of time in seconds.
+ * 'Turn' length of time in ms.
  * @const {number}
  */
-game.constants.PlayTime = 5;
+game.constants.PlayTime = 5000;
 
 
 /**
- * Length of time to wait for info from the server.
+ * Length of time to wait for info from the server in ms/
  * @const {number}
  */
-game.constants.WaitTime = 2;
+game.constants.WaitTime = 2000;

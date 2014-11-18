@@ -53,7 +53,7 @@ game.core.KeyHandler.records = [];
  */
 game.core.KeyHandler.prototype.visibilityChanged_ = function() {
   if (document.hidden) {
-    _.each(this.pressed_, function(keycode) {
+    _.each(this.pressed_, function(value, keycode) {
       this.endRecordEvent_(keycode);
     }.bind(this));
     this.pressed_ = {};
@@ -67,7 +67,7 @@ game.core.KeyHandler.prototype.visibilityChanged_ = function() {
  */
 game.core.KeyHandler.prototype.mouseDown_ = function(evt) {
   if (evt.which != 1) {
-    _.each(this.pressed_, function(keycode) {
+    _.each(this.pressed_, function(value, keycode) {
       this.endRecordEvent_(keycode);
     }.bind(this));
     this.pressed_ = {};
@@ -125,7 +125,7 @@ game.core.KeyHandler.prototype.onKeyup_ = function(evt) {
  * Disallows the recording of key stroked and ends recording of any keys.
  */
 game.core.KeyHandler.prototype.stopRecording = function() {
-  _.each(this.pressed_, function(keycode) {
+  _.each(this.pressed_, function(value, keycode) {
     this.endRecordEvent_(keycode);
   }.bind(this));
   this.isRecording = false;

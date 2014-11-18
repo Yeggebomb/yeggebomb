@@ -23,6 +23,15 @@ game.mixins.Physical = function() {
 
 
 /**
+ * Resets physical attributes.
+ */
+game.mixins.Physical.prototype.init = function() {
+  this.acceleration_ = new game.core.math.Vector(0, 0);
+  this.velocity_ = new game.core.math.Vector(0, 0);
+};
+
+
+/**
  * Register mixin globally.
  */
 game.core.helper.mixins['physical'] = game.mixins.Physical.prototype;
@@ -231,8 +240,7 @@ game.mixins.Physical.prototype.update = function(delta) {
  *
  * @param {number} delta
  */
-game.mixins.Physical.prototype.resolveCollisions = function(delta) {
-};
+game.mixins.Physical.prototype.resolveCollisions = function(delta) {};
 
 
 /**
