@@ -52,12 +52,13 @@ game.Player.CLASS_NAME = 'player';
  * Initialize player.
  */
 game.Player.prototype.init = function() {
+  // Sets initial mass of object.
   this.setMass(5);
 
   /**
    * The initial position of an entity. Used when pausing and starting time.
    *
-   * @type {game.core.math.Vector}
+   * @type {!game.core.math.Vector}
    */
   this.initialPosition = this.pos;
 };

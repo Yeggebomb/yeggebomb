@@ -170,7 +170,15 @@ game.Main.prototype.update = function() {
   }
 
   if (this.gameState_ == game.Main.State.SENDING) {
+
+    _.each(game.core.Entity.All, function(entity) {
+      if (entity instanceof game.Player) {
+        entity.init();
+      }
+    });
+
     var records = game.core.KeyHandler.records;
+    console.log('Record:', records);
     this.keyHandler_.stopRecording();
     this.hasRecordedInitialState_ = false;
 
