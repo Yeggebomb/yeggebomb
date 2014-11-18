@@ -67,6 +67,22 @@ game.UserInterface.prototype.drawCountDown = function(countDownTime) {
 
 
 /**
+ * Show start screen.
+ */
+game.UserInterface.prototype.showStartScreen = function() {
+  this.inactiveLayer.className = 'startScreen';
+};
+
+
+/**
+ * Remove start screen.
+ */
+game.UserInterface.prototype.removeStartScreen = function() {
+  this.inactiveLayer.className = '';
+};
+
+
+/**
  * @type {String}
  */
 game.UserInterface.CLASS_NAME = 'userInterface';
