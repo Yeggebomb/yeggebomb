@@ -18,6 +18,7 @@ game.core.KeyHandler = function() {
    * @type {Boolean}
    */
   this.isRecording = true;
+  this.currentTime = null;
 
   game.core.KeyHandler.prototype._singletonInstance = this;
   /**
@@ -138,6 +139,7 @@ game.core.KeyHandler.prototype.stopRecording = function() {
 game.core.KeyHandler.prototype.startRecording = function() {
   game.core.KeyHandler.records = [];
   this.isRecording = true;
+  this.currentTime = +new Date();
 };
 
 
@@ -151,7 +153,7 @@ game.core.KeyHandler.prototype.recordEvent_ = function(keyCode) {
   if (!this.isRecording) return;
   game.core.KeyHandler.records.push({
     keyCode: keyCode,
-    start: +new Date(),
+    start: +new Date() - this.currentTime,
     end: null
   });
 };
@@ -182,8 +184,7 @@ game.core.KeyHandler.prototype.endRecordEvent_ = function(keyCode) {
     return;
   }
 
-  foundRecord.end = +new Date();
-  foundRecord.duration = foundRecord.end - foundRecord.start;
+  foundRecord.end = +new Date() - this.currentTime;
   console.log(game.core.KeyHandler.records);
 };
 
