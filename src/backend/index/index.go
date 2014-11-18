@@ -1,13 +1,10 @@
-package game
+package index
 
 import (
+  "backend/assets"
   "net/http"
   "text/template"
 )
-
-func init() {
-  http.HandleFunc("/", indexHandler)
-}
 
 // Template context associated with mainPageTemplate.
 type mainPageData struct {
@@ -18,12 +15,12 @@ type mainPageData struct {
 }
 
 // Respond to the URL /home with an html home page
-func indexHandler(w http.ResponseWriter, r *http.Request){
+func IndexHandler(w http.ResponseWriter, r *http.Request){
   t, _ := template.ParseFiles("index.html")
 
   var prodAssets = map[string][]string{
-    "js": devJs(),
-    "css": devCss(),
+    "js": assets.DevJs(),
+    "css": assets.DevCss(),
   }
 
   templateData := &mainPageData{Assets: prodAssets}
