@@ -1,6 +1,8 @@
 var game = {constants:{}};
 game.constants.Gravity = 9.8;
 game.constants.Epsilon = .01;
+game.constants.PlayTime = 15;
+game.constants.WaitTime = 5;
 game.core = {};
 game.core.helper = {};
 game.core.helper.object = {};
@@ -750,11 +752,12 @@ game.Main = function $game$Main$() {
   this.rotatedPlatform_ = new game.Platform;
   this.sphereObject_ = new game.Circle;
   this.gameTime_ = +new Date;
+  this.loopTime_ = game.constants.PlayTime;
   this.attach();
   this.init();
   this.update();
 };
-game.Main.State = {RUNNING:0, PAUSED:1};
+game.Main.State = {RUNNING:0, SENDING:1, WAITING:2, PLAYBACK:3};
 game.Main.prototype.init = function $game$Main$$init$() {
   this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME, function() {
     this.viewport_.setRectangle("25%", "25%", "50%", "50%", this.window_, 800, 600, 400, 300);
@@ -784,19 +787,25 @@ game.Main.prototype.attach = function $game$Main$$attach$() {
   this.sphereObject_.attach(this.board_);
 };
 game.Main.prototype.update = function $game$Main$$update$() {
-  if (this.gameState_ != game.Main.State.PAUSED) {
-    window.requestAnimationFrame(this.update.bind(this));
-    var $newTime$$ = +new Date, $deltaTime$$ = ($newTime$$ - this.gameTime_) / 100;
-    this.gameTime_ = $newTime$$;
-    this.camera_.update($deltaTime$$);
+  var $currTime$$ = +new Date, $deltaMs$$ = $currTime$$ - this.gameTime_;
+  this.loopTime_ -= $deltaMs$$ / 1E3;
+  if (this.gameState_ == game.Main.State.RUNNING) {
+    var $dt$$ = $deltaMs$$ / 100;
+    this.camera_.update($dt$$);
     _.each(game.core.Entity.All, function($entity$$) {
-      $entity$$.update($deltaTime$$);
-      $entity$$.resolveCollisions($deltaTime$$);
+      $entity$$.update($dt$$);
+      $entity$$.resolveCollisions($dt$$);
     });
     _.each(game.core.Entity.All, function($entity$$) {
       $entity$$.isDirty && $entity$$.draw();
     });
+    0 > this.loopTime_ && (this.loopTime_ = 1, this.gameState_ = game.Main.State.SENDING);
   }
+  this.gameState_ == game.Main.State.SENDING && (this.loopTime_ = game.constants.WaitTime, this.gameState_ = game.Main.State.WAITING);
+  this.gameState_ == game.Main.State.WAITING && 0 > this.loopTime_ && (this.loopTime_ = game.constants.PlayTime, this.gameState_ = game.Main.State.PLAYBACK);
+  this.gameState_ == game.Main.State.PLAYBACK && 0 > this.loopTime_ && (this.loopTime_ = game.constants.PlayTime, this.gameState_ = game.Main.State.RUNNING);
+  this.gameTime_ = $currTime$$;
+  window.requestAnimationFrame(this.update.bind(this));
 };
 var main = new game.Main;
 

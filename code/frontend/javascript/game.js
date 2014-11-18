@@ -38,6 +38,8 @@ game.Main = function() {
   this.sphereObject_ = new game.Circle();
   /** @private {number} */
   this.gameTime_ = +new Date();
+  /** @private {number} */
+  this.loopTime_ = game.constants.PlayTime;
 
   this.attach();
   this.init();
@@ -48,7 +50,9 @@ game.Main = function() {
 /** @enum {number} */
 game.Main.State = {
   RUNNING: 0,
-  PAUSED: 1
+  SENDING: 1,
+  WAITING: 2,
+  PLAYBACK: 3
 };
 
 
@@ -113,27 +117,59 @@ game.Main.prototype.attach = function() {
  * Main update loop.
  */
 game.Main.prototype.update = function() {
-  if (this.gameState_ == game.Main.State.PAUSED) return;
-  window.requestAnimationFrame(this.update.bind(this));
-  var newTime = +new Date();
-  var deltaTime = (newTime - this.gameTime_) / (100);
-  this.gameTime_ = newTime;
+  var currTime = +new Date();
+  var deltaMs = currTime - this.gameTime_;
+  this.loopTime_ = this.loopTime_ - (deltaMs / 1000);
+  if (this.gameState_ == game.Main.State.RUNNING) {
+    // Generate your play for this loop.
+    var dt = deltaMs / 100;
 
-  // Camera isn't an entity.
-  this.camera_.update(deltaTime);
+    // Camera isn't an entity.
+    this.camera_.update(dt);
 
-  // Update loop
-  _.each(game.core.Entity.All, function(entity) {
-    entity.update(deltaTime);
-    entity.resolveCollisions(deltaTime);
-  });
+    // Update loop
+    _.each(game.core.Entity.All, function(entity) {
+      entity.update(dt);
+      entity.resolveCollisions(dt);
+    });
 
-  // Draw loop
-  _.each(game.core.Entity.All, function(entity) {
-    if (entity.isDirty) {
-      entity.draw();
+    // Draw loop
+    _.each(game.core.Entity.All, function(entity) {
+      if (entity.isDirty) {
+        entity.draw();
+      }
+    });
+
+    // Decide whether to move on to next step.
+    if (this.loopTime_ < 0) {
+      this.loopTime_ = 1;
+      this.gameState_ = game.Main.State.SENDING;
     }
-  });
+  }
+
+  if (this.gameState_ == game.Main.State.SENDING) {
+    // Send information to the server.
+    this.loopTime_ = game.constants.WaitTime;
+    this.gameState_ = game.Main.State.WAITING;
+  }
+
+  if (this.gameState_ == game.Main.State.WAITING) {
+    // Wait for info from the server.
+    if (this.loopTime_ < 0) {
+      this.loopTime_ = game.constants.PlayTime;
+      this.gameState_ = game.Main.State.PLAYBACK;
+    }
+  }
+
+  if (this.gameState_ == game.Main.State.PLAYBACK) {
+    // Play back the result of the loop.
+    if (this.loopTime_ < 0) {
+      this.loopTime_ = game.constants.PlayTime;
+      this.gameState_ = game.Main.State.RUNNING;
+    }
+  }
+  this.gameTime_ = currTime;
+  window.requestAnimationFrame(this.update.bind(this));
 };
 
 
