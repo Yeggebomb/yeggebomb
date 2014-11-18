@@ -27,17 +27,12 @@ game.core.Entity = function(opt_x, opt_y, opt_w, opt_h) {
   this.el.id = this.id_;
   this.el.classList.add(game.core.Entity.CLASS_NAME);
 
-  /**
-   * The initial position of an entity. Used when pausing and starting time.
-   *
-   * @type {game.core.math.Vector}
-   */
-  this.initialPosition = null;
-
   game.core.Entity.All.push(this);
 
   game.core.helper.mixin(this, 'shape');
   this.setPosition(opt_x, opt_y, opt_w, opt_h);
+
+  this.init();
 };
 
 
@@ -62,6 +57,12 @@ game.core.Entity.CLASS_NAME = 'entity';
  * @type {number}
  */
 game.core.Entity.ID_COUNT = 0;
+
+
+/**
+ * Initializes the entity.
+ */
+game.core.Entity.prototype.init = function() {};
 
 
 /**

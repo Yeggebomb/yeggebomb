@@ -56,7 +56,7 @@ game.core.KeyHandler.prototype.visibilityChanged_ = function() {
     _.each(this.pressed_, function(keycode) {
       this.endRecordEvent_(keycode);
     }.bind(this));
-    this.pressed_ = [];
+    this.pressed_ = {};
   }
 };
 
@@ -70,7 +70,7 @@ game.core.KeyHandler.prototype.mouseDown_ = function(evt) {
     _.each(this.pressed_, function(keycode) {
       this.endRecordEvent_(keycode);
     }.bind(this));
-    this.pressed_ = [];
+    this.pressed_ = {};
   }
 };
 
@@ -166,6 +166,11 @@ game.core.KeyHandler.prototype.recordEvent_ = function(keyCode) {
  * @private
  */
 game.core.KeyHandler.prototype.endRecordEvent_ = function(keyCode) {
+  if (!keyCode) {
+    console.warn('Warning! no keycode provided when ending record event!');
+    return;
+  }
+
   if (!this.isRecording) return;
   var foundRecord = null;
 
@@ -185,7 +190,6 @@ game.core.KeyHandler.prototype.endRecordEvent_ = function(keyCode) {
   }
 
   foundRecord.end = +new Date() - this.currentTime;
-  console.log(game.core.KeyHandler.records);
 };
 
 
