@@ -9,9 +9,9 @@ module.exports = function(grunt) {
         },
         files: [{
           expand: true,
-          cwd: 'code/frontend/stylesheets',
+          cwd: 'src/frontend/stylesheets',
           src: ['**/*.sass'],
-          dest: 'code/frontend/static/css_compiled',
+          dest: 'src/frontend/static/css_compiled',
           ext: '.css'
         }]
       }
@@ -20,9 +20,9 @@ module.exports = function(grunt) {
     cssmin: {
       dist: {
         files: {
-          'code/frontend/static/css_compiled/game.min.css': [
-            'code/frontend/static/css_compiled/**/*.css',
-            '!code/frontend/static/css_compiled/**/*.min.css'
+          'src/frontend/static/css_compiled/game.min.css': [
+            'src/frontend/static/css_compiled/**/*.css',
+            '!src/frontend/static/css_compiled/**/*.min.css'
           ]
         }
       }
@@ -30,11 +30,11 @@ module.exports = function(grunt) {
 
     watch: {
       scripts: {
-        files: ['code/frontend/javascript/**/*.js'],
+        files: ['src/frontend/javascript/**/*.js'],
         tasks: ['js']
       },
       sass: {
-        files: ['code/frontend/stylesheets/**/*.sass'],
+        files: ['src/frontend/stylesheets/**/*.sass'],
         tasks: ['css']
       },
       livereload: {
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
           livereload: true
         },
         files: [
-          'code/frontend/static/**/*'
+          'src/frontend/static/**/*'
         ]
       }
     },
@@ -58,7 +58,7 @@ module.exports = function(grunt) {
         }
       },
       all: {
-        src: 'code/frontend/javascript/**/*.js'
+        src: 'src/frontend/javascript/**/*.js'
       }
     },
 
@@ -73,15 +73,15 @@ module.exports = function(grunt) {
         }
       },
       all: {
-        src: 'code/frontend/javascript/**/*.js'
+        src: 'src/frontend/javascript/**/*.js'
       }
     },
 
     'closure-compiler': {
       prod: {
         closurePath: '$CLOSURE_PATH',
-        js: 'code/frontend/javascript/**/*.js',
-        jsOutputFile: 'code/frontend/static/js_compiled/game.min.js',
+        js: 'src/frontend/javascript/**/*.js',
+        jsOutputFile: 'src/frontend/static/js_compiled/game.min.js',
         maxBuffer: 500,
         options: {
           compilation_level: 'ADVANCED_OPTIMIZATIONS',
@@ -90,8 +90,8 @@ module.exports = function(grunt) {
       },
       dev: {
         closurePath: '$CLOSURE_PATH',
-        js: 'code/frontend/javascript/**/*.js',
-        jsOutputFile: 'code/frontend/static/js_compiled/game.js',
+        js: 'src/frontend/javascript/**/*.js',
+        jsOutputFile: 'src/frontend/static/js_compiled/game.js',
         maxBuffer: 500,
         options: {
           compilation_level: 'SIMPLE_OPTIMIZATIONS',
