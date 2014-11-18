@@ -15,25 +15,9 @@ game.UserInterface = function() {
   game.UserInterface.base(this, 'constructor');
   this.el.classList.add(game.UserInterface.CLASS_NAME);
 
-  this.inactiveLayer = document.createElement('div');
-
-  this.el.appendChild(this.inactiveLayer);
-
-  this.countDownLabel_ = document.createElement('span');
-  this.countDownLabel_.className = 'countDownLabel';
-  this.countDownLabel_.innerHTML = 'Play Ends In: ';
-
-  this.countDownNumber_ = document.createElement('span');
-  this.countDownNumber_.className = 'countDownNumber';
-
-  this.countDownElement_ = document.createElement('div');
-  this.countDownElement_.className = 'countDownElement';
-
-  this.countDownElement_.appendChild(this.countDownLabel_);
-  this.countDownElement_.appendChild(this.countDownNumber_);
-  this.el.appendChild(this.countDownElement_);
-
-  this.countDownTime = 0;
+  this.timerDiv = document.createElement('div');
+  this.timerDiv.classList.add('timer');
+  this.el.appendChild(this.timerDiv);
 
   game.core.helper.mixin(this);
 };
@@ -41,28 +25,25 @@ game.core.helper.inherit(game.UserInterface, game.core.Entity);
 
 
 /**
- * Start the timer.
+ * Time in ms to update the display of the counter.
  *
- * @param {string} countDownLabel
- * @param {number} countDownTime
+ * @type {number}
  */
-game.UserInterface.prototype.startCountDown = function(
-    countDownLabel, countDownTime) {
-  if (countDownTime < 0) return;
-  this.countDownLabel_.innerHTML = countDownLabel;
-  this.drawCountDown(countDownTime);
-};
+game.UserInterface.COUNTDOWN_DELAY = 100;
 
 
 /**
  * Draw the timer.
  *
- * @param {number} countDownTime
+ * @param {string} label
+ * @param {number} countDownTo The time we are counting down to.
  */
-game.UserInterface.prototype.drawCountDown = function(countDownTime) {
-  if (countDownTime < 0) return;
-  this.countDownNumber_.innerHTML = countDownTime;
-  setTimeout(this.drawCountDown.bind(this, countDownTime - 1), 1000);
+game.UserInterface.prototype.drawCountDown = function(label, countDownTo) {
+  var remainder = countDownTo - +new Date();
+  if (remainder <= 0) return;
+  this.timerDiv.innerText = label + ' ' + (remainder / 1000).toFixed(1);
+  setTimeout(this.drawCountDown.bind(this, label, countDownTo),
+      game.UserInterface.COUNTDOWN_DELAY);
 };
 
 

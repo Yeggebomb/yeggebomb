@@ -38,6 +38,13 @@ game.Player = function() {
    * @type {number}
    */
   this.epsilon = 0.01;
+
+  /**
+   * If I should ignore key input or not.
+   *
+   * @type {number}
+   */
+  this.ignoreKeys = false;
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
