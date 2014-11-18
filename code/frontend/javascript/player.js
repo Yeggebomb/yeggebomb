@@ -13,7 +13,8 @@ goog.require('game.core.helper');
  * @extends {Game.Entity}
  */
 game.Player = function() {
-  game.core.helper.mixin(this, 'shape', 'reset', 'fourway', 'physical');
+  game.core.helper.mixin(
+      this, 'shape', 'reset', 'projectilecreator', 'fourway', 'physical');
   game.Player.base(this, 'constructor');
   this.el.classList.add(game.Player.CLASS_NAME);
   /**
