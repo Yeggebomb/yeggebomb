@@ -1,4 +1,4 @@
-package game
+package assets
 
 import (
   "fmt"
@@ -7,15 +7,7 @@ import (
   "strings"
 )
 
-func main() {
-  foundFiles := devJs()
-
-  for _, file := range foundFiles {
-    fmt.Println(file)
-  }
-}
-
-func devJs() []string {
+func DevJs() []string {
   directory := "frontend/static/js_compiled/"
   toMatch := "*.js"
   toIgnore := "*.min.js"
@@ -29,7 +21,7 @@ func devJs() []string {
   return foundFiles
 }
 
-func devCss() []string {
+func DevCss() []string {
   directory := "frontend/static/css_compiled/"
   toMatch := "*.css"
   toIgnore := "*.min.css"
