@@ -40,6 +40,10 @@ game.Main = function() {
   this.gameTime_ = +new Date();
   /** @private {number} */
   this.loopTime_ = game.constants.PlayTime;
+  /** @private {!game.core.KeyHandler} */
+  this.keyHandler_ = new game.core.KeyHandler();
+  /** @private {number} */
+  this.hasRecordedInitialState_ = false;
 
   this.attach();
   this.init();
@@ -60,6 +64,9 @@ game.Main.State = {
  * Setup for our app.
  */
 game.Main.prototype.init = function() {
+  /** @private {number} */
+  this.hasRecordedInitialState_ = false;
+
   this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME,
       function() {
         this.viewport_.setRectangle('25%', '25%', '50%', '50%',
@@ -121,6 +128,16 @@ game.Main.prototype.update = function() {
   var deltaMs = currTime - this.gameTime_;
   this.loopTime_ = this.loopTime_ - (deltaMs / 1000);
   if (this.gameState_ == game.Main.State.RUNNING) {
+
+    // Record the intial state of every entity so that we can reset them when
+    // we are done.
+    if (!this.hasRecordedInitialState_) {
+      _.each(game.core.Entity.All, function(enity) {
+        enity.initialPosition = game.core.helper.object.clone(enity.pos);
+      });
+      this.hasRecordedInitialState_ = true;
+      this.keyHandler_.startRecording();
+    }
     // Generate your play for this loop.
     var dt = deltaMs / 100;
 
@@ -148,6 +165,10 @@ game.Main.prototype.update = function() {
   }
 
   if (this.gameState_ == game.Main.State.SENDING) {
+    var records = game.core.KeyHandler.records;
+    this.keyHandler_.stopRecording();
+    this.hasRecordedInitialState_ = false;
+
     // Send information to the server.
     this.loopTime_ = game.constants.WaitTime;
     this.gameState_ = game.Main.State.WAITING;
