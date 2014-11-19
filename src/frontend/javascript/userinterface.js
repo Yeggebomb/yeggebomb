@@ -14,12 +14,23 @@ goog.require('game.core.helper');
 game.UserInterface = function() {
   game.UserInterface.base(this, 'constructor');
   this.el.classList.add(game.UserInterface.CLASS_NAME);
+  /**
+   * Login callback.
+   *
+   * @type {function()}
+   */
+  this.loginCallback = null;
 
   this.timerDiv = document.createElement('div');
   this.timerDiv.classList.add('timer');
   this.el.appendChild(this.timerDiv);
 
-  game.core.helper.mixin(this);
+  this.googleLoginButton = document.createElement('div');
+  this.googleLoginButton.classList.add('button', 'blue', 'login-button');
+  this.googleLoginButton.innerText = 'Login via Google';
+  this.el.appendChild(this.googleLoginButton);
+
+  this.googleLoginButton.addEventListener('click', this.login.bind(this));
 };
 game.core.helper.inherit(game.UserInterface, game.core.Entity);
 
@@ -66,4 +77,14 @@ game.UserInterface.prototype.removeStartScreen = function() {
 /**
  * @type {String}
  */
-game.UserInterface.CLASS_NAME = 'userInterface';
+game.UserInterface.CLASS_NAME = 'user-interface';
+
+
+/**
+ * LoginButton click.
+ */
+game.UserInterface.prototype.login = function() {
+  if (_.isFunction(this.loginCallback)) {
+    this.loginCallback();
+  }
+};

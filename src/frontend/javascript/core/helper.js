@@ -1,5 +1,6 @@
 goog.provide('game.core.helper');
 goog.provide('game.core.helper.object');
+goog.provide('game.core.helper.string');
 
 
 /**
@@ -211,4 +212,35 @@ game.core.helper.mixin = function(klass) {
   });
 
   return klass;
+};
+
+
+/**
+ * Removes classes from the given element with the given prefix.
+ *
+ * @param {Element} element
+ * @param  {stromg} prefix
+ */
+game.core.helper.removeClassPrefix = function(element, prefix) {
+  var classes = _.filter(element.classList, function(className) {
+    return game.core.helper.string.startsWith(className, prefix);
+  });
+  _.each(classes, function(className) {
+    element.classList.remove(className);
+  });
+};
+
+
+/**
+ * Does the string start with.
+ *
+ * @param {string} str
+ * @param {string} starts
+ * @return {boolean}
+ */
+game.core.helper.string.startsWith = function(str, starts) {
+  if (starts === '') return true;
+  if (str == null || starts == null) return false;
+  str = String(str); starts = String(starts);
+  return str.length >= starts.length && str.slice(0, starts.length) === starts;
 };
