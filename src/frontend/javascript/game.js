@@ -84,7 +84,7 @@ game.Main.prototype.init = function() {
   this.platform_.el.classList.add('ground');
   this.board_.setRectangle(0, 0, 1000, 700);
   this.backDrop_.setRectangle(0, 0, 1000, 700);
-  this.player_.setRectangle(0, 0, 40, 50);
+  this.player_.setRectangle(0, 0, 85, 59);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
 

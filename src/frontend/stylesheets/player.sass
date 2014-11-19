@@ -1,5 +1,19 @@
-@import compass/css3/border-radius
+@import compass/css3
 
 .player
-  background-color: #90F690
-  border: 2px solid black
+  background: url(/images/player/idle.png) no-repeat 50% 0%
+  background-size: 36%
+  &:before, &:after
+    display: block
+    content: ""
+    width: 85px
+    height: 59px
+    position: absolute
+  &:before
+    background: url(/images/player/ship.png) no-repeat
+    background-size: contain
+    top: 15px
+  &:after
+    background: url(/images/player/gun.png) no-repeat
+    top: 8px
+    background-size: 36%
