@@ -40,13 +40,6 @@ game.Player = function() {
   this.epsilon = 0.01;
 
   /**
-   * If I should ignore key input or not.
-   *
-   * @type {number}
-   */
-  this.ignoreKeys = false;
-
-  /**
    * The position of an entity at the start of his turn.
    *
    * @type {!game.core.math.Vector}
@@ -158,4 +151,14 @@ game.Player.prototype.playRecordedKeys = function() {
       delete this.keyHandler_.pressed[keyCode];
     }.bind(this, record.keyCode), record.end);
   }.bind(this));
+};
+
+
+/**
+ * If I should ignore keys.
+ *
+ * @param {boolean} value
+ */
+game.Player.prototype.ignoreKeys = function(value) {
+  this.keyHandler_.ignoreKeys = value;
 };

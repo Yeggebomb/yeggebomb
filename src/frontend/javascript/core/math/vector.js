@@ -246,4 +246,3 @@ game.core.math.Vector.prototype.distanceTo = function(other) {
   ys = ys * ys;
   return Math.sqrt(xs + ys);
 };
-
