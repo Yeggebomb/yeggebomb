@@ -166,15 +166,22 @@ game.Main.prototype.gameStateSwitcher = function() {
 game.Main.prototype.physicsLoop = function() {
   var currTime = +new Date();
   if (!this.gameTime_) this.gameTime_ = +new Date();
-  var dt = (currTime - this.gameTime_) / 100;
+  if (!this.physicsRemainderTime_) this.physicsRemainderTime_ = 0;
+  var dt = (this.physicsRemainderTime_ + currTime - this.gameTime_) / 100;
+  var dtstep = 1 / 60;  // 60 FPS
+
+  var steps = Math.floor(dt / dtstep);
+  this.physicsRemainderTime = dt - dtstep * steps;
 
   this.camera_.update();
 
   // Update loop
-  _.each(game.core.Entity.All, function(entity) {
-    entity.update(dt);
-    entity.resolveCollisions(dt);
-  });
+  for (var step = 0; step < steps; step++) {
+    _.each(game.core.Entity.All, function(entity) {
+      entity.update(dtstep);
+      entity.resolveCollisions(dtstep);
+    });
+  }
   this.gameTime_ = +new Date();
   setTimeout(this.physicsLoop.bind(this), 0);
 };
