@@ -84,9 +84,6 @@ game.Main.prototype.init = function() {
   this.platform_.el.classList.add('ground');
   this.board_.setRectangle(0, 0, 1000, 700);
   this.backDrop_.setRectangle(0, 0, 1000, 700);
-
-  this.player_.getVelocity().x = 5;
-
   this.player_.setRectangle(0, 0, 40, 50);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
@@ -208,10 +205,14 @@ game.Main.prototype.stateChangeToRecording = function() {
   this.keyHandler_.startRecording();
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
+      entity.setVelocity(new game.core.math.Vector());
+      entity.setAcceleration(new game.core.math.Vector());
+      entity.setMass(game.Player.DEFAULT_MASS);
+
       var endPosition = entity.endPosition;
       if (endPosition) {
-        entity.setPosition(entity.endPosition.x, entity.endPosition.y);
-        entity.setMass(game.Player.DEFAULT_MASS);
+        console.log('error of this much',
+            entity.getPosition().distanceTo(endPosition));
       }
       entity.ignoreKeys = false;
       entity.initialPosition = entity.getPosition().clone();

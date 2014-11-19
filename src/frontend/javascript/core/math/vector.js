@@ -231,3 +231,19 @@ game.core.math.Vector.prototype.len2 = function() {
 game.core.math.Vector.prototype.len = function() {
   return Math.sqrt(this.len2());
 };
+
+
+/**
+ * Distance between this vector and the given.
+ *
+ * @param {game.core.math.Vector} other
+ * @return {number}
+ */
+game.core.math.Vector.prototype.distanceTo = function(other) {
+  var xs = other.x - this.x;
+  xs = xs * xs;
+  var ys = other.y - this.y;
+  ys = ys * ys;
+  return Math.sqrt(xs + ys);
+};
+

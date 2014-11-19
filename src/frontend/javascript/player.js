@@ -93,6 +93,34 @@ game.Player.prototype.init = function() {
 };
 
 
+/** moveLeft */
+game.Player.prototype.moveLeft = function() {
+  this.getVelocity().x = -35;
+};
+
+
+/** moveRight */
+game.Player.prototype.moveRight = function() {
+  this.getVelocity().x = 35;
+};
+
+
+/** moveUp */
+game.Player.prototype.moveUp = function() {
+  this.getVelocity().y = -40;
+};
+
+
+/** Update function */
+game.Player.prototype.update = function() {
+  var Keycodes = game.core.KeyHandler.Keycodes;
+
+  if (this.keyHandler_.isDown(Keycodes.RIGHT)) this.moveRight();
+  if (this.keyHandler_.isDown(Keycodes.LEFT)) this.moveLeft();
+  if (this.keyHandler_.isDown(Keycodes.UP)) this.moveUp();
+};
+
+
 /**
  * Callback for when player collides with platform.
  *
