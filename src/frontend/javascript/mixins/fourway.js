@@ -59,10 +59,6 @@ game.mixins.Fourway.prototype.update = function() {
   var KEY_HANDLER = game.mixins.Fourway.KEY_HANDLER;
   var Keycodes = game.core.KeyHandler.Keycodes;
 
-  if (_.isBoolean(this.ignoreKeys) && this.ignoreKeys) {
-    return;
-  }
-
   if (KEY_HANDLER.isDown(Keycodes.RIGHT)) this.moveRight();
   if (KEY_HANDLER.isDown(Keycodes.LEFT)) this.moveLeft();
   if (KEY_HANDLER.isDown(Keycodes.UP)) this.moveUp();

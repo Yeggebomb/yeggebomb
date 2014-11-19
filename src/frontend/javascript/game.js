@@ -205,6 +205,7 @@ game.Main.prototype.renderLoop = function() {
  * The state is now recording.
  */
 game.Main.prototype.stateChangeToRecording = function() {
+  this.keyHandler_.startRecording();
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
       var endPosition = entity.endPosition;
@@ -223,6 +224,7 @@ game.Main.prototype.stateChangeToRecording = function() {
  * The state is now sending.
  */
 game.Main.prototype.stateChangeToSending = function() {
+  this.keyHandler_.stopRecording();
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
       entity.endPosition = entity.getPosition().clone();
@@ -249,7 +251,7 @@ game.Main.prototype.stateChangeToPlayback = function() {
     if (entity instanceof game.Player) {
       entity.setPosition(entity.initialPosition.x, entity.initialPosition.y);
       entity.setMass(game.Player.DEFAULT_MASS);
-
+      entity.playRecordedKeys();
     }
   }.bind(this));
 };

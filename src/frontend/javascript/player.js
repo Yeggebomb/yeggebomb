@@ -60,6 +60,12 @@ game.Player = function() {
    */
   this.endPosition = null;
 
+  /**
+   * Key handler
+   *
+   * @private {!game.core.KeyHandler}
+   */
+  this.keyHandler_ = new game.core.KeyHandler();
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
@@ -109,4 +115,19 @@ game.Player.prototype.collisionWithPlatform = function(other, response, delta) {
     velocity.x = 0;
   }
   this.setPosition(position.x, position.y);
+};
+
+
+/**
+ * Plays recorded keys the KeyHandler.
+ */
+game.Player.prototype.playRecordedKeys = function() {
+  _.each(game.core.KeyHandler.records, function(record) {
+    setTimeout(function(keyCode) {
+      this.keyHandler_.pressed[keyCode] = true;
+    }.bind(this, record.keyCode), record.start);
+    setTimeout(function(keyCode) {
+      delete this.keyHandler_.pressed[keyCode];
+    }.bind(this, record.keyCode), record.end);
+  }.bind(this));
 };
