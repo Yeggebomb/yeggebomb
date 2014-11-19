@@ -47,9 +47,23 @@ game.core.helper.poly2path = function(polygon) {
  * Updates the translate transform on a given element.
  * @param {Element} element
  * @param  {!game.core.math.Vector} position
+ * @param  {number} scale
  */
-game.core.helper.updateTranslate = function(element, position) {
-  var transform = 'translate(' + position.x + 'px, ' + position.y + 'px)';
+game.core.helper.updateTranslate = function(element, position, scale) {
+  var transform = '';
+  if (_.isObject(position)) {
+    transform += 'translate(' + position.x + 'px, ' + position.y + 'px) ';
+  }
+
+  if (_.isObject(scale)) {
+    if (_.isNumber(scale.x)) {
+      transform += ' scaleX(' + scale.x + ')';
+    }
+    if (_.isNumber(scale.y)) {
+      transform += ' scaleY(' + scale.y + ')';
+    }
+  }
+
   element.style.webkitTransform = transform;
   element.style.MozTransform = transform;
   element.style.msTransform = transform;

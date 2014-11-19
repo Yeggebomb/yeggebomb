@@ -246,12 +246,7 @@ game.mixins.Shape.prototype.setPosition = function(x, y, opt_relativeTo) {
   }
 
   if (this.el) {
-    var transform = 'translate(' + x + 'px, ' + y + 'px)';
-    this.el.style.webkitTransform = transform;
-    this.el.style.MozTransform = transform;
-    this.el.style.msTransform = transform;
-    this.el.style.OTransform = transform;
-    this.el.style.transform = transform;
+    game.core.helper.updateTranslate(this.el, this.pos, this.scale);
   }
 
   this.isDirty = true;
