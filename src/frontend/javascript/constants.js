@@ -13,6 +13,7 @@ game.constants.Physics = {
 
 /**
  * 'Turn' length of time in ms.
+ *
  * @const {number}
  */
 game.constants.PLAY_TIME = 10000;
@@ -20,6 +21,7 @@ game.constants.PLAY_TIME = 10000;
 
 /**
  * Length of time to wait for info from the server in ms/
+ *
  * @const {number}
  */
 game.constants.WAIT_TIME = 2000;
