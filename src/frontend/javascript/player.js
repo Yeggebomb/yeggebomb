@@ -59,6 +59,13 @@ game.Player = function() {
    * @private {!game.core.KeyHandler}
    */
   this.keyHandler_ = new game.core.KeyHandler();
+
+  /**
+   * The authenticated user with this player.
+   *
+   * @type {Object}
+   */
+  this.user = null;
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 

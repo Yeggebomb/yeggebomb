@@ -45,6 +45,8 @@ game.Main = function() {
   this.keyHandler_ = new game.core.KeyHandler();
   /** @private {!Firebase} */
   this.firebase_ = new Firebase(game.constants.FIREBASE_URL);
+  /** @private {!Firebase} */
+  this.firebaseEvents_ = this.firebase_.child('events');
   /** @private {Object} */
   this.primaryUser_ = null;
 
@@ -265,6 +267,10 @@ game.Main.prototype.stateChangeToSending = function() {
       entity.setVelocity(new game.core.math.Vector());
       entity.setAcceleration(new game.core.math.Vector());
       entity.setMass(0);
+
+      // Write to firebase.
+      this.firebaseEvents_.child(entity.user.userId)
+          .push(game.core.KeyHandler.records);
     }
   }.bind(this));
 };
@@ -288,8 +294,10 @@ game.Main.prototype.loginCallback = function() {
     this.primaryUser_ = {
       userId: authData.uid,
       userToken: authData.token,
-      userName: authData.google.displayName,
+      userName: authData.google.displayName
     };
+    // Eventually we will need an add player function.
+    this.player_.user = this.primaryUser_;
     game.Main.Users.push(this.primaryUser_);
     this.startGame();
   }.bind(this));
