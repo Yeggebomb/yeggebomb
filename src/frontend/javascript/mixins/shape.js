@@ -221,6 +221,7 @@ game.mixins.Shape.prototype.getPosition = function() {
  * @param {number|string} x X-coord or sometimes referred to as left.
  * @param {number|string} y Y-coord or sometimes referred to as top.
  * @param {Element=|game.mixins.Shape=} opt_relativeTo
+ * @return {!game.mixins.Shape}
  */
 game.mixins.Shape.prototype.setPosition = function(x, y, opt_relativeTo) {
   if (_.isString(x) && opt_relativeTo) {
@@ -252,6 +253,10 @@ game.mixins.Shape.prototype.setPosition = function(x, y, opt_relativeTo) {
     this.el.style.OTransform = transform;
     this.el.style.transform = transform;
   }
+
+  this.isDirty = true;
+
+  return this;
 };
 
 

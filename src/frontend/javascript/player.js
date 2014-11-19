@@ -45,6 +45,21 @@ game.Player = function() {
    * @type {number}
    */
   this.ignoreKeys = false;
+
+  /**
+   * The position of an entity at the start of his turn.
+   *
+   * @type {!game.core.math.Vector}
+   */
+  this.initialPosition = null;
+
+  /**
+   * The position of an entity at the end of his turn.
+   *
+   * @type {!game.core.math.Vector}
+   */
+  this.endPosition = null;
+
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
@@ -56,18 +71,19 @@ game.Player.CLASS_NAME = 'player';
 
 
 /**
+ * Default mass.
+ *
+ * @type {number}
+ */
+game.Player.DEFAULT_MASS = 5;
+
+
+/**
  * Initialize player.
  */
 game.Player.prototype.init = function() {
   // Sets initial mass of object.
-  this.setMass(5);
-
-  /**
-   * The initial position of an entity. Used when pausing and starting time.
-   *
-   * @type {!game.core.math.Vector}
-   */
-  this.initialPosition = this.pos;
+  this.setMass(game.Player.DEFAULT_MASS);
 };
 
 

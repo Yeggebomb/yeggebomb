@@ -32,25 +32,25 @@ game.mixins.Fourway.KEY_HANDLER = new game.core.KeyHandler();
 
 /** moveLeft */
 game.mixins.Fourway.prototype.moveLeft = function() {
-  this.getVelocity().x -= 2;
+  this.getVelocity().x -= 1;
 };
 
 
 /** moveRight */
 game.mixins.Fourway.prototype.moveRight = function() {
-  this.getVelocity().x += 2;
+  this.getVelocity().x += 1;
 };
 
 
 /** moveUp */
 game.mixins.Fourway.prototype.moveUp = function() {
-  this.getVelocity().y -= 5;
+  this.getVelocity().y -= 2;
 };
 
 
 /** moveDown */
 game.mixins.Fourway.prototype.moveDown = function() {
-  this.getVelocity().y += 5;
+  this.getVelocity().y += 2;
 };
 
 

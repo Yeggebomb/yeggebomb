@@ -23,15 +23,6 @@ game.mixins.Physical = function() {
 
 
 /**
- * Resets physical attributes.
- */
-game.mixins.Physical.prototype.init = function() {
-  this.acceleration_ = new game.core.math.Vector(0, 0);
-  this.velocity_ = new game.core.math.Vector(0, 0);
-};
-
-
-/**
  * Register mixin globally.
  */
 game.core.helper.mixins['physical'] = game.mixins.Physical.prototype;
@@ -48,7 +39,7 @@ game.mixins.Physical.Colliders = {};
 /**
  * Returns a reference to the acceleration of the entity.
  *
- * @return {!game.core.math.Point}
+ * @return {!game.core.math.Vector}
  */
 game.mixins.Physical.prototype.getAcceleration = function() {
   if (!this.acceleration_) {
@@ -61,13 +52,35 @@ game.mixins.Physical.prototype.getAcceleration = function() {
 /**
  * Returns a reference to the velocity of the entity.
  *
- * @return {!game.core.math.Point}
+ * @return {!game.core.math.Vector}
  */
 game.mixins.Physical.prototype.getVelocity = function() {
   if (!this.velocity_) {
     this.velocity_ = new game.core.math.Vector(0, 0);
   }
   return this.velocity_;
+};
+
+
+/**
+ * Sets velocity.
+ *
+ * @param {!game.core.math.Vector} vector
+ * @return {!game.core.math.Vector}
+ */
+game.mixins.Physical.prototype.setVelocity = function(vector) {
+  return this.velocity_ = vector;
+};
+
+
+/**
+ * Sets acceleration.
+ *
+ * @param {!game.core.math.Vector} vector
+ * @return {!game.core.math.Vector}
+ */
+game.mixins.Physical.prototype.setAcceleration = function(vector) {
+  return this.acceleration_ = vector;
 };
 
 
@@ -82,6 +95,17 @@ game.mixins.Physical.prototype.getMass = function() {
     this.mass_ = 0;
   }
   return this.mass_;
+};
+
+
+/**
+ * Sets mass.
+ *
+ * @param {number} mass
+ * @return {!number}
+ */
+game.mixins.Physical.prototype.setMass = function(mass) {
+  return this.mass_ = mass;
 };
 
 
@@ -109,7 +133,7 @@ game.mixins.Physical.prototype.addGravity = function() {
 /**
  * Adds a force to the object.
  *
- * @param {!game.core.math.Point} force
+ * @param {!game.core.math.Vector} force
  */
 game.mixins.Physical.prototype.addForce = function(force) {
   if (this.isMovable()) {
