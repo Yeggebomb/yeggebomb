@@ -17,42 +17,42 @@ game.Player = function() {
       this, 'shape', 'reset', 'fourway', 'physical', 'projectilecreator');
   game.Player.base(this, 'constructor');
   this.el.classList.add(game.Player.CLASS_NAME);
-
   /**
    * How bouncy this object is. (0 being nothing 1 being forever bouncy)
    *
    * @type {number}
    */
   this.bouncyness = 0.5;
-
   /**
    * How frictiony the object is.
    *
    * @type {number}
    */
   this.friction = 0.5;
-
+  /**
+   * How frictiony the air is.
+   *
+   * @type {number}
+   */
+  this.airFriction = 0.3;
   /**
    * The error for zero.
    *
    * @type {number}
    */
   this.epsilon = 0.01;
-
   /**
    * The position of an entity at the start of his turn.
    *
    * @type {!game.core.math.Vector}
    */
   this.initialPosition = null;
-
   /**
    * The position of an entity at the end of his turn.
    *
    * @type {!game.core.math.Vector}
    */
   this.endPosition = null;
-
   /**
    * Key handler
    *
@@ -86,33 +86,46 @@ game.Player.prototype.init = function() {
 };
 
 
-/** moveLeft */
-game.Player.prototype.moveLeft = function() {
-  this.getVelocity().x = -35;
+/**
+ * moveLeft
+ * @param {number} delta
+ */
+game.Player.prototype.moveLeft = function(delta) {
+  this.getVelocity().x -= 30 * this.airFriction * delta;
   this.scale = {x: 1};
 };
 
 
-/** moveRight */
-game.Player.prototype.moveRight = function() {
-  this.getVelocity().x = 35;
+/**
+ * moveRight
+ * @param {number} delta
+ */
+game.Player.prototype.moveRight = function(delta) {
+  this.getVelocity().x += 30 * this.airFriction * delta;
   this.scale = {x: -1};
 };
 
 
-/** moveUp */
-game.Player.prototype.moveUp = function() {
-  this.getVelocity().y = -40;
+/**
+ * moveUp
+ * @param {number} delta
+ */
+game.Player.prototype.moveUp = function(delta) {
+  this.getVelocity().y -= 90 * this.airFriction * delta;
 };
 
 
-/** Update function */
-game.Player.prototype.update = function() {
+/**
+ * Player update.
+ *
+ * @param {number} delta
+ */
+game.Player.prototype.update = function(delta) {
   var Keycodes = game.core.KeyHandler.Keycodes;
 
-  if (this.keyHandler_.isDown(Keycodes.RIGHT)) this.moveRight();
-  if (this.keyHandler_.isDown(Keycodes.LEFT)) this.moveLeft();
-  if (this.keyHandler_.isDown(Keycodes.UP)) this.moveUp();
+  if (this.keyHandler_.isDown(Keycodes.RIGHT)) this.moveRight(delta);
+  if (this.keyHandler_.isDown(Keycodes.LEFT)) this.moveLeft(delta);
+  if (this.keyHandler_.isDown(Keycodes.UP)) this.moveUp(delta);
 };
 
 
