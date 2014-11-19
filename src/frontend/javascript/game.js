@@ -198,8 +198,6 @@ game.Main.prototype.renderLoop = function() {
  * The state is now recording.
  */
 game.Main.prototype.stateChangeToRecording = function() {
-
-  console.log('state is now recording');
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
       var endPosition = entity.endPosition;
@@ -218,7 +216,6 @@ game.Main.prototype.stateChangeToRecording = function() {
  * The state is now sending.
  */
 game.Main.prototype.stateChangeToSending = function() {
-  console.log('state is now sending');
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
       entity.endPosition = entity.getPosition().clone();
@@ -234,16 +231,13 @@ game.Main.prototype.stateChangeToSending = function() {
 /**
  * The state is now waiting.
  */
-game.Main.prototype.stateChangeToWaiting = function() {
-  console.log('state is now waiting');
-};
+game.Main.prototype.stateChangeToWaiting = function() {};
 
 
 /**
  * The state is now playback.
  */
 game.Main.prototype.stateChangeToPlayback = function() {
-  console.log('state is now playback');
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
       entity.setPosition(entity.initialPosition.x, entity.initialPosition.y);
