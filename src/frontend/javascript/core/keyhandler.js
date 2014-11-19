@@ -12,20 +12,29 @@ game.core.KeyHandler = function() {
   if (game.core.KeyHandler.prototype._singletonInstance) {
     return game.core.KeyHandler.prototype._singletonInstance;
   }
-
   /**
    * True if we should record events.
    * @type {Boolean}
    */
-  this.isRecording = true;
+  this.isRecording = false;
+  /**
+   * The current time. (for recording).
+   *
+   * @type {number}
+   */
   this.currentTime = null;
+  /**
+   * True if we should respons to keyUp and keyDown.
+   * @type {Boolean}
+   */
+  this.ignoreKeys = false;
 
   game.core.KeyHandler.prototype._singletonInstance = this;
   /**
    * Object that tracks what is currently being pressed.
-   * @private {!Object.<!game.core.KeyHandler.Keycodes, boolean>}
+   * @type {!Object.<!game.core.KeyHandler.Keycodes, boolean>}
    */
-  this.pressed_ = {};
+  this.pressed = {};
 
   // Add event listeners.
   window.addEventListener('keyup', this.onKeyup_.bind(this), false);
@@ -53,10 +62,10 @@ game.core.KeyHandler.records = [];
  */
 game.core.KeyHandler.prototype.visibilityChanged_ = function() {
   if (document.hidden) {
-    _.each(this.pressed_, function(value, keycode) {
+    _.each(this.pressed, function(value, keycode) {
       this.endRecordEvent_(keycode);
     }.bind(this));
-    this.pressed_ = {};
+    this.pressed = {};
   }
 };
 
@@ -67,10 +76,10 @@ game.core.KeyHandler.prototype.visibilityChanged_ = function() {
  */
 game.core.KeyHandler.prototype.mouseDown_ = function(evt) {
   if (evt.which != 1) {
-    _.each(this.pressed_, function(value, keycode) {
+    _.each(this.pressed, function(value, keycode) {
       this.endRecordEvent_(keycode);
     }.bind(this));
-    this.pressed_ = {};
+    this.pressed = {};
   }
 };
 
@@ -82,7 +91,7 @@ game.core.KeyHandler.prototype.mouseDown_ = function(evt) {
  * @return {boolean} true if key is down.
  */
 game.core.KeyHandler.prototype.isDown = function(keyCode) {
-  return this.pressed_[keyCode];
+  return this.pressed[keyCode];
 };
 
 
@@ -93,6 +102,7 @@ game.core.KeyHandler.prototype.isDown = function(keyCode) {
  * @private
  */
 game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
+  if (this.ignoreKeys) return;
   var skipRecord = false;
   _.each(game.core.KeyHandler.records, function(record) {
     if (record.keyCode == evt.keyCode && record.end == null) {
@@ -105,7 +115,7 @@ game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
     this.recordEvent_(evt.keyCode);
   }
 
-  this.pressed_[evt.keyCode] = true;
+  this.pressed[evt.keyCode] = true;
 };
 
 
@@ -116,8 +126,9 @@ game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
  * @private
  */
 game.core.KeyHandler.prototype.onKeyup_ = function(evt) {
+  if (this.ignoreKeys) return;
   this.endRecordEvent_(evt.keyCode);
-  delete this.pressed_[evt.keyCode];
+  delete this.pressed[evt.keyCode];
 };
 
 
@@ -125,11 +136,10 @@ game.core.KeyHandler.prototype.onKeyup_ = function(evt) {
  * Disallows the recording of key stroked and ends recording of any keys.
  */
 game.core.KeyHandler.prototype.stopRecording = function() {
-  _.each(this.pressed_, function(value, keycode) {
+  _.each(this.pressed, function(value, keycode) {
     this.endRecordEvent_(keycode);
   }.bind(this));
   this.isRecording = false;
-  game.core.KeyHandler.records = [];
 };
 
 

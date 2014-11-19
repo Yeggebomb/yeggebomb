@@ -40,11 +40,25 @@ game.Player = function() {
   this.epsilon = 0.01;
 
   /**
-   * If I should ignore key input or not.
+   * The position of an entity at the start of his turn.
    *
-   * @type {number}
+   * @type {!game.core.math.Vector}
    */
-  this.ignoreKeys = false;
+  this.initialPosition = null;
+
+  /**
+   * The position of an entity at the end of his turn.
+   *
+   * @type {!game.core.math.Vector}
+   */
+  this.endPosition = null;
+
+  /**
+   * Key handler
+   *
+   * @private {!game.core.KeyHandler}
+   */
+  this.keyHandler_ = new game.core.KeyHandler();
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
@@ -56,18 +70,49 @@ game.Player.CLASS_NAME = 'player';
 
 
 /**
+ * Default mass.
+ *
+ * @type {number}
+ */
+game.Player.DEFAULT_MASS = 5;
+
+
+/**
  * Initialize player.
  */
 game.Player.prototype.init = function() {
   // Sets initial mass of object.
-  this.setMass(5);
+  this.setMass(game.Player.DEFAULT_MASS);
+};
 
-  /**
-   * The initial position of an entity. Used when pausing and starting time.
-   *
-   * @type {!game.core.math.Vector}
-   */
-  this.initialPosition = this.pos;
+
+/** moveLeft */
+game.Player.prototype.moveLeft = function() {
+  this.getVelocity().x = -35;
+  this.scale = {x: 1};
+};
+
+
+/** moveRight */
+game.Player.prototype.moveRight = function() {
+  this.getVelocity().x = 35;
+  this.scale = {x: -1};
+};
+
+
+/** moveUp */
+game.Player.prototype.moveUp = function() {
+  this.getVelocity().y = -40;
+};
+
+
+/** Update function */
+game.Player.prototype.update = function() {
+  var Keycodes = game.core.KeyHandler.Keycodes;
+
+  if (this.keyHandler_.isDown(Keycodes.RIGHT)) this.moveRight();
+  if (this.keyHandler_.isDown(Keycodes.LEFT)) this.moveLeft();
+  if (this.keyHandler_.isDown(Keycodes.UP)) this.moveUp();
 };
 
 
@@ -93,4 +138,29 @@ game.Player.prototype.collisionWithPlatform = function(other, response, delta) {
     velocity.x = 0;
   }
   this.setPosition(position.x, position.y);
+};
+
+
+/**
+ * Plays recorded keys the KeyHandler.
+ */
+game.Player.prototype.playRecordedKeys = function() {
+  _.each(game.core.KeyHandler.records, function(record) {
+    setTimeout(function(keyCode) {
+      this.keyHandler_.pressed[keyCode] = true;
+    }.bind(this, record.keyCode), record.start);
+    setTimeout(function(keyCode) {
+      delete this.keyHandler_.pressed[keyCode];
+    }.bind(this, record.keyCode), record.end);
+  }.bind(this));
+};
+
+
+/**
+ * If I should ignore keys.
+ *
+ * @param {boolean} value
+ */
+game.Player.prototype.ignoreKeys = function(value) {
+  this.keyHandler_.ignoreKeys = value;
 };

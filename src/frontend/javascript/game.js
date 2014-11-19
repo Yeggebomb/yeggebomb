@@ -33,14 +33,10 @@ game.Main = function() {
   this.platform_ = new game.Platform();
   /** @private {!game.Platform} */
   this.rotatedPlatform_ = new game.Platform();
-  /** @private {!game.Platform} */
-  this.sphereObject_ = new game.Circle();
   /** @private {number} */
   this.gameTime_ = null;
-  /** @private {number} */
-  this.loopTime_ = game.constants.PlayTime;
   /** @private {!game.Main.State} */
-  this.gameState_ = game.Main.State.RECORDING;
+  this.gameState_ = game.Main.State.PLAYBACK;
   /** @private {!game.UserInterface} */
   this.userInterface_ = new game.UserInterface();
   /** @private {!game.core.KeyHandler} */
@@ -78,16 +74,11 @@ game.Main.prototype.init = function() {
     new game.core.math.Vector(0, 80)
   ]);
 
-  // this.sphereObject_.setCircle(new game.core.math.Vector(200, 0), 20);
-
   this.platform_.setRectangle(0, 600, 1000, 100);
   this.platform_.el.classList.add('ground');
   this.board_.setRectangle(0, 0, 1000, 700);
   this.backDrop_.setRectangle(0, 0, 1000, 700);
-
-  this.player_.getVelocity().x = 5;
-
-  this.player_.setRectangle(0, 0, 40, 50);
+  this.player_.setRectangle(0, 0, 85, 59);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
 
@@ -115,7 +106,6 @@ game.Main.prototype.attach = function() {
   this.player_.attach(this.board_);
   this.platform_.attach(this.board_);
   this.rotatedPlatform_.attach(this.board_);
-  // this.sphereObject_.attach(this.board_);
 };
 
 
@@ -129,21 +119,25 @@ game.Main.prototype.gameStateSwitcher = function() {
     case game.Main.State.RECORDING:
       this.gameState_ = game.Main.State.SENDING;
       remainingTime = game.constants.WaitTime;
+      this.stateChangeToSending();
       label = 'Sending:';
       break;
     case game.Main.State.SENDING:
       this.gameState_ = game.Main.State.WAITING;
       remainingTime = game.constants.WaitTime;
+      this.stateChangeToWaiting();
       label = 'Waiting:';
       break;
     case game.Main.State.WAITING:
       this.gameState_ = game.Main.State.PLAYBACK;
       remainingTime = game.constants.PlayTime;
-      label = 'Playing:';
+      this.stateChangeToPlayback();
+      label = 'Play Back:';
       break;
     case game.Main.State.PLAYBACK:
       this.gameState_ = game.Main.State.RECORDING;
       remainingTime = game.constants.PlayTime;
+      this.stateChangeToRecording();
       label = 'Recording:';
       break;
     default:
@@ -162,15 +156,22 @@ game.Main.prototype.gameStateSwitcher = function() {
 game.Main.prototype.physicsLoop = function() {
   var currTime = +new Date();
   if (!this.gameTime_) this.gameTime_ = +new Date();
-  var dt = (currTime - this.gameTime_) / 100;
+  if (!this.physicsRemainderTime_) this.physicsRemainderTime_ = 0;
+  var dt = (this.physicsRemainderTime_ + currTime - this.gameTime_) / 100;
+  var dtstep = 1 / 60;  // 60 FPS
+
+  var steps = Math.floor(dt / dtstep);
+  this.physicsRemainderTime = dt - dtstep * steps;
 
   this.camera_.update();
 
   // Update loop
-  _.each(game.core.Entity.All, function(entity) {
-    entity.update(dt);
-    entity.resolveCollisions(dt);
-  });
+  for (var step = 0; step < steps; step++) {
+    _.each(game.core.Entity.All, function(entity) {
+      entity.update(dtstep);
+      entity.resolveCollisions(dtstep);
+    });
+  }
   this.gameTime_ = +new Date();
   setTimeout(this.physicsLoop.bind(this), 0);
 };
@@ -191,46 +192,63 @@ game.Main.prototype.renderLoop = function() {
 
 
 /**
- * The Recording State.
- *
- * @param {number} dt
+ * The state is now recording.
  */
-game.Main.prototype.recordingState = function(dt) {
-  // console.log('recordingState');
+game.Main.prototype.stateChangeToRecording = function() {
+  this.keyHandler_.startRecording();
+  game.core.Entity.forEach(function(entity) {
+    if (entity instanceof game.Player) {
+      entity.setVelocity(new game.core.math.Vector());
+      entity.setAcceleration(new game.core.math.Vector());
+      entity.setMass(game.Player.DEFAULT_MASS);
+
+      var endPosition = entity.endPosition;
+      if (endPosition) {
+        console.log('error of this much',
+            entity.getPosition().distanceTo(endPosition));
+      }
+      entity.ignoreKeys(false);
+      entity.initialPosition = entity.getPosition().clone();
+    }
+  }.bind(this));
 };
 
 
 /**
- * The Sending State.
- * @param {number} dt
- *
+ * The state is now sending.
  */
-game.Main.prototype.sendingState = function(dt) {
-  // console.log('sendingState');
+game.Main.prototype.stateChangeToSending = function() {
+  this.keyHandler_.stopRecording();
+  game.core.Entity.forEach(function(entity) {
+    if (entity instanceof game.Player) {
+      entity.endPosition = entity.getPosition().clone();
+      entity.ignoreKeys(true);
+      entity.setVelocity(new game.core.math.Vector());
+      entity.setAcceleration(new game.core.math.Vector());
+      entity.setMass(0);
+    }
+  }.bind(this));
 };
 
 
 /**
-
- * The Waiting State.
- * @param {number} dt
- *
+ * The state is now waiting.
  */
-game.Main.prototype.waitingState = function(dt) {
-  // console.log('waitingState');
-};
+game.Main.prototype.stateChangeToWaiting = function() {};
 
 
 /**
-
- * The Playback State.
- *
- * @param {number} dt
+ * The state is now playback.
  */
-game.Main.prototype.playbackState = function(dt) {
-  // console.log('playbackState');
+game.Main.prototype.stateChangeToPlayback = function() {
+  game.core.Entity.forEach(function(entity) {
+    if (entity instanceof game.Player) {
+      entity.setPosition(entity.initialPosition.x, entity.initialPosition.y);
+      entity.setMass(game.Player.DEFAULT_MASS);
+      entity.playRecordedKeys();
+    }
+  }.bind(this));
 };
-
 
 // Start
 var main = new game.Main();

@@ -11,8 +11,7 @@ goog.require('game.core.helper');
  *
  * @constructor
  */
-game.mixins.ProjectileCreator = function() {
-};
+game.mixins.ProjectileCreator = function() {};
 
 
 /**
@@ -30,14 +29,6 @@ game.mixins.ProjectileCreator.prototype.init = function() {
 };
 
 
-/**
- * Key handler
- *
- * @const {!game.core.KeyHandler}
- */
-game.mixins.ProjectileCreator.KEY_HANDLER = new game.core.KeyHandler();
-
-
 /** create and throw new projectile */
 game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
   var vel = this.getVelocity();
@@ -49,7 +40,6 @@ game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
 
 /** Update function */
 game.mixins.ProjectileCreator.prototype.update = function() {
-  var KEY_HANDLER = game.mixins.Fourway.KEY_HANDLER;
   var Keycodes = game.core.KeyHandler.Keycodes;
-  if (KEY_HANDLER.isDown(Keycodes.SPACE)) this.throwProjectile();
+  if (this.keyHandler_.isDown(Keycodes.SPACE)) this.throwProjectile();
 };

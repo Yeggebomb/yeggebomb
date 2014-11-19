@@ -117,7 +117,7 @@ game.core.Camera.prototype.update = function(deltaTime) {
     if (axis == Axis.HORIZONTAL || axis == Axis.BOTH) {
       if (followedX > wView - xDeadZone) {
         xView = (followedX - (wView - xDeadZone)) * - 1;
-      } else if (followedX < xView + xDeadZone) {
+      } else {
         xView = (followedX - xDeadZone) * -1;
       }
       // Clip to the bounds of our viewport.
@@ -127,7 +127,7 @@ game.core.Camera.prototype.update = function(deltaTime) {
     if (axis == Axis.VERTICAL || axis == Axis.BOTH) {
       if (followedY > hView - yDeadZone) {
         yView = (followedY - (hView - yDeadZone)) * - 1;
-      } else if (followedY < yView + yDeadZone) {
+      } else {
         yView = (followedY - yDeadZone) * -1;
       }
       // Clip to the bounds of our viewport.
