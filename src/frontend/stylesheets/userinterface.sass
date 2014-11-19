@@ -1,4 +1,4 @@
-@import compass/css3/border-radius
+@import compass/css3
 
 .user-interface
   width: 100%
@@ -6,4 +6,57 @@
   padding: 10px
   & .timer
     font-size: 22px
+
+
+.root .user-interface .login-button
+  display: none
+
+.root.state-pending .user-interface
+  & .login-button
+    display: inline-block
+  & .timer
+    display: none
+
+.button
+  +border-radius(2px)
+  +background-image(linear-gradient(top, #f5f5f5, #f1f1f1))
+  background-color: #f5f5f5
+  border: 1px solid #dcdcdc
+  color: #444
+  cursor: default
+  display: inline-block
+  font-size: 18px
+  height: 34px
+  line-height: 1.7em
+  min-width: 54px
+  padding: 0 8px
+  text-align: center
+  text-decoration: none
+
+  &:hover
+    +background-image(linear-gradient(top, #f8f8f8, #f1f1f1))
+    // +box-shadow(0px 1px 1px rgba(0, 0, 0, 0.1))
+    background-color: #F8F8F8
+    border: 1px solid #C6C6C6
+    color: #333
+
+  &.blue
+    +background-image(linear-gradient(top, #4d90fe,#4787ed))
+    background-color: #4D90FE
+    border: 1px solid #3079ED
+    color: white
+
+  &.blue:hover
+    +background-image(linear-gradient(top, #4d90fe, #357ae8))
+    // +box-shadow(0px 1px 1px rgba(0, 0, 0, 0.1))
+    border: 1px solid #2F5BB7
+    background-color: #357AE8
+
+
+.login-button
+  +box-shadow(0px 0px 70px 70px rgba(255, 255, 255, 0.9))
+  position: absolute
+  top: 50%
+  left: 50%
+  margin-left: -72px
 

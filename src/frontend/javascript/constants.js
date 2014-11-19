@@ -32,4 +32,4 @@ game.constants.WAIT_TIME = 2000;
  *
  * @const {string}
  */
-game.constants.FIREBASE_URL = 'yegge-bomb';
+game.constants.FIREBASE_URL = 'https://yegge-bomb.firebaseio.com';

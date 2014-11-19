@@ -1,6 +1,4 @@
-@import compass/reset
-@import compass/css3/box-sizing
-@import compass/css3/transform
+@import compass
 
 +global-reset
 
@@ -17,3 +15,12 @@ html, body
 
 body
   background: url(/images/shattered.png)
+
+.root .backdrop
+  +transition(-webkit-filter 200ms linear)
+
+.root.state-pending
+  & .backdrop
+    +filter(grayscale(100%))
+  & .board
+    opacity: 0

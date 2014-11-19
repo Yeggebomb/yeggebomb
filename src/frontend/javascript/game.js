@@ -5,8 +5,10 @@ goog.require('game.Board');
 goog.require('game.Platform');
 goog.require('game.Player');
 goog.require('game.UserInterface');
+goog.require('game.constants');
 goog.require('game.core.Root');
 goog.require('game.core.Window');
+goog.require('game.core.helper');
 goog.require('game.core.math.Vector');
 
 
@@ -36,11 +38,15 @@ game.Main = function() {
   /** @private {number} */
   this.gameTime_ = null;
   /** @private {!game.Main.State} */
-  this.gameState_ = game.Main.State.PLAYBACK;
+  this.gameState_ = game.Main.State.PENDING;
   /** @private {!game.UserInterface} */
   this.userInterface_ = new game.UserInterface();
   /** @private {!game.core.KeyHandler} */
   this.keyHandler_ = new game.core.KeyHandler();
+  /** @private {!Firebase} */
+  this.firebase_ = new Firebase(game.constants.FIREBASE_URL);
+  /** @private {Object} */
+  this.primaryUser_ = null;
 
   this.attach();
   this.init();
@@ -49,6 +55,7 @@ game.Main = function() {
 
 /** @enum {number} */
 game.Main.State = {
+  PENDING: -1,
   RECORDING: 0,
   SENDING: 1,
   WAITING: 2,
@@ -57,9 +64,18 @@ game.Main.State = {
 
 
 /**
+ * List of currently playing.
+ *
+ * @type {Array}
+ */
+game.Main.Users = [];
+
+
+/**
  * Setup for our app.
  */
 game.Main.prototype.init = function() {
+  this.userInterface_.loginCallback = this.loginCallback.bind(this);
   this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME,
       function() {
         this.viewport_.setRectangle('25%', '25%', '50%', '50%',
@@ -88,6 +104,18 @@ game.Main.prototype.init = function() {
 
   // Kick off the time based loops.
   this.gameStateSwitcher();
+
+};
+
+
+/**
+ * Initializes values to start game.
+ */
+game.Main.prototype.startGame = function() {
+  this.gameState_ = game.Main.State.PLAYBACK;
+  // This has a timeout, calling this twice could be weird.
+  this.gameStateSwitcher();
+
   this.physicsLoop();
   this.renderLoop();
 };
@@ -115,27 +143,38 @@ game.Main.prototype.attach = function() {
 game.Main.prototype.gameStateSwitcher = function() {
   var label = '';
   var remainingTime = 0;
+  game.core.helper.removeClassPrefix(this.viewport_.el, 'state-');
   switch (this.gameState_) {
+    case game.Main.State.PENDING:
+      this.gameState_ = game.Main.State.PENDING;
+      this.viewport_.el.classList.add('state-pending');
+      // this.stateChangeToPending();
+      return;
+      break;
     case game.Main.State.RECORDING:
       this.gameState_ = game.Main.State.SENDING;
+      this.viewport_.el.classList.add('state-sending');
       remainingTime = game.constants.WAIT_TIME;
       this.stateChangeToSending();
       label = 'Sending:';
       break;
     case game.Main.State.SENDING:
       this.gameState_ = game.Main.State.WAITING;
+      this.viewport_.el.classList.add('state-waiting');
       remainingTime = game.constants.WAIT_TIME;
       this.stateChangeToWaiting();
       label = 'Waiting:';
       break;
     case game.Main.State.WAITING:
       this.gameState_ = game.Main.State.PLAYBACK;
+      this.viewport_.el.classList.add('state-playback');
       remainingTime = game.constants.PLAY_TIME;
       this.stateChangeToPlayback();
       label = 'Play Back:';
       break;
     case game.Main.State.PLAYBACK:
       this.gameState_ = game.Main.State.RECORDING;
+      this.viewport_.el.classList.add('state-recording');
       remainingTime = game.constants.PLAY_TIME;
       this.stateChangeToRecording();
       label = 'Recording:';
@@ -235,6 +274,26 @@ game.Main.prototype.stateChangeToSending = function() {
  * The state is now waiting.
  */
 game.Main.prototype.stateChangeToWaiting = function() {};
+
+
+/**
+ * Login
+ */
+game.Main.prototype.loginCallback = function() {
+  this.firebase_.authWithOAuthPopup('google', function(error, authData) {
+    if (error) {
+      console.warn(error);
+      return;
+    }
+    this.primaryUser_ = {
+      userId: authData.uid,
+      userToken: authData.token,
+      userName: authData.google.displayName,
+    };
+    game.Main.Users.push(this.primaryUser_);
+    this.startGame();
+  }.bind(this));
+};
 
 
 /**
