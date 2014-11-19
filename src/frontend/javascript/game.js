@@ -118,25 +118,25 @@ game.Main.prototype.gameStateSwitcher = function() {
   switch (this.gameState_) {
     case game.Main.State.RECORDING:
       this.gameState_ = game.Main.State.SENDING;
-      remainingTime = game.constants.WaitTime;
+      remainingTime = game.constants.WAIT_TIME;
       this.stateChangeToSending();
       label = 'Sending:';
       break;
     case game.Main.State.SENDING:
       this.gameState_ = game.Main.State.WAITING;
-      remainingTime = game.constants.WaitTime;
+      remainingTime = game.constants.WAIT_TIME;
       this.stateChangeToWaiting();
       label = 'Waiting:';
       break;
     case game.Main.State.WAITING:
       this.gameState_ = game.Main.State.PLAYBACK;
-      remainingTime = game.constants.PlayTime;
+      remainingTime = game.constants.PLAY_TIME;
       this.stateChangeToPlayback();
       label = 'Play Back:';
       break;
     case game.Main.State.PLAYBACK:
       this.gameState_ = game.Main.State.RECORDING;
-      remainingTime = game.constants.PlayTime;
+      remainingTime = game.constants.PLAY_TIME;
       this.stateChangeToRecording();
       label = 'Recording:';
       break;

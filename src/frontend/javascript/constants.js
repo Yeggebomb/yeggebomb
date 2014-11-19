@@ -1,27 +1,33 @@
 goog.provide('game.constants');
+goog.provide('game.constants.Physics');
 
 
 /**
  * @const {number}
  */
-game.constants.Gravity = 9.8;
-
-
-/**
- * @const {number}
- */
-game.constants.Epsilon = 0.01;
+game.constants.Physics = {
+  GRAVITY: 9.8,
+  EPSILON: 0.01
+};
 
 
 /**
  * 'Turn' length of time in ms.
  * @const {number}
  */
-game.constants.PlayTime = 10000;
+game.constants.PLAY_TIME = 10000;
 
 
 /**
  * Length of time to wait for info from the server in ms/
  * @const {number}
  */
-game.constants.WaitTime = 2000;
+game.constants.WAIT_TIME = 2000;
+
+
+/**
+ * Firebase URL.
+ *
+ * @const {string}
+ */
+game.constants.FIREBASE_URL = 'yegge-bomb';

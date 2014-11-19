@@ -1,5 +1,6 @@
 goog.provide('game.mixins.Physical');
 
+goog.require('game.constants.Physics');
 goog.require('game.core.helper');
 goog.require('game.core.math.Response');
 goog.require('game.core.math.Vector');
@@ -115,7 +116,7 @@ game.mixins.Physical.prototype.setMass = function(mass) {
  * @return {boolean}
  */
 game.mixins.Physical.prototype.isMovable = function() {
-  return (this.getMass() > game.constants.Epsilon);
+  return (this.getMass() > game.constants.Physics.EPSILON);
 };
 
 
@@ -125,7 +126,7 @@ game.mixins.Physical.prototype.isMovable = function() {
 game.mixins.Physical.prototype.addGravity = function() {
   if (this.isMovable()) {
     var acc = this.getAcceleration();
-    acc.y += game.constants.Gravity;
+    acc.y += game.constants.Physics.GRAVITY;
   }
 };
 
