@@ -17,7 +17,7 @@ game.constants.Epsilon = 0.01;
  * 'Turn' length of time in ms.
  * @const {number}
  */
-game.constants.PlayTime = 5000;
+game.constants.PlayTime = 10000;
 
 
 /**

@@ -50,4 +50,4 @@ game.UserInterface.prototype.drawCountDown = function(label, countDownTo) {
 /**
  * @type {String}
  */
-game.UserInterface.CLASS_NAME = 'userInterface';
+game.UserInterface.CLASS_NAME = 'user-interface';

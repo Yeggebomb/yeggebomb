@@ -63,7 +63,7 @@ game.Main.prototype.init = function() {
   this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME,
       function() {
         this.viewport_.setRectangle('25%', '25%', '50%', '50%',
-            this.window_, 800, 600, 400, 300);
+            this.window_, 1024, 461, 800, 461);
       }.bind(this), true);
 
   this.rotatedPlatform_.setPolygon(new game.core.math.Vector(160, 120), [
@@ -74,10 +74,10 @@ game.Main.prototype.init = function() {
     new game.core.math.Vector(0, 80)
   ]);
 
-  this.platform_.setRectangle(0, 600, 1000, 100);
+  this.platform_.setRectangle(0, 551, 1600, 10);
   this.platform_.el.classList.add('ground');
-  this.board_.setRectangle(0, 0, 1000, 700);
-  this.backDrop_.setRectangle(0, 0, 1000, 700);
+  this.board_.setRectangle(0, 0, 1600, 561);
+  this.backDrop_.setRectangle(0, 0, 1600, 561);
   this.player_.setRectangle(0, 0, 85, 59);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
@@ -99,13 +99,13 @@ game.Main.prototype.init = function() {
  * isAttached or something and check on update maybe?
  */
 game.Main.prototype.attach = function() {
-  this.userInterface_.attach(document.body);
   this.viewport_.attach(document.body);
   this.backDrop_.attach(this.viewport_);
   this.board_.attach(this.viewport_);
   this.player_.attach(this.board_);
   this.platform_.attach(this.board_);
   this.rotatedPlatform_.attach(this.board_);
+  this.userInterface_.attach(this.viewport_);
 };
 
 
