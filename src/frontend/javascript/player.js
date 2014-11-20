@@ -127,6 +127,12 @@ game.Player.prototype.moveUp = function() {
 };
 
 
+/** moveDown */
+game.Player.prototype.moveDown = function() {
+  this.getVelocity().y += 40;
+};
+
+
 /**
  * Update for the player
  * @param {number} dt Delta time since last update.
@@ -141,6 +147,7 @@ game.Player.prototype.update = function(dt, currentTick) {
   if (this.keyHandler_.isDown(Keycodes.RIGHT)) this.moveRight();
   if (this.keyHandler_.isDown(Keycodes.LEFT)) this.moveLeft();
   if (this.keyHandler_.isDown(Keycodes.UP)) this.moveUp();
+  if (this.keyHandler_.isDown(Keycodes.DOWN)) this.moveDown();
 };
 
 
