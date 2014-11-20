@@ -204,26 +204,30 @@ game.Main.prototype.gameStateSwitcher = function() {
  * Main physics loop.
  */
 game.Main.prototype.physicsLoop = function() {
-  var currTime = +new Date();
-  if (!this.gameTime_) this.gameTime_ = +new Date();
+  var currTime = +new Date() / 1000;
+  console.log('currtime in secs: ' + currTime);
+  if (!this.lastTimeRan_) this.lastTimeRan_ = +new Date();
   if (!this.physicsRemainderTime_) this.physicsRemainderTime_ = 0;
-  var dt = (this.physicsRemainderTime_ + currTime - this.gameTime_) / 100;
-  var dtstep = 1 / 60;  // 60 FPS
+  var dt = currTime - this.lastTimeRan_ + this.physicsRemainderTime_;
+  var dtstep = (1 / 60);  // 60 FPS
 
   var steps = Math.floor(dt / dtstep);
-  this.physicsRemainderTime = dt - dtstep * steps;
+  this.physicsRemainderTime_ += dt - dtstep * steps;
 
   this.camera_.update();
 
+  console.log('num steps: ' + steps);
+  console.log('dtstep: ' + dtstep);
   // Update loop
   for (var step = 0; step < steps; step++) {
-    _.each(game.core.Entity.All, function(entity) {
+    //console.log('start update loop for step: ' + step);
+    game.core.Entity.forEach(function(entity) {
       entity.update(dtstep, this.globalTick_);
       entity.resolveCollisions(dtstep);
     }.bind(this));
     this.globalTick_++;
   }
-  this.gameTime_ = +new Date();
+  this.lastTimeRan_ = currTime;
   setTimeout(this.physicsLoop.bind(this), 0);
 };
 

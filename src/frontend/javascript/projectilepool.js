@@ -29,8 +29,10 @@ game.ProjectilePool.prototype.get = function() {
   } else {
     var len = this.available.length - 1;
     var toReturn = this.available.splice(len, 1);
-    return toReturn[0];
+    var projectile = toReturn[0];
+    return projectile;
   }
+  this.isActive_ = true;
 };
 
 
@@ -39,7 +41,13 @@ game.ProjectilePool.prototype.get = function() {
  *
  * @param {!game.Projectile} projectile
  */
-game.ProjectilePool.prototype.return = function(projectile) {
+game.ProjectilePool.prototype.returnToPool = function(projectile) {
   var len = this.available.length;
   this.available[len] = projectile;
+
+  if (!projectile.el.parentNode) {
+    debugger;
+  }
+  this.isActive_ = false;
+  projectile.detach();
 };

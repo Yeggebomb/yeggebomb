@@ -32,6 +32,8 @@ game.core.Entity = function(opt_x, opt_y, opt_w, opt_h) {
   game.core.helper.mixin(this, 'shape');
   this.setPosition(opt_x, opt_y, opt_w, opt_h);
 
+  this.isActive_ = true;
+
   this.init();
 };
 
@@ -49,7 +51,10 @@ game.core.Entity.All = [];
  * @param {function()} cb
  */
 game.core.Entity.forEach = function(cb) {
-  _.each(game.core.Entity.All, cb);
+  _.each(
+      _.filter(game.core.Entity.All,
+          function(entity) { return entity.isActive(); }),
+      cb);
 };
 
 
@@ -66,6 +71,16 @@ game.core.Entity.CLASS_NAME = 'entity';
  * @type {number}
  */
 game.core.Entity.ID_COUNT = 0;
+
+
+/**
+ * Whether the entity is active.
+ *
+ * @return {boolean}
+ */
+game.core.Entity.prototype.isActive = function() {
+  return this.isActive_;
+};
 
 
 /**
@@ -99,7 +114,7 @@ game.core.Entity.prototype.attach = function(parent) {
   if (!document.getElementById(this.id_)) {
     parent.appendChild(this.el);
   } else {
-    console.warn('Attempted to attach dom element multiple times:', this.el_);
+    console.warn('Attempted to attach dom element multiple times:', this.el);
   }
   this.setupEventListeners();
 };
@@ -113,7 +128,7 @@ game.core.Entity.prototype.detach = function() {
     this.el.parentNode.removeChild(this.el);
   } else {
     console.warn(
-        'Attempted to remove dom element when it has no parent', this.el_);
+        'Attempted to remove dom element when it has no parent', this.el);
   }
   this.destroyEventListeners();
 };
