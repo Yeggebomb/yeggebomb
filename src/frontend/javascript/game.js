@@ -37,8 +37,8 @@ game.Main = function() {
   this.rotatedPlatform_ = new game.Platform();
   /** @private {number} */
   this.gameTime_ = null;
-  /** @private {!game.Main.State} */
-  this.gameState_ = game.Main.State.PENDING;
+  /** @private {game.Main.State} */
+  this.gameState_ = null;
   /** @private {!game.UserInterface} */
   this.userInterface_ = new game.UserInterface();
   /** @private {!game.core.KeyHandler} */
@@ -51,14 +51,10 @@ game.Main = function() {
   this.primaryUser_ = null;
   /** @private {number} */
   this.globalTick_ = 0;
-  /** @private {boolean} */
-  this.bypassLogin_ = true;
 
   this.attach();
   this.init();
-  if (this.bypassLogin_) {
-    this.startGame();
-  }
+  this.switchGameStateTo(game.Main.State.PENDING);
 };
 
 
@@ -115,10 +111,6 @@ game.Main.prototype.init = function() {
   this.platform_.registerCollider('platform', game.Platform);
   this.player_.registerCollidesWith(
       'platform', this.player_.collisionWithPlatform.bind(this.player_));
-
-  // Kick off the time based loops.
-  this.gameStateSwitcher();
-
 };
 
 
@@ -126,10 +118,7 @@ game.Main.prototype.init = function() {
  * Initializes values to start game.
  */
 game.Main.prototype.startGame = function() {
-  this.gameState_ = game.Main.State.PLAYBACK;
-  // This has a timeout, calling this twice could be weird.
-  this.gameStateSwitcher();
-
+  this.switchGameStateTo(game.Main.State.RECORDING);
   this.physicsLoop();
   this.renderLoop();
 };
@@ -152,51 +141,34 @@ game.Main.prototype.attach = function() {
 
 
 /**
- * Game state switcher.
+ * Switches the game state to the given state.
+ *
+ * @param {!game.Main.State} nextGameState
  */
-game.Main.prototype.gameStateSwitcher = function() {
-  var label = '';
-  var remainingTime = 0;
+game.Main.prototype.switchGameStateTo = function(nextGameState) {
+  this.gameState_ = nextGameState;
   game.core.helper.removeClassPrefix(this.viewport_.el, 'state-');
   switch (this.gameState_) {
     case game.Main.State.PENDING:
-      this.gameState_ = game.Main.State.PENDING;
       this.viewport_.el.classList.add('state-pending');
-      // this.stateChangeToPending();
-      return;
+      this.stateChangeToPending();
+      break;
     case game.Main.State.RECORDING:
-      this.gameState_ = game.Main.State.SYNCING;
-      this.viewport_.el.classList.add('state-syncing');
-      remainingTime = game.constants.WAIT_TIME;
-      this.stateChangeToSYNCING();
-      this.userInterface_.updateTimerText('Syncing data');
-      if (!this.bypassLogin_) {
-        return;
-      } else {
-        // fall through.
-      }
+      this.viewport_.el.classList.add('state-recording');
+      this.stateChangeToRecording();
+      break;
     case game.Main.State.SYNCING:
-      this.gameState_ = game.Main.State.PLAYBACK;
-      this.viewport_.el.classList.add('state-playback');
-      remainingTime = game.constants.PLAY_TIME;
-      this.stateChangeToPlayback();
-      label = 'Play Back:';
+      this.viewport_.el.classList.add('state-syncing');
+      this.stateChangeToSyncing();
       break;
     case game.Main.State.PLAYBACK:
-      this.globalTick_ = 0;
-      this.gameState_ = game.Main.State.RECORDING;
-      this.viewport_.el.classList.add('state-recording');
-      remainingTime = game.constants.PLAY_TIME;
-      this.stateChangeToRecording();
-      label = 'Recording:';
+      this.viewport_.el.classList.add('state-playback');
+      this.stateChangeToPlayback();
       break;
     default:
       console.error('unrecognized state');
+      return;
   }
-  this.userInterface_.drawCountDown(label, +new Date() + remainingTime);
-
-  // remainingTime is relavant to the server time, not implemented
-  setTimeout(this.gameStateSwitcher.bind(this), remainingTime);
 };
 
 
@@ -217,6 +189,7 @@ game.Main.prototype.physicsLoop = function() {
 
   // Update loop
   for (var step = 0; step < steps; step++) {
+    this.gameStateAdvancer(this.globalTick_);
     _.each(game.core.Entity.All, function(entity) {
       entity.update(dtstep, this.globalTick_);
       entity.resolveCollisions(dtstep);
@@ -225,6 +198,33 @@ game.Main.prototype.physicsLoop = function() {
   }
   this.gameTime_ = +new Date();
   setTimeout(this.physicsLoop.bind(this), 0);
+};
+
+
+/**
+ * [called description]
+ * @type {number}
+ */
+game.Main.called = 0;
+
+
+/**
+ * This is what keeps track of what tick we are on and if we should be
+ * advancing.
+ *1
+ * @param {number} currentTick
+ */
+game.Main.prototype.gameStateAdvancer = function(currentTick) {
+  if (currentTick === 4690) {
+    if (this.gameState_ == game.Main.State.RECORDING) {
+      this.switchGameStateTo(game.Main.State.SYNCING);
+      return;
+    }
+    if (this.gameState_ == game.Main.State.PLAYBACK) {
+      this.switchGameStateTo(game.Main.State.RECORDING);
+      return;
+    }
+  }
 };
 
 
@@ -243,9 +243,19 @@ game.Main.prototype.renderLoop = function() {
 
 
 /**
+ * The state is now pending.
+ */
+game.Main.prototype.stateChangeToPending = function() {};
+
+
+/**
  * The state is now recording.
  */
 game.Main.prototype.stateChangeToRecording = function() {
+  this.globalTick_ = 0;
+  this.userInterface_.drawCountDown(
+      'Recording:', +new Date() + game.constants.PLAY_TIME);
+
   this.keyHandler_.startRecording();
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
@@ -269,7 +279,9 @@ game.Main.prototype.stateChangeToRecording = function() {
 /**
  * The state is now SYNCING.
  */
-game.Main.prototype.stateChangeToSYNCING = function() {
+game.Main.prototype.stateChangeToSyncing = function() {
+  this.userInterface_.updateTimerText('Syncing data');
+
   this.keyHandler_.stopRecording();
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
@@ -279,17 +291,17 @@ game.Main.prototype.stateChangeToSYNCING = function() {
       entity.setAcceleration(new game.core.math.Vector());
       entity.setMass(0);
 
-      if (!this.bypassLogin_) {
-        // Write to firebase.
-        this.firebaseEvents_.child(entity.user.userId).push(
-            game.core.KeyHandler.records,
-            function(error) {
-              if (error) {
-                console.error(error);
-                alert('FATAL: ', error);
-              }
-            }.bind(this));
-      }
+      // Write to firebase.
+      this.firebaseEvents_.child(entity.user.userId).push(
+          game.core.KeyHandler.records,
+          function(error) {
+            if (error) {
+              console.error(error);
+              alert('FATAL: ', error);
+            } else {
+              this.switchGameStateTo(game.Main.State.PLAYBACK);
+            }
+          }.bind(this));
     }
   }.bind(this));
 };
@@ -299,6 +311,8 @@ game.Main.prototype.stateChangeToSYNCING = function() {
  * The state is now playback.
  */
 game.Main.prototype.stateChangeToPlayback = function() {
+  this.userInterface_.drawCountDown(
+      'Playback:', +new Date() + game.constants.PLAY_TIME);
   this.globalTick_ = 0;  // Reset for playback!
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
@@ -338,7 +352,7 @@ game.Main.prototype.loginCallback = function() {
  * @param {Object} snapshot
  */
 game.Main.prototype.onRetrieveEvents = function(snapshot) {
-  console.log(snapshot);
+  // console.log(snapshot);
 };
 
 
