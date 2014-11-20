@@ -69,6 +69,14 @@ game.Main.State = {
 
 
 /**
+ * The framerate our game runs off on.
+ *
+ * @type {number}
+ */
+game.Main.FPS = 60;
+
+
+/**
  * List of currently playing.
  *
  * @type {Array}
@@ -177,35 +185,36 @@ game.Main.prototype.switchGameStateTo = function(nextGameState) {
  */
 game.Main.prototype.physicsLoop = function() {
   var currTime = +new Date();
+  if (!this.tmpGameTime_) this.tmpGameTime_ = +new Date();
   if (!this.gameTime_) this.gameTime_ = +new Date();
   if (!this.physicsRemainderTime_) this.physicsRemainderTime_ = 0;
-  var dt = (this.physicsRemainderTime_ + currTime - this.gameTime_) / 100;
-  var dtstep = 1 / 60;  // 60 FPS
 
+  var dt = (currTime - this.gameTime_) / 1000 + this.physicsRemainderTime_;
+
+  var dtstep = 1 / game.Main.FPS;
   var steps = Math.floor(dt / dtstep);
-  this.physicsRemainderTime = dt - dtstep * steps;
+
+  this.physicsRemainderTime_ = dt - dtstep * steps;
 
   this.camera_.update();
-
   // Update loop
   for (var step = 0; step < steps; step++) {
+    // console.log(
+    //     (+new Date() - this.tmpGameTime_), this.globalTick_ * game.Main.FPS);
+
     this.gameStateAdvancer(this.globalTick_);
+
     _.each(game.core.Entity.All, function(entity) {
       entity.update(dtstep, this.globalTick_);
       entity.resolveCollisions(dtstep);
     }.bind(this));
+
     this.globalTick_++;
   }
-  this.gameTime_ = +new Date();
+
+  this.gameTime_ = currTime;
   setTimeout(this.physicsLoop.bind(this), 0);
 };
-
-
-/**
- * [called description]
- * @type {number}
- */
-game.Main.called = 0;
 
 
 /**
@@ -215,7 +224,7 @@ game.Main.called = 0;
  * @param {number} currentTick
  */
 game.Main.prototype.gameStateAdvancer = function(currentTick) {
-  if (currentTick === 4690) {
+  if (currentTick == (game.Main.FPS * game.constants.PLAY_TIME) / 1000) {
     if (this.gameState_ == game.Main.State.RECORDING) {
       this.switchGameStateTo(game.Main.State.SYNCING);
       return;
