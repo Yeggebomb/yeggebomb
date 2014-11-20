@@ -56,7 +56,8 @@ game.Main = function() {
   this.meter_ = new FPSMeter({
     theme: 'light',
     left: 'auto',
-    right: '5px'
+    right: '5px',
+    graph: true
   });
 
   this.attach();

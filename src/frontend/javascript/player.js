@@ -101,21 +101,21 @@ game.Player.prototype.init = function() {
 
 /** moveLeft */
 game.Player.prototype.moveLeft = function() {
-  this.getVelocity().x = -35;
+  this.getVelocity().x = -350;
   this.scale = {x: 1};
 };
 
 
 /** moveRight */
 game.Player.prototype.moveRight = function() {
-  this.getVelocity().x = 35;
+  this.getVelocity().x = 350;
   this.scale = {x: -1};
 };
 
 
 /** moveUp */
 game.Player.prototype.moveUp = function() {
-  this.getVelocity().y = -40;
+  this.getVelocity().y = -400;
 };
 
 

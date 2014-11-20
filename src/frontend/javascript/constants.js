@@ -6,7 +6,7 @@ goog.provide('game.constants.Physics');
  * @const {number}
  */
 game.constants.Physics = {
-  GRAVITY: 9.8,
+  GRAVITY: 999,
   EPSILON: 0.01
 };
 
