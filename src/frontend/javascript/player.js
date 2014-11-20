@@ -104,32 +104,63 @@ game.Player.COLLISION_SMUDGE = 1.01;
 game.Player.prototype.init = function() {
   // Sets initial mass of object.
   this.setMass(game.Player.DEFAULT_MASS);
+  this.scale = new game.core.math.Vector(0, 0);
+};
+
+
+/** alignLeft */
+game.Player.prototype.alignLeft = function() {
+  this.scale.x = -1;
+  this.scale.normalize();
+};
+
+
+/** alignRight */
+game.Player.prototype.alignRight = function() {
+  this.scale.x = 1;
+  this.scale.normalize();
+};
+
+
+/** alignUp */
+game.Player.prototype.alignUp = function() {
+  this.scale.y = -0.8;
+  this.scale.normalize();
+};
+
+
+/** alignDown */
+game.Player.prototype.alignDown = function() {
+  this.scale.y = -0.2;
+  this.scale.normalize();
 };
 
 
 /** moveLeft */
 game.Player.prototype.moveLeft = function() {
   this.getVelocity().x += -35;
-  this.scale = {x: -1};
+  this.alignLeft();
 };
 
 
 /** moveRight */
 game.Player.prototype.moveRight = function() {
   this.getVelocity().x += 35;
-  this.scale = {x: 1};
+  this.alignRight();
 };
 
 
 /** moveUp */
 game.Player.prototype.moveUp = function() {
   this.getVelocity().y += -40;
+  this.alignUp();
 };
 
 
 /** moveDown */
 game.Player.prototype.moveDown = function() {
   this.getVelocity().y += 40;
+  this.alignDown();
 };
 
 

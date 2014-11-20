@@ -39,12 +39,14 @@ game.Projectile.prototype.create = function(pos, vel, scale) {
   var position = this.getPosition();
   var velocity = this.getVelocity();
 
-  var transformX = 20;
-  if (scale.x > 0) transformX += 60;
-  position.x = pos.x + scale.x * transformX;
-  position.y = pos.y + 10;
+  var transformX = -5;
+  if (scale.x > 0) transformX += 90;
+  var transformY = -10;
+  if (scale.y > -0.2) transformY += 30;
+  position.x = pos.x + transformX;
+  position.y = pos.y + transformY;
   velocity.x = vel.x + scale.x * 50;
-  velocity.y = vel.y + 50;
+  velocity.y = vel.y + scale.y * 50;
 
   this.setToDissapearIn(10);
   this.registerCollidesWith('ground', this.collisionWithPlatform.bind(this));

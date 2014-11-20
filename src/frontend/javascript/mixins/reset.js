@@ -28,12 +28,5 @@ game.mixins.entity.Reset.prototype.update = function(deltaTime) {
   var accel = this.getAcceleration();
   accel.x = 0;
   accel.y = 0;
-  var vel = this.getVelocity();
-  if (vel.x > 1000) {
-    vel.x = 1000;
-  }
-  if (vel.y > 1000) {
-    vel.y = 1000;
-  }
 };
 
