@@ -52,6 +52,13 @@ game.Main = function() {
   /** @private {number} */
   this.globalTick_ = 0;
 
+  /** @private {FPSMeter}*/
+  this.meter_ = new FPSMeter({
+    theme: 'light',
+    left: 'auto',
+    right: '5px'
+  });
+
   this.attach();
   this.init();
   this.switchGameStateTo(game.Main.State.PENDING);
@@ -242,6 +249,7 @@ game.Main.prototype.renderLoop = function() {
       entity.draw();
     }
   });
+  this.meter_.tick();
 };
 
 
