@@ -30,6 +30,10 @@ game.UserInterface = function() {
   this.googleLoginButton.innerText = 'Login via Google';
   this.el.appendChild(this.googleLoginButton);
 
+
+  /** @private {number} */
+  this.updateTimerTimeout_ = null;
+
   this.googleLoginButton.addEventListener('click', this.login.bind(this));
 };
 game.core.helper.inherit(game.UserInterface, game.core.Entity);
@@ -56,10 +60,12 @@ game.UserInterface.CLASS_NAME = 'user-interface';
  * @param {number} countDownTo The time we are counting down to.
  */
 game.UserInterface.prototype.drawCountDown = function(label, countDownTo) {
+  if (this.updateTimerTimeout_ != null) clearTimeout(this.updateTimerTimeout_);
   var remainder = countDownTo - +new Date();
   if (remainder <= 0) return;
   this.updateTimerText(label + ' ' + (remainder / 1000).toFixed(1));
-  setTimeout(this.drawCountDown.bind(this, label, countDownTo),
+  this.updateTimerTimeout_ = setTimeout(
+      this.drawCountDown.bind(this, label, countDownTo),
       game.UserInterface.COUNTDOWN_DELAY);
 };
 
