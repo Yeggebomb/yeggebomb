@@ -27,15 +27,19 @@ game.core.helper.mixins['projectilecreator'] =
 game.mixins.ProjectileCreator.prototype.init = function() {
   this.projectilePool = new game.ProjectilePool();
   this.ticksSinceLastBullet = game.constants.BULLET_DELAY;
+  this.readyToShoot = false;
+  this.ticksSinceStartBulletThrow = 0;
 };
 
 
 /** create and throw new projectile */
 game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
+  var shootingPower = this.ticksSinceStartBulletThrow /
+      game.constants.BULLET_DELAY;
   var vel = this.getVelocity();
   var projectile = this.projectilePool.get();
   projectile.attach(this.el.parentNode);
-  projectile.create(this.getPosition(), vel, this.scale);
+  projectile.create(this.getPosition(), vel, this.scale, shootingPower);
   vel.x += this.scale.x * -80;
   vel.y += this.scale.y * 80;
 };
@@ -47,10 +51,16 @@ game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
 game.mixins.ProjectileCreator.prototype.update = function() {
   var Keycodes = game.core.KeyHandler.Keycodes;
   this.ticksSinceLastBullet += 1;
+  if (this.readyToShoot &&
+      !this.keyHandler_.isDown(Keycodes.SPACE) &&
+      this.ticksSinceLastBullet > game.constants.BULLET_DELAY) {
+    this.throwProjectile();
+    this.ticksSinceLastBullet = 0;
+    this.ticksSinceStartBulletThrow = 0;
+    this.readyToShoot = false;
+  }
   if (this.keyHandler_.isDown(Keycodes.SPACE)) {
-    if (this.ticksSinceLastBullet > game.constants.BULLET_DELAY) {
-      this.throwProjectile();
-      this.ticksSinceLastBullet = 0;
-    }
+    this.readyToShoot = true;
+    this.ticksSinceStartBulletThrow += 1;
   }
 };
