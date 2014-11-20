@@ -92,8 +92,7 @@ game.Main.prototype.init = function() {
   this.userInterface_.loginCallback = this.loginCallback.bind(this);
   this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME,
       function() {
-        this.viewport_.setRectangle('25%', '25%', '50%', '50%',
-            this.window_, 1024, 461, 800, 461);
+        this.viewport_.setRectangle('0%', '0%', '100%', '100%', this.window_);
       }.bind(this), true);
 
   this.rotatedPlatform_.setPolygon(new game.core.math.Vector(160, 120), [
@@ -104,10 +103,10 @@ game.Main.prototype.init = function() {
     new game.core.math.Vector(0, 80)
   ]);
 
-  this.platform_.setRectangle(0, 551, 1600, 10);
+  this.platform_.setRectangle(0, 792, 1920, 10);
   this.platform_.el.classList.add('ground');
-  this.board_.setRectangle(0, 0, 1600, 561);
-  this.backDrop_.setRectangle(0, 0, 1600, 561);
+  this.board_.setRectangle(0, 0, 1920, 802);
+  this.backDrop_.setRectangle(0, 0, 1920, 802);
   this.player_.setRectangle(0, 0, 85, 59);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
