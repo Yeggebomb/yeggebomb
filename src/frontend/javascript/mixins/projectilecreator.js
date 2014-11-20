@@ -34,11 +34,10 @@ game.mixins.ProjectileCreator.prototype.init = function() {
 game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
   var vel = this.getVelocity();
   var projectile = this.projectilePool.get();
-  if (!this.el.parentNode) {
-    debugger;
-  }
   projectile.attach(this.el.parentNode);
-  projectile.create(this.getPosition(), vel);
+  projectile.create(this.getPosition(), vel, this.scale);
+  vel.x += this.scale.x * -40;
+  vel.y += 40;
 };
 
 
