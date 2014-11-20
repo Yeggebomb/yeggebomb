@@ -170,7 +170,11 @@ game.Main.prototype.gameStateSwitcher = function() {
       remainingTime = game.constants.WAIT_TIME;
       this.stateChangeToSYNCING();
       this.userInterface_.updateTimerText('Syncing data');
-      return;
+      if (!this.bypassLogin_) {
+        return;
+      } else {
+        // fall through.
+      }
     case game.Main.State.SYNCING:
       this.gameState_ = game.Main.State.PLAYBACK;
       this.viewport_.el.classList.add('state-playback');
