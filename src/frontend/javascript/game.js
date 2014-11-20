@@ -207,8 +207,10 @@ game.Main.prototype.physicsLoop = function() {
     this.gameStateAdvancer(this.globalTick_);
 
     game.core.Entity.forEach(function(entity) {
-      entity.update(dtstep, this.globalTick_);
-      entity.resolveCollisions(dtstep);
+      if (entity.isActive()) {
+        entity.update(dtstep, this.globalTick_);
+        entity.resolveCollisions(dtstep);
+      }
     }.bind(this));
 
     this.globalTick_++;
