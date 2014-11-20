@@ -52,7 +52,9 @@ game.Main = function() {
   /** @private {number} */
   this.globalTick_ = 0;
 
+  console.log('attach');
   this.attach();
+  console.log('init start');
   this.init();
   this.switchGameStateTo(game.Main.State.PENDING);
 };
@@ -126,6 +128,7 @@ game.Main.prototype.init = function() {
  * Initializes values to start game.
  */
 game.Main.prototype.startGame = function() {
+  console.log('start game');
   this.switchGameStateTo(game.Main.State.RECORDING);
   this.physicsLoop();
   this.renderLoop();
@@ -185,22 +188,26 @@ game.Main.prototype.switchGameStateTo = function(nextGameState) {
  */
 game.Main.prototype.physicsLoop = function() {
   var currTime = +new Date() / 1000;
-  console.log('currtime in secs: ' + currTime);
+  //console.log('currtime in secs: ' + currTime);
   if (!this.tmpGameTime_) this.tmpGameTime_ = +new Date() / 1000;
   if (!this.lastTimeRan_) this.lastTimeRan_ = +new Date() / 1000;
   if (!this.physicsRemainderTime_) this.physicsRemainderTime_ = 0;
 
-  var dt = currTime - this.gameTime_ + this.physicsRemainderTime_;
+  //console.log('currtime - time: ' + (currTime - this.lastTimeRan_));
+  var dt = (currTime - this.lastTimeRan_) + this.physicsRemainderTime_;
+
+  //console.log('dt: ' + dt);
 
   var dtstep = 1 / game.Main.FPS;
   var steps = Math.floor(dt / dtstep);
-  this.physicsRemainderTime_ += dt - dtstep * steps;
+  this.physicsRemainderTime_ = dt - dtstep * steps;
 
-  console.log('num steps: ' + steps);
+  //console.log('num steps: ' + steps);
 
   this.camera_.update();
   // Update loop
   for (var step = 0; step < steps; step++) {
+    //console.log('performing step: ' + step);
     this.gameStateAdvancer(this.globalTick_);
 
     game.core.Entity.forEach(function(entity) {
@@ -336,6 +343,7 @@ game.Main.prototype.stateChangeToPlayback = function() {
  * Login
  */
 game.Main.prototype.loginCallback = function() {
+  console.log('login callback');
   this.firebase_.authWithOAuthPopup('google', function(error, authData) {
     if (error) {
       console.warn(error);
