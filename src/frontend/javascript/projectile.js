@@ -68,10 +68,10 @@ game.Projectile.prototype.collisionWithPlatform =
   velocity.y *= -this.bouncyness;
 
   if (velocity.x > this.epsilon) {
-    velocity.x -= 9.8 * this.friction * delta;
+    velocity.x -= game.constants.Physics.GRAVITY * this.friction * delta;
     if (velocity.x < 0) velocity.x = 0;
   } else if (velocity.x < this.epsilon) {
-    velocity.x += 9.8 * this.friction * delta;
+    velocity.x += game.constants.Physics.GRAVITY * this.friction * delta;
     if (velocity.x > 0) velocity.x = 0;
   } else {
     velocity.x = 0;

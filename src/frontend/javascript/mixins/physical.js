@@ -192,8 +192,8 @@ game.mixins.Physical.prototype.updatePosition = function(delta) {
   var accel = this.getAcceleration();
   var velocity = this.getVelocity();
   var pos = this.getPosition();
-  pos.x += velocity.x * delta + 0.5 * accel.x * delta * delta;
-  pos.y += velocity.y * delta + 0.5 * accel.y * delta * delta;
+  pos.x += (velocity.x * delta) + (0.5 * accel.x * delta * delta);
+  pos.y += (velocity.y * delta) + (0.5 * accel.y * delta * delta);
 };
 
 
@@ -206,11 +206,10 @@ game.mixins.Physical.prototype.step = function(delta) {
   if (this.isMovable()) {
     this.addGravity();
 
-    // Update new velocity.
-    this.updateVelocity(delta);
-
     // Update the position.
     this.updatePosition(delta);
+    // Update new velocity.
+    this.updateVelocity(delta);
   }
 
   // Update the position.

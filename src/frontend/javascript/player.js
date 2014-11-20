@@ -101,21 +101,21 @@ game.Player.prototype.init = function() {
 
 /** moveLeft */
 game.Player.prototype.moveLeft = function() {
-  this.getVelocity().x = -35;
+  this.getVelocity().x += -35;
   this.scale = {x: 1};
 };
 
 
 /** moveRight */
 game.Player.prototype.moveRight = function() {
-  this.getVelocity().x = 35;
+  this.getVelocity().x += 35;
   this.scale = {x: -1};
 };
 
 
 /** moveUp */
 game.Player.prototype.moveUp = function() {
-  this.getVelocity().y = -40;
+  this.getVelocity().y += -40;
 };
 
 
@@ -149,10 +149,10 @@ game.Player.prototype.collisionWithPlatform = function(other, response, delta) {
   velocity.y *= -this.bouncyness;
 
   if (velocity.x > this.epsilon) {
-    velocity.x -= 9.8 * this.friction * delta;
+    velocity.x -= game.constants.Physics.GRAVITY * this.friction * delta;
     if (velocity.x < 0) velocity.x = 0;
   } else if (velocity.x < this.epsilon) {
-    velocity.x += 9.8 * this.friction * delta;
+    velocity.x += game.constants.Physics.GRAVITY * this.friction * delta;
     if (velocity.x > 0) velocity.x = 0;
   } else {
     velocity.x = 0;

@@ -5,8 +5,14 @@ goog.provide('game.constants.Physics');
 /**
  * @const {number}
  */
+game.constants.PIXEL_TO_METER = 10;
+
+
+/**
+ * @const {number}
+ */
 game.constants.Physics = {
-  GRAVITY: 9.8,
+  GRAVITY: 9.8 * game.constants.PIXEL_TO_METER,
   EPSILON: 0.01
 };
 
@@ -20,7 +26,7 @@ game.constants.PLAY_TIME = 10000;
 
 
 /**
- * Length of time to wait for info from the server in ms/
+ * Length of time to wait for info from the server in ms.
  *
  * @const {number}
  */
