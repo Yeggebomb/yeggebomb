@@ -274,7 +274,7 @@ game.Main.prototype.stateChangeToSYNCING = function() {
       entity.setAcceleration(new game.core.math.Vector());
       entity.setMass(0);
 
-      if (this.bypassLogin_) {
+      if (!this.bypassLogin_) {
         // Write to firebase.
         this.firebaseEvents_.child(entity.user.userId).push(
             game.core.KeyHandler.records,
