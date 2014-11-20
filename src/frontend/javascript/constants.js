@@ -12,7 +12,11 @@ game.constants.PIXEL_TO_METER = 10;
  * @const {number}
  */
 game.constants.Physics = {
+<<<<<<< HEAD
   GRAVITY: 9.8 * game.constants.PIXEL_TO_METER,
+=======
+  GRAVITY: 999,
+>>>>>>> 0f447b2ce92fe653ab66d537540aedbfec85df3f
   EPSILON: 0.01
 };
 
