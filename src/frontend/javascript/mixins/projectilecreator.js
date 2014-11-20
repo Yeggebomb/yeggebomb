@@ -50,7 +50,7 @@ game.mixins.ProjectileCreator.prototype.update = function(delta) {
   var Keycodes = game.core.KeyHandler.Keycodes;
   if (this.keyHandler_.isDown(Keycodes.SPACE)) {
     if (this.lastCreated == null ||
-        ((+new Date()) - this.lastCreated) > 100) {
+        ((+new Date()) - this.lastCreated) > game.constants.BULLET_DELAY) {
       this.throwProjectile();
       this.lastCreated = +new Date();
     }

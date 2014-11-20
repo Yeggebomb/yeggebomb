@@ -34,6 +34,14 @@ game.constants.WAIT_TIME = 2000;
 
 
 /**
+ * Delay on bullet creation (can only create bullet every x ms).
+ *
+ * @const {number}
+ */
+game.constants.BULLET_DELAY = 1000;
+
+
+/**
  * Firebase URL.
  *
  * @const {string}
