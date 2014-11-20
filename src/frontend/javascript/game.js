@@ -134,12 +134,21 @@ game.Main.prototype.init = function() {
   this.backDrop_.setRectangle(0, 0, 1920, 802);
 
   this.player_.setPolygon(new game.core.math.Vector(0, 0), [
-    new game.core.math.Vector(0, 0),
-    new game.core.math.Vector(85, 0),
-    new game.core.math.Vector(85, 59),
-    new game.core.math.Vector(0, 59)
+    new game.core.math.Vector(0, 37),
+    new game.core.math.Vector(0, 42),
+    new game.core.math.Vector(22, 50),
+    new game.core.math.Vector(32, 58),
+    new game.core.math.Vector(52, 58),
+    new game.core.math.Vector(63, 50),
+    new game.core.math.Vector(85, 42),
+    new game.core.math.Vector(85, 37),
+    new game.core.math.Vector(58, 20),
+    new game.core.math.Vector(58, 7),
+    new game.core.math.Vector(42, 0),
+    new game.core.math.Vector(32, 7),
+    new game.core.math.Vector(28, 20)
   ]);
-  this.player_.setSize(85, 59);
+  this.player_.setSize(85, 89);
 
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);

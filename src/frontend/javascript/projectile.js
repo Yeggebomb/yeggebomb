@@ -30,18 +30,21 @@ game.core.helper.inherit(game.Projectile, game.core.Entity);
  *
  * @param {!game.core.math.Vector} pos
  * @param {!game.core.math.Vector} vel
+ * @param {!game.core.math.Vector} scale
  */
-game.Projectile.prototype.create = function(pos, vel) {
+game.Projectile.prototype.create = function(pos, vel, scale) {
   this.setMass(1);
   this.setRectangle(0, 0, 5, 5);
 
   var position = this.getPosition();
   var velocity = this.getVelocity();
 
-  position.x = pos.x + 40;
+  var transformX = 20;
+  if (scale.x > 0) transformX += 60;
+  position.x = pos.x + scale.x * transformX;
   position.y = pos.y + 10;
-  velocity.x = vel.x + 50;
-  velocity.y = vel.y + 5;
+  velocity.x = vel.x + scale.x * 50;
+  velocity.y = vel.y + 50;
 
   this.setToDissapearIn(10);
   this.registerCollidesWith('ground', this.collisionWithPlatform.bind(this));

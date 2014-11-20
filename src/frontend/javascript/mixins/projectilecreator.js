@@ -34,11 +34,10 @@ game.mixins.ProjectileCreator.prototype.init = function() {
 game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
   var vel = this.getVelocity();
   var projectile = this.projectilePool.get();
-  if (!this.el.parentNode) {
-    debugger;
-  }
   projectile.attach(this.el.parentNode);
-  projectile.create(this.getPosition(), vel);
+  projectile.create(this.getPosition(), vel, this.scale);
+  vel.x += this.scale.x * -40;
+  vel.y += 40;
 };
 
 
@@ -51,7 +50,7 @@ game.mixins.ProjectileCreator.prototype.update = function(delta) {
   var Keycodes = game.core.KeyHandler.Keycodes;
   if (this.keyHandler_.isDown(Keycodes.SPACE)) {
     if (this.lastCreated == null ||
-        ((+new Date()) - this.lastCreated) > 100) {
+        ((+new Date()) - this.lastCreated) > game.constants.BULLET_DELAY) {
       this.throwProjectile();
       this.lastCreated = +new Date();
     }
