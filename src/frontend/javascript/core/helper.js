@@ -56,14 +56,14 @@ game.core.helper.updateTranslate = function(element, position, scale) {
     transform += 'translate(' + position.x + 'px, ' + position.y + 'px) ';
   }
 
-  if (_.isObject(scale)) {
-    if (_.isNumber(scale.x)) {
-      transform += ' scaleX(' + scale.x + ')';
-    }
-    if (_.isNumber(scale.y)) {
-      transform += ' scaleY(' + scale.y + ')';
-    }
-  }
+  // if (_.isObject(scale)) {
+  //   if (_.isNumber(scale.x)) {
+  //     transform += ' scaleX(' + scale.x + ')';
+  //   }
+  //   if (_.isNumber(scale.y)) {
+  //     transform += ' scaleY(' + scale.y + ')';
+  //   }
+  // }
 
   element.style.webkitTransform = transform;
   element.style.MozTransform = transform;
