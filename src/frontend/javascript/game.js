@@ -92,7 +92,8 @@ game.Main.prototype.init = function() {
   this.userInterface_.loginCallback = this.loginCallback.bind(this);
   this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME,
       function() {
-        this.viewport_.setRectangle('0%', '0%', '100%', '100%', this.window_);
+        this.viewport_.setRectangle('0%', '0%', '100%', '100%',
+            this.window_, 1920, 802, 800, 461);
       }.bind(this), true);
 
   this.rotatedPlatform_.setPolygon(new game.core.math.Vector(160, 120), [
