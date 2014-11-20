@@ -5,20 +5,20 @@ api_version: go1
 handlers:
 - url: /js
   static_dir: frontend/static/js_compiled/
-  secure: always
+  application_readable: true
 - url: /css
   static_dir: frontend/static/css_compiled/
-  secure: always
+  application_readable: true
 - url: /images
   static_dir: frontend/static/images/
-  secure: always
+  application_readable: true
 - url: /.*
   script: _go_app
-  secure: always
 
 
 skip_files:
 - ^(.*/)?.*\.MF$
 - ^(.*/)?.*\.CMF$
 - ^(.*/)?.*\.sourcemap$
+- ^(.*/)?.*\.map$
 - ^(.*/)?.*\node_modules$
