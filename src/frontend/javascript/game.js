@@ -185,7 +185,6 @@ game.Main.prototype.switchGameStateTo = function(nextGameState) {
  */
 game.Main.prototype.physicsLoop = function() {
   var currTime = +new Date() / 1000;
-  if (!this.tmpGameTime_) this.tmpGameTime_ = +new Date() / 1000;
   if (!this.lastTimeRan_) this.lastTimeRan_ = +new Date() / 1000;
   if (!this.physicsRemainderTime_) this.physicsRemainderTime_ = 0;
 
