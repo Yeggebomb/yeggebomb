@@ -13,6 +13,12 @@ game.core.KeyHandler = function() {
     return game.core.KeyHandler.prototype._singletonInstance;
   }
   /**
+   * The current tick to record by.
+   *
+   * @type {number}
+   */
+  this.currentTick = 0;
+  /**
    * True if we should record events.
    * @type {Boolean}
    */
@@ -51,7 +57,7 @@ game.core.KeyHandler = function() {
  *
  * @type {Array.<Object>}
  */
-game.core.KeyHandler.records = [];
+game.core.KeyHandler.records = {};
 
 
 /**
@@ -62,8 +68,8 @@ game.core.KeyHandler.records = [];
  */
 game.core.KeyHandler.prototype.visibilityChanged_ = function() {
   if (document.hidden) {
-    _.each(this.pressed, function(value, keycode) {
-      this.endRecordEvent_(keycode);
+    _.each(this.pressed, function(value, keyCode) {
+      this.addRecord_(keyCode, false);
     }.bind(this));
     this.pressed = {};
   }
@@ -76,8 +82,8 @@ game.core.KeyHandler.prototype.visibilityChanged_ = function() {
  */
 game.core.KeyHandler.prototype.mouseDown_ = function(evt) {
   if (evt.which != 1) {
-    _.each(this.pressed, function(value, keycode) {
-      this.endRecordEvent_(keycode);
+    _.each(this.pressed, function(value, keyCode) {
+      this.addRecord_(keyCode, false);
     }.bind(this));
     this.pressed = {};
   }
@@ -85,7 +91,7 @@ game.core.KeyHandler.prototype.mouseDown_ = function(evt) {
 
 
 /**
- * Returns true if the given keycode is currently being pressed.
+ * Returns true if the given keyCode is currently being pressed.
  *
  * @param {!game.core.KeyHandler.Keycodes} keyCode
  * @return {boolean} true if key is down.
@@ -102,19 +108,10 @@ game.core.KeyHandler.prototype.isDown = function(keyCode) {
  * @private
  */
 game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
+  var keyCode = evt.keyCode;
   if (this.ignoreKeys) return;
-  var skipRecord = false;
-  _.each(game.core.KeyHandler.records, function(record) {
-    if (record.keyCode == evt.keyCode && record.end == null) {
-      skipRecord = true;
-    }
-  });
-  // We should skip recording this entry if we already found an event with this
-  // entry.
-  if (!skipRecord) {
-    this.recordEvent_(evt.keyCode);
-  }
-
+  if (this.isDown(keyCode)) return;  // No need to do this twice.
+  this.addRecord_(keyCode, true);
   this.pressed[evt.keyCode] = true;
 };
 
@@ -126,9 +123,10 @@ game.core.KeyHandler.prototype.onKeydown_ = function(evt) {
  * @private
  */
 game.core.KeyHandler.prototype.onKeyup_ = function(evt) {
+  var keyCode = evt.keyCode;
   if (this.ignoreKeys) return;
-  this.endRecordEvent_(evt.keyCode);
-  delete this.pressed[evt.keyCode];
+  this.addRecord_(keyCode, false);
+  delete this.pressed[keyCode];
 };
 
 
@@ -136,8 +134,8 @@ game.core.KeyHandler.prototype.onKeyup_ = function(evt) {
  * Disallows the recording of key stroked and ends recording of any keys.
  */
 game.core.KeyHandler.prototype.stopRecording = function() {
-  _.each(this.pressed, function(value, keycode) {
-    this.endRecordEvent_(keycode);
+  _.each(this.pressed, function(value, keyCode) {
+    this.addRecord_(keyCode, false);
   }.bind(this));
   this.isRecording = false;
 };
@@ -147,59 +145,29 @@ game.core.KeyHandler.prototype.stopRecording = function() {
  * Allows recording of keys
  */
 game.core.KeyHandler.prototype.startRecording = function() {
-  game.core.KeyHandler.records = [];
+  game.core.KeyHandler.records = {};
   this.isRecording = true;
-  this.currentTime = +new Date();
 };
 
 
 /**
- * Starts recording the key stroke.
+ * Adds a record for recording. Either pressed or un pressed.
  *
  * @param {number} keyCode
+ * @param {boolean} value True for keyCode was pressed, false for un pressed.
  * @private
  */
-game.core.KeyHandler.prototype.recordEvent_ = function(keyCode) {
+game.core.KeyHandler.prototype.addRecord_ = function(keyCode, value) {
   if (!this.isRecording) return;
-  game.core.KeyHandler.records.push({
+  var currentTick = this.currentTick;
+  if (!_.isArray(game.core.KeyHandler.records[currentTick])) {
+    game.core.KeyHandler.records[currentTick] = [];
+  }
+
+  game.core.KeyHandler.records[currentTick].push({
     keyCode: keyCode,
-    start: +new Date() - this.currentTime,
-    end: null
+    value: value
   });
-};
-
-
-/**
- * Ends the key.
- *
- * @param {number} keyCode
- * @private
- */
-game.core.KeyHandler.prototype.endRecordEvent_ = function(keyCode) {
-  if (!keyCode) {
-    console.warn('Warning! no keycode provided when ending record event!');
-    return;
-  }
-
-  if (!this.isRecording) return;
-  var foundRecord = null;
-
-  _.each(game.core.KeyHandler.records, function(record) {
-    if (record.keyCode == keyCode && record.end == null) {
-      if (foundRecord) {
-        console.warn('Crap we found multiple records that we havent ended ' +
-            'for this key');
-      }
-      foundRecord = record;
-    }
-  });
-
-  if (!foundRecord) {
-    console.warn('Crap we couldn\'t find that last record');
-    return;
-  }
-
-  foundRecord.end = +new Date() - this.currentTime;
 };
 
 

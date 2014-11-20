@@ -66,6 +66,12 @@ game.Player = function() {
    * @type {Object}
    */
   this.user = null;
+  /**
+   * If in playback mode or not.
+   *
+   * @type {boolean}
+   */
+  this.isPlayingBack = false;
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
@@ -113,10 +119,17 @@ game.Player.prototype.moveUp = function() {
 };
 
 
-/** Update function */
-game.Player.prototype.update = function() {
+/**
+ * Update for the player
+ * @param {number} dt Delta time since last update.
+ * @param {number} currentTick The current tick we are on.
+ */
+game.Player.prototype.update = function(dt, currentTick) {
+  this.keyHandler_.currentTick = currentTick;
+  if (this.isPlayingBack) {
+    this.playRecordedKeys(currentTick);
+  }
   var Keycodes = game.core.KeyHandler.Keycodes;
-
   if (this.keyHandler_.isDown(Keycodes.RIGHT)) this.moveRight();
   if (this.keyHandler_.isDown(Keycodes.LEFT)) this.moveLeft();
   if (this.keyHandler_.isDown(Keycodes.UP)) this.moveUp();
@@ -150,15 +163,16 @@ game.Player.prototype.collisionWithPlatform = function(other, response, delta) {
 
 /**
  * Plays recorded keys the KeyHandler.
+ *
+ * @param {number} currentTick The current tick we are on.
  */
-game.Player.prototype.playRecordedKeys = function() {
-  _.each(game.core.KeyHandler.records, function(record) {
-    setTimeout(function(keyCode) {
-      this.keyHandler_.pressed[keyCode] = true;
-    }.bind(this, record.keyCode), record.start);
-    setTimeout(function(keyCode) {
-      delete this.keyHandler_.pressed[keyCode];
-    }.bind(this, record.keyCode), record.end);
+game.Player.prototype.playRecordedKeys = function(currentTick) {
+  _.each(game.core.KeyHandler.records[currentTick], function(record) {
+    if (_.isBoolean(record.value)) {
+      this.keyHandler_.pressed[record.keyCode] = record.value;
+    } else {
+      delete this.keyHandler_.pressed[record.keyCode];
+    }
   }.bind(this));
 };
 

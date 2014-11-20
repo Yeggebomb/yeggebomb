@@ -220,7 +220,7 @@ game.Main.prototype.physicsLoop = function() {
     _.each(game.core.Entity.All, function(entity) {
       entity.update(dtstep, this.globalTick_);
       entity.resolveCollisions(dtstep);
-    });
+    }.bind(this));
     this.globalTick_++;
   }
   this.gameTime_ = +new Date();
@@ -252,6 +252,7 @@ game.Main.prototype.stateChangeToRecording = function() {
       entity.setVelocity(new game.core.math.Vector());
       entity.setAcceleration(new game.core.math.Vector());
       entity.setMass(game.Player.DEFAULT_MASS);
+      entity.isPlayingBack = false;
 
       var endPosition = entity.endPosition;
       if (endPosition) {
@@ -295,6 +296,21 @@ game.Main.prototype.stateChangeToSYNCING = function() {
 
 
 /**
+ * The state is now playback.
+ */
+game.Main.prototype.stateChangeToPlayback = function() {
+  this.globalTick_ = 0;  // Reset for playback!
+  game.core.Entity.forEach(function(entity) {
+    if (entity instanceof game.Player) {
+      entity.setPosition(entity.initialPosition.x, entity.initialPosition.y);
+      entity.setMass(game.Player.DEFAULT_MASS);
+      entity.isPlayingBack = true;
+    }
+  }.bind(this));
+};
+
+
+/**
  * Login
  */
 game.Main.prototype.loginCallback = function() {
@@ -312,20 +328,6 @@ game.Main.prototype.loginCallback = function() {
     this.player_.user = this.primaryUser_;
     game.Main.Users.push(this.primaryUser_);
     this.startGame();
-  }.bind(this));
-};
-
-
-/**
- * The state is now playback.
- */
-game.Main.prototype.stateChangeToPlayback = function() {
-  game.core.Entity.forEach(function(entity) {
-    if (entity instanceof game.Player) {
-      entity.setPosition(entity.initialPosition.x, entity.initialPosition.y);
-      entity.setMass(game.Player.DEFAULT_MASS);
-      entity.playRecordedKeys();
-    }
   }.bind(this));
 };
 
