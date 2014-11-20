@@ -51,9 +51,14 @@ game.Main = function() {
   this.primaryUser_ = null;
   /** @private {number} */
   this.globalTick_ = 0;
+  /** @private {boolean} */
+  this.bypassLogin_ = true;
 
   this.attach();
   this.init();
+  if (this.bypassLogin_) {
+    this.startGame();
+  }
 };
 
 
@@ -269,15 +274,17 @@ game.Main.prototype.stateChangeToSYNCING = function() {
       entity.setAcceleration(new game.core.math.Vector());
       entity.setMass(0);
 
-      // Write to firebase.
-      this.firebaseEvents_.child(entity.user.userId).push(
-          game.core.KeyHandler.records,
-          function(error) {
-            if (error) {
-              console.error(error);
-              alert('FATAL: ', error);
-            }
-          }.bind(this));
+      if (this.bypassLogin_) {
+        // Write to firebase.
+        this.firebaseEvents_.child(entity.user.userId).push(
+            game.core.KeyHandler.records,
+            function(error) {
+              if (error) {
+                console.error(error);
+                alert('FATAL: ', error);
+              }
+            }.bind(this));
+      }
     }
   }.bind(this));
 };
