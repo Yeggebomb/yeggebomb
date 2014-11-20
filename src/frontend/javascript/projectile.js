@@ -46,6 +46,8 @@ game.Projectile.prototype.create = function(pos, vel) {
   this.setToDissapearIn(10);
   this.registerCollidesWith('ground', this.collisionWithPlatform.bind(this));
   this.registerCollidesWith('ceiling', this.collisionWithPlatform.bind(this));
+  this.registerCollidesWith('leftwall', this.collisionWithPlatform.bind(this));
+  this.registerCollidesWith('rightwall', this.collisionWithPlatform.bind(this));
 };
 
 

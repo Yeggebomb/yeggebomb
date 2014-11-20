@@ -36,6 +36,10 @@ game.Main = function() {
   /** @private {!game.Platform} */
   this.ground_ = new game.Platform();
   /** @private {!game.Platform} */
+  this.leftwall_ = new game.Platform();
+  /** @private {!game.Platform} */
+  this.rightwall_ = new game.Platform();
+  /** @private {!game.Platform} */
   this.rotatedPlatform_ = new game.Platform();
   /** @private {number} */
   this.gameTime_ = null;
@@ -122,12 +126,22 @@ game.Main.prototype.init = function() {
   this.ceiling_.el.classList.add('ceiling');
   this.ground_.setRectangle(0, 792, 1920, 10);
   this.ground_.el.classList.add('ground');
+  this.leftwall_.setRectangle(-10, 0, 10, 792);
+  this.leftwall_.el.classList.add('wall');
+  this.rightwall_.setRectangle(1910, 0, 10, 802);
+  this.rightwall_.el.classList.add('wall');
   this.board_.setRectangle(0, 0, 1920, 802);
   this.backDrop_.setRectangle(0, 0, 1920, 802);
   this.player_.setRectangle(0, 0, 85, 59);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
 
+  this.leftwall_.registerCollider('leftwall', game.Platform);
+  this.player_.registerCollidesWith(
+      'leftwall', this.player_.collisionWithPlatform.bind(this.player_));
+  this.rightwall_.registerCollider('rightwall', game.Platform);
+  this.player_.registerCollidesWith(
+      'rightwall', this.player_.collisionWithPlatform.bind(this.player_));
   this.ground_.registerCollider('ground', game.Platform);
   this.player_.registerCollidesWith(
       'ground', this.player_.collisionWithPlatform.bind(this.player_));
@@ -159,6 +173,8 @@ game.Main.prototype.attach = function() {
   this.player_.attach(this.board_);
   this.ground_.attach(this.board_);
   this.ceiling_.attach(this.board_);
+  this.leftwall_.attach(this.board_);
+  this.rightwall_.attach(this.board_);
   this.rotatedPlatform_.attach(this.board_);
   this.userInterface_.attach(this.viewport_);
 };
