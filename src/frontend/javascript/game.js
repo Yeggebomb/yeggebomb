@@ -59,7 +59,7 @@ game.Main = function() {
 game.Main.State = {
   PENDING: -1,
   RECORDING: 0,
-  SENDING: 1,
+  SYNCING: 1,
   WAITING: 2,
   PLAYBACK: 3
 };
@@ -77,6 +77,11 @@ game.Main.Users = [];
  * Setup for our app.
  */
 game.Main.prototype.init = function() {
+  this.firebaseEvents_.on(
+      'value',
+      this.onRetrieveEvents.bind(this),
+      this.onRetrieveEventsFailed.bind(this));
+
   this.userInterface_.loginCallback = this.loginCallback.bind(this);
   this.window_.registerListener(game.core.Window.RESIZE_LISTENER_EVENT_NAME,
       function() {
@@ -152,22 +157,14 @@ game.Main.prototype.gameStateSwitcher = function() {
       this.viewport_.el.classList.add('state-pending');
       // this.stateChangeToPending();
       return;
-      break;
     case game.Main.State.RECORDING:
-      this.gameState_ = game.Main.State.SENDING;
-      this.viewport_.el.classList.add('state-sending');
+      this.gameState_ = game.Main.State.SYNCING;
+      this.viewport_.el.classList.add('state-syncing');
       remainingTime = game.constants.WAIT_TIME;
-      this.stateChangeToSending();
-      label = 'Sending:';
-      break;
-    case game.Main.State.SENDING:
-      this.gameState_ = game.Main.State.WAITING;
-      this.viewport_.el.classList.add('state-waiting');
-      remainingTime = game.constants.WAIT_TIME;
-      this.stateChangeToWaiting();
-      label = 'Waiting:';
-      break;
-    case game.Main.State.WAITING:
+      this.stateChangeToSYNCING();
+      this.userInterface_.updateTimerText('Syncing data');
+      return;
+    case game.Main.State.SYNCING:
       this.gameState_ = game.Main.State.PLAYBACK;
       this.viewport_.el.classList.add('state-playback');
       remainingTime = game.constants.PLAY_TIME;
@@ -256,9 +253,9 @@ game.Main.prototype.stateChangeToRecording = function() {
 
 
 /**
- * The state is now sending.
+ * The state is now SYNCING.
  */
-game.Main.prototype.stateChangeToSending = function() {
+game.Main.prototype.stateChangeToSYNCING = function() {
   this.keyHandler_.stopRecording();
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
@@ -269,17 +266,17 @@ game.Main.prototype.stateChangeToSending = function() {
       entity.setMass(0);
 
       // Write to firebase.
-      this.firebaseEvents_.child(entity.user.userId)
-          .push(game.core.KeyHandler.records);
+      this.firebaseEvents_.child(entity.user.userId).push(
+          game.core.KeyHandler.records,
+          function(error) {
+            if (error) {
+              console.error(error);
+              alert('FATAL: ', error);
+            }
+          }.bind(this));
     }
   }.bind(this));
 };
-
-
-/**
- * The state is now waiting.
- */
-game.Main.prototype.stateChangeToWaiting = function() {};
 
 
 /**
@@ -316,6 +313,27 @@ game.Main.prototype.stateChangeToPlayback = function() {
     }
   }.bind(this));
 };
+
+
+/**
+ * Retreives data from firebase.
+ *
+ * @param {Object} snapshot
+ */
+game.Main.prototype.onRetrieveEvents = function(snapshot) {
+  console.log(snapshot);
+};
+
+
+/**
+ * Failed Retreives data from firebase.
+ *
+ * @param {Object} snapshot
+ */
+game.Main.prototype.onRetrieveEventsFailed = function(snapshot) {
+  console.error('onRetrieveEventsFailed', snapshot);
+};
+
 
 // Start
 var main = new game.Main();

@@ -44,6 +44,12 @@ game.UserInterface.COUNTDOWN_DELAY = 100;
 
 
 /**
+ * @type {String}
+ */
+game.UserInterface.CLASS_NAME = 'user-interface';
+
+
+/**
  * Draw the timer.
  *
  * @param {string} label
@@ -52,32 +58,20 @@ game.UserInterface.COUNTDOWN_DELAY = 100;
 game.UserInterface.prototype.drawCountDown = function(label, countDownTo) {
   var remainder = countDownTo - +new Date();
   if (remainder <= 0) return;
-  this.timerDiv.innerText = label + ' ' + (remainder / 1000).toFixed(1);
+  this.updateTimerText(label + ' ' + (remainder / 1000).toFixed(1));
   setTimeout(this.drawCountDown.bind(this, label, countDownTo),
       game.UserInterface.COUNTDOWN_DELAY);
 };
 
 
 /**
- * Show start screen.
+ * Updates the timer text.
+ *
+ * @param {string} label
  */
-game.UserInterface.prototype.showStartScreen = function() {
-  this.inactiveLayer.className = 'startScreen';
+game.UserInterface.prototype.updateTimerText = function(label) {
+  this.timerDiv.innerText = label;
 };
-
-
-/**
- * Remove start screen.
- */
-game.UserInterface.prototype.removeStartScreen = function() {
-  this.inactiveLayer.className = '';
-};
-
-
-/**
- * @type {String}
- */
-game.UserInterface.CLASS_NAME = 'user-interface';
 
 
 /**
