@@ -44,7 +44,8 @@ game.Projectile.prototype.create = function(pos, vel) {
   velocity.y = vel.y + 5;
 
   this.setToDissapearIn(10);
-  this.registerCollidesWith('platform', this.collisionWithPlatform.bind(this));
+  this.registerCollidesWith('ground', this.collisionWithPlatform.bind(this));
+  this.registerCollidesWith('ceiling', this.collisionWithPlatform.bind(this));
 };
 
 

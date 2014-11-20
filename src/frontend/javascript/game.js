@@ -32,7 +32,9 @@ game.Main = function() {
   /** @private {!game.Board} */
   this.backDrop_ = new game.Backdrop();
   /** @private {!game.Platform} */
-  this.platform_ = new game.Platform();
+  this.ceiling_ = new game.Platform();
+  /** @private {!game.Platform} */
+  this.ground_ = new game.Platform();
   /** @private {!game.Platform} */
   this.rotatedPlatform_ = new game.Platform();
   /** @private {number} */
@@ -116,17 +118,22 @@ game.Main.prototype.init = function() {
     new game.core.math.Vector(0, 80)
   ]);
 
-  this.platform_.setRectangle(0, 792, 1920, 10);
-  this.platform_.el.classList.add('ground');
+  this.ceiling_.setRectangle(0, -10, 1920, 10);
+  this.ceiling_.el.classList.add('ceiling');
+  this.ground_.setRectangle(0, 792, 1920, 10);
+  this.ground_.el.classList.add('ground');
   this.board_.setRectangle(0, 0, 1920, 802);
   this.backDrop_.setRectangle(0, 0, 1920, 802);
   this.player_.setRectangle(0, 0, 85, 59);
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
 
-  this.platform_.registerCollider('platform', game.Platform);
+  this.ground_.registerCollider('ground', game.Platform);
   this.player_.registerCollidesWith(
-      'platform', this.player_.collisionWithPlatform.bind(this.player_));
+      'ground', this.player_.collisionWithPlatform.bind(this.player_));
+  this.ceiling_.registerCollider('ceiling', game.Platform);
+  this.player_.registerCollidesWith(
+      'ceiling', this.player_.collisionWithPlatform.bind(this.player_));
 };
 
 
@@ -150,7 +157,8 @@ game.Main.prototype.attach = function() {
   this.backDrop_.attach(this.viewport_);
   this.board_.attach(this.viewport_);
   this.player_.attach(this.board_);
-  this.platform_.attach(this.board_);
+  this.ground_.attach(this.board_);
+  this.ceiling_.attach(this.board_);
   this.rotatedPlatform_.attach(this.board_);
   this.userInterface_.attach(this.viewport_);
 };
