@@ -49,6 +49,8 @@ game.Main = function() {
   this.firebaseEvents_ = this.firebase_.child('events');
   /** @private {Object} */
   this.primaryUser_ = null;
+  /** @private {number} */
+  this.globalTick_ = 0;
 
   this.attach();
   this.init();
@@ -172,6 +174,7 @@ game.Main.prototype.gameStateSwitcher = function() {
       label = 'Play Back:';
       break;
     case game.Main.State.PLAYBACK:
+      this.globalTick_ = 0;
       this.gameState_ = game.Main.State.RECORDING;
       this.viewport_.el.classList.add('state-recording');
       remainingTime = game.constants.PLAY_TIME;
@@ -206,9 +209,10 @@ game.Main.prototype.physicsLoop = function() {
   // Update loop
   for (var step = 0; step < steps; step++) {
     _.each(game.core.Entity.All, function(entity) {
-      entity.update(dtstep);
+      entity.update(dtstep, this.globalTick_);
       entity.resolveCollisions(dtstep);
     });
+    this.globalTick_++;
   }
   this.gameTime_ = +new Date();
   setTimeout(this.physicsLoop.bind(this), 0);
