@@ -26,33 +26,41 @@ game.core.helper.mixins['projectilecreator'] =
  */
 game.mixins.ProjectileCreator.prototype.init = function() {
   this.projectilePool = new game.ProjectilePool();
-  this.lastCreated = null;
+  this.ticksSinceLastBullet = game.constants.BULLET_DELAY;
+  this.readyToShoot = false;
+  this.ticksSinceStartBulletThrow = 0;
 };
 
 
 /** create and throw new projectile */
 game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
+  var shootingPower = this.ticksSinceStartBulletThrow /
+      game.constants.BULLET_DELAY;
   var vel = this.getVelocity();
   var projectile = this.projectilePool.get();
   projectile.attach(this.el.parentNode);
-  projectile.create(this.getPosition(), vel, this.scale);
-  vel.x += this.scale.x * -40;
-  vel.y += 40;
+  projectile.create(this.getPosition(), vel, this.scale, shootingPower);
+  vel.x += this.scale.x * -80;
+  vel.y += this.scale.y * 80;
 };
 
 
 /**
  * Update function
- *
- * @param {number} delta
  */
-game.mixins.ProjectileCreator.prototype.update = function(delta) {
+game.mixins.ProjectileCreator.prototype.update = function() {
   var Keycodes = game.core.KeyHandler.Keycodes;
+  this.ticksSinceLastBullet += 1;
+  if (this.readyToShoot &&
+      !this.keyHandler_.isDown(Keycodes.SPACE) &&
+      this.ticksSinceLastBullet > game.constants.BULLET_DELAY) {
+    this.throwProjectile();
+    this.ticksSinceLastBullet = 0;
+    this.ticksSinceStartBulletThrow = 0;
+    this.readyToShoot = false;
+  }
   if (this.keyHandler_.isDown(Keycodes.SPACE)) {
-    if (this.lastCreated == null ||
-        ((+new Date()) - this.lastCreated) > game.constants.BULLET_DELAY) {
-      this.throwProjectile();
-      this.lastCreated = +new Date();
-    }
+    this.readyToShoot = true;
+    this.ticksSinceStartBulletThrow += 1;
   }
 };
