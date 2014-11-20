@@ -35,7 +35,7 @@ game.mixins.ProjectileCreator.prototype.init = function() {
 /** create and throw new projectile */
 game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
   var shootingPower = this.ticksSinceStartBulletThrow /
-      game.constants.BULLET_DELAY;
+      game.constants.BULLET_DELAY + 1;
   var vel = this.getVelocity();
   var projectile = this.projectilePool.get();
   projectile.attach(this.el.parentNode);
