@@ -91,6 +91,14 @@ game.Player.DEFAULT_MASS = 5;
 
 
 /**
+ * Collision correction smudge factor.
+ *
+ * @type {number}
+ */
+game.Player.COLLISION_SMUDGE = 1.01;
+
+
+/**
  * Initialize player.
  */
 game.Player.prototype.init = function() {
@@ -144,9 +152,13 @@ game.Player.prototype.update = function(dt, currentTick) {
  * @param {number} delta
  */
 game.Player.prototype.collisionWithPlatform = function(other, response, delta) {
-  var position = this.pos.sub(response.overlapV);
+  var correction =
+      response.overlapV.clone().scale(game.Player.COLLISION_SMUDGE);
+  var position = this.pos.sub(correction);
   var velocity = this.getVelocity();
-  velocity.y *= -this.bouncyness;
+  var normal = response.overlapN;
+  velocity.sub(normal.clone().scale(2 * normal.dot(velocity)));
+  velocity.scale(this.bouncyness);
 
   if (velocity.x > this.epsilon) {
     velocity.x -= game.constants.Physics.GRAVITY * this.friction * delta;
