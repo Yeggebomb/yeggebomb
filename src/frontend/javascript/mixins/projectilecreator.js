@@ -26,7 +26,7 @@ game.core.helper.mixins['projectilecreator'] =
  */
 game.mixins.ProjectileCreator.prototype.init = function() {
   this.projectilePool = new game.ProjectilePool();
-  this.lastCreated = null;
+  this.ticksSinceLastBullet = game.constants.BULLET_DELAY;
 };
 
 
@@ -43,16 +43,14 @@ game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
 
 /**
  * Update function
- *
- * @param {number} delta
  */
-game.mixins.ProjectileCreator.prototype.update = function(delta) {
+game.mixins.ProjectileCreator.prototype.update = function() {
   var Keycodes = game.core.KeyHandler.Keycodes;
+  this.ticksSinceLastBullet += 1;
   if (this.keyHandler_.isDown(Keycodes.SPACE)) {
-    if (this.lastCreated == null ||
-        ((+new Date()) - this.lastCreated) > game.constants.BULLET_DELAY) {
+    if (this.ticksSinceLastBullet > game.constants.BULLET_DELAY) {
       this.throwProjectile();
-      this.lastCreated = +new Date();
+      this.ticksSinceLastBullet = 0;
     }
   }
 };

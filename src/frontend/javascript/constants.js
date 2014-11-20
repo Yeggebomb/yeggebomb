@@ -34,11 +34,11 @@ game.constants.WAIT_TIME = 2000;
 
 
 /**
- * Delay on bullet creation (can only create bullet every x ms).
+ * Delay on bullet creation (can only create bullet every x ticks).
  *
  * @const {number}
  */
-game.constants.BULLET_DELAY = 1000;
+game.constants.BULLET_DELAY = 60;
 
 
 /**
