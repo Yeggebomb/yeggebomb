@@ -132,7 +132,15 @@ game.Main.prototype.init = function() {
   this.rightwall_.el.classList.add('wall');
   this.board_.setRectangle(0, 0, 1920, 802);
   this.backDrop_.setRectangle(0, 0, 1920, 802);
-  this.player_.setRectangle(0, 0, 85, 59);
+
+  this.player_.setPolygon(new game.core.math.Vector(0, 0), [
+    new game.core.math.Vector(0, 0),
+    new game.core.math.Vector(85, 0),
+    new game.core.math.Vector(85, 59),
+    new game.core.math.Vector(0, 59)
+  ]);
+  this.player_.setSize(85, 59);
+
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
 

@@ -79,7 +79,7 @@ game.core.helper.inherit(game.Player, game.core.Entity);
 /**
  * @type {String}
  */
-game.Player.CLASS_NAME = 'player';
+game.Player.CLASS_NAME = 'sdzjgh';
 
 
 /**
@@ -110,14 +110,12 @@ game.Player.prototype.init = function() {
 /** moveLeft */
 game.Player.prototype.moveLeft = function() {
   this.getVelocity().x += -35;
-  this.scale = {x: 1};
 };
 
 
 /** moveRight */
 game.Player.prototype.moveRight = function() {
   this.getVelocity().x += 35;
-  this.scale = {x: -1};
 };
 
 
