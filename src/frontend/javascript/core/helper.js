@@ -48,9 +48,9 @@ game.core.helper.poly2path = function(polygon) {
  * Updates the translate transform on a given element.
  * @param {Element} element
  * @param  {!game.core.math.Vector} position
- * @param  {number} scale
+ * @param  {number} renderScale
  */
-game.core.helper.updateTranslate = function(element, position, scale) {
+game.core.helper.updateTranslate = function(element, position, renderScale) {
   var transform = '';
   if (_.isObject(position)) {
     transform += 'translate(' +
@@ -58,14 +58,14 @@ game.core.helper.updateTranslate = function(element, position, scale) {
         position.y.toFixed(1) + 'px) ';
   }
 
-  // if (_.isObject(scale)) {
-  //   if (_.isNumber(scale.x)) {
-  //     transform += ' scaleX(' + scale.x + ')';
-  //   }
-  //   if (_.isNumber(scale.y)) {
-  //     transform += ' scaleY(' + scale.y + ')';
-  //   }
-  // }
+  if (_.isObject(renderScale)) {
+    if (_.isNumber(renderScale.x)) {
+      transform += ' scaleX(' + renderScale.x + ')';
+    }
+    if (_.isNumber(renderScale.y)) {
+      transform += ' scaleY(' + renderScale.y + ')';
+    }
+  }
 
   element.style.webkitTransform = transform;
   element.style.MozTransform = transform;
