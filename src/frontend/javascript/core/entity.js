@@ -33,7 +33,17 @@ game.core.Entity = function(opt_x, opt_y, opt_w, opt_h) {
   game.core.helper.mixin(this, 'shape');
   this.setPosition(opt_x, opt_y, opt_w, opt_h);
 
+  /**
+   * @private {boolean}
+   */
   this.isActive_ = true;
+
+  /**
+   * In the dom.
+   * @type {boolean}
+   */
+  this.isInDom = false;
+
 
   this.init();
 };
@@ -114,6 +124,7 @@ game.core.Entity.prototype.attach = function(parent) {
 
   if (!document.getElementById(this.id_)) {
     parent.appendChild(this.el);
+    this.isInDom = true;
   } else {
     console.warn('Attempted to attach dom element multiple times:', this.el);
   }
@@ -127,6 +138,7 @@ game.core.Entity.prototype.attach = function(parent) {
 game.core.Entity.prototype.detach = function() {
   if (this.el.parentNode) {
     this.el.parentNode.removeChild(this.el);
+    this.isInDom = false;
   } else {
     console.warn(
         'Attempted to remove dom element when it has no parent', this.el);

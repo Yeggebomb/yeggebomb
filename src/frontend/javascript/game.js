@@ -103,14 +103,6 @@ game.Main.FPS = 60;
 
 
 /**
- * List of currently playing.
- *
- * @type {Array}
- */
-game.Main.Users = [];
-
-
-/**
  * Setup for our app.
  */
 game.Main.prototype.init = function() {
@@ -204,6 +196,7 @@ game.Main.prototype.attach = function() {
  *
  * @param {Object} userData
  * @param {boolean} isPrimaryUser
+ * @return {!game.Player}
  */
 game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
   var player = new game.Player();
@@ -241,6 +234,8 @@ game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
       'ceiling', player.collisionWithPlatform.bind(player));
 
   player.attach(this.board_);
+
+  return player;
 };
 
 
@@ -393,7 +388,7 @@ game.Main.prototype.stateChangeToPending = function() {};
  * Change the users state to not ready. TODO(jstanton): UI for this.
  */
 game.Main.prototype.stateChangeToNotReady = function() {
-  console.log('state switched to not ready, no ui, lets go to ready state');
+  // console.log('state switched to not ready, no ui, lets go to ready state');
   this.switchGameStateTo(game.Main.State.READY);
 };
 
@@ -402,7 +397,7 @@ game.Main.prototype.stateChangeToNotReady = function() {
  * Change the users state to ready
  */
 game.Main.prototype.stateChangeToReady = function() {
-  console.log('state switched to ready');
+  this.userInterface_.updateTimerText('Waiting for 1 more player to connect.');
   this.firebaseUsers_.
       child(this.primaryUser_.userId).child('state').
       set(game.Main.State.READY,
@@ -424,13 +419,23 @@ game.Main.prototype.stateChangeToRecording = function() {
   this.userInterface_.drawCountDown(
       'Recording:', +new Date() + game.constants.PLAY_TIME);
 
+  var usersInGame = this.getUsersInGame(
+      this.primaryUser_.gameId, this.userList_);
+
+
   this.keyHandler_.startRecording();
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
-      entity.setVelocity(new game.core.math.Vector());
-      entity.setAcceleration(new game.core.math.Vector());
-      entity.setMass(game.Player.DEFAULT_MASS);
       entity.isPlayingBack = false;
+      entity.ignoreKeys(false);
+
+      // Only set velocity, acceleration, and mass for current player.
+      // Everyone else should just be floating.
+      if (entity.user && this.primaryUser_.userId == entity.user.userId) {
+        entity.setVelocity(new game.core.math.Vector());
+        entity.setAcceleration(new game.core.math.Vector());
+        entity.setMass(game.Player.DEFAULT_MASS);
+      }
 
       var endPosition = entity.endPosition;
       if (endPosition) {
@@ -474,11 +479,17 @@ game.Main.prototype.stateChangeToPlayback = function() {
   this.userInterface_.drawCountDown(
       'Playback:', +new Date() + game.constants.PLAY_TIME);
   this.globalTick_ = 0;  // Reset for playback!
+
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
-      entity.setPosition(entity.initialPosition.x, entity.initialPosition.y);
-      entity.setMass(game.Player.DEFAULT_MASS);
       entity.isPlayingBack = true;
+      if (entity.initialPosition) {
+        entity.setPosition(entity.initialPosition.x, entity.initialPosition.y);
+      } else {
+        entity.setPosition(0, 0);
+      }
+      entity.setAcceleration(new game.core.math.Vector());
+      entity.setMass(game.Player.DEFAULT_MASS);
     }
     if (entity instanceof game.Projectile) {
       entity.disappear();
@@ -498,9 +509,6 @@ game.Main.prototype.handleCreds = function(authData) {
     userToken: authData.token,
     userName: authData.google.displayName
   };
-  // Eventually we will need an add player function.
-  this.addPlayer(this.primaryUser_, true);
-  game.Main.Users.push(this.primaryUser_);
 
   this.firebaseUsers_.child(this.primaryUser_.userId).set({
     userId: authData.uid,
@@ -551,7 +559,16 @@ game.Main.prototype.loginCallback = function() {
 game.Main.prototype.usersChangedOrAdded = function(user) {
   var userId = user.key();
   var userData = user.val();
+  var playerReference;
+  if (this.userList_[userId]) {
+    playerReference = this.userList_[userId].player;
+  }
   this.userList_[userId] = userData;
+  this.userList_[userId].player = playerReference;
+
+  if (userData.gameId) {
+    this.createUserIfNotAlreadyCreatedAndInThisGame(userData.gameId);
+  }
 
   if (this.primaryUser_ && userId == this.primaryUser_.userId) {
     this.primaryUser_ = userData;
@@ -583,18 +600,19 @@ game.Main.prototype.eventsChangedOrAdded = function(eventData) {
   var eventGameData = eventData.val();
 
   if (!this.primaryUser_) return;
-  console.log('firebase event happened', eventGameId, this.primaryUser_.gameId);
+  // console.log(
+  //  'firebase event happened', eventGameId, this.primaryUser_.gameId);
   if (this.primaryUser_.gameId != eventGameId) return;
-  console.log('with game data', eventGameData);
+  // console.log('with game data', eventGameData);
   if (!eventGameData[this.turnNumber_]) return;
   var numberOfPlayersWhoAddedData =
       Object.keys(eventGameData[this.turnNumber_]).length;
   var userInGame = this.getUsersInGame(eventGameId, this.userList_);
-  console.log('numberOfPlayersWhoAddedData', numberOfPlayersWhoAddedData);
-  console.log('userInGame', userInGame.length, userInGame);
+  // console.log('numberOfPlayersWhoAddedData', numberOfPlayersWhoAddedData);
+  // console.log('userInGame', userInGame.length, userInGame);
   if (numberOfPlayersWhoAddedData >= userInGame.length) {
     this.turnNumber_++;
-    console.log('NEW TURN NUMBER', this.turnNumber_, 'START PLAYBACK!');
+    // console.log('NEW TURN NUMBER', this.turnNumber_, 'START PLAYBACK!');
 
     // Switching to PLayback.
     this.switchGameStateTo(game.Main.State.IN_GAME_PLAYBACK);
@@ -610,11 +628,12 @@ game.Main.prototype.eventsChangedOrAdded = function(eventData) {
 game.Main.prototype.gameChanged = function(addedGame) {
   var gameId = addedGame.key();
   var gameData = addedGame.val();
+  gameData.gameId = gameId;
   this.games_[gameId] = gameData;
 
   if (this.primaryUser_) {
     if (this.primaryUser_.gameId && this.primaryUser_.gameId == gameId) {
-      console.log('A game I am in just got updated');
+      // console.log('A game I am in just got updated');
     }
   }
 };
@@ -641,7 +660,9 @@ game.Main.prototype.gameAdded = function(addedGame) {
       }
 
       this.currentGame_ = gameData;
-      console.log('I can haz game id');
+      this.currentGame_.gameId = gameId;
+
+      // console.log('I can haz game id');
       this.firebaseGames_.
           child(gameId).
           child('users').
@@ -671,7 +692,7 @@ game.Main.prototype.gamesDeleted = function(game) {
  */
 game.Main.prototype.checkIfWeShouldStartAGame = function() {
   var readyUsers = this.getReadyUser();
-  console.log('userWhoAreReady', readyUsers.length);
+  // console.log('userWhoAreReady', readyUsers.length);
 
   return this.gameState_ == game.Main.State.READY &&
       readyUsers.length >= game.constants.NUM_USERS_ALLOWED_TO_START_A_GAME;
@@ -696,28 +717,28 @@ game.Main.prototype.attemptStartGame = function() {
     _.each(sortedUserList, function(user) {
       var msg = ' while attempting to add him to a game';
       if (!currentData[user.userId]) {
-        console.log(user.userId, 'doesn\'t exists' + msg);
+        // console.log(user.userId, 'doesn\'t exists' + msg);
         shouldAbort = true;
       }
 
       if (currentData[user.userId].state != game.Main.State.READY) {
-        console.log(user.userId, 'state was already changed' + msg);
+        // console.log(user.userId, 'state was already changed' + msg);
         shouldAbort = true;
       }
 
       if (currentData[user.userId].gameId) {
-        console.log(user.userId, 'user already in a game' + msg);
+        // console.log(user.userId, 'user already in a game' + msg);
         shouldAbort = true;
       }
     });
 
     if (shouldAbort) {
-      console.log('ABORTING START GAME TRANSACTION.');
+      // console.log('ABORTING START GAME TRANSACTION.');
       return;
     }
 
     var randomNumber = this.uniqueishId();
-    console.log('MY RANDOM NUMBER', randomNumber);
+    // console.log('MY RANDOM NUMBER', randomNumber);
     _.each(sortedUserList, function(user) {
       currentData[user.userId].state = game.Main.State.IN_GAME_RECORDING;
       currentData[user.userId].gameId = randomNumber;
@@ -730,13 +751,13 @@ game.Main.prototype.attemptStartGame = function() {
       return;
     }
     if (!committed) {
-      console.log('I did not commit abort');
+      // console.log('I did not commit abort');
       return;
     }
 
-    console.log(snapshot);
+    // console.log(snapshot);
     var gameId = snapshot.val()[this.primaryUser_.userId].gameId;
-    console.log('GAME ID', gameId);
+    // console.log('GAME ID', gameId);
     var users = this.getUsersInGame(gameId, snapshot.val());
 
     this.createGame(gameId, users);
@@ -797,6 +818,27 @@ game.Main.prototype.getUsersInGame = function(gameId, users) {
  */
 game.Main.prototype.uniqueishId = function() {
   return Math.floor((1 + Math.random()) * 0x10000000).toString(16);
+};
+
+
+/**
+ * Foo
+ *
+ * @param {string} gameId
+ */
+game.Main.prototype.createUserIfNotAlreadyCreatedAndInThisGame =
+    function(gameId) {
+  var usersNotCreated = _.filter(this.userList_, function(user) {
+    return !_.isObject(user.player) ||
+        (_.isObject(user.player) && !user.player.isInDom) &&
+        this.currentGame_ && this.currentGame_.gameId == user.gameId == gameId;
+  }.bind(this));
+
+  _.each(usersNotCreated, function(user) {
+    console.log('CREATED USER', user.userId, gameId);
+    var playerObj = this.addPlayer(user);
+    user.player = playerObj;
+  }.bind(this));
 };
 
 
