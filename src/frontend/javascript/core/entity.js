@@ -157,12 +157,18 @@ game.core.Entity.prototype.draw = function() {
   this.isDirty = false;
   if (this.type == game.mixins.Shape.Type.RECTANGLE) return;
 
-  var svg = this.el.getElementsByTagName('svg');
-  if (svg.length == 1) {
-    svg = svg[0];
+  var svgContainer = this.el.getElementsByClassName('svg-container');
+  var svg;
+  if (svgContainer.length == 1) {
+    svgContainer = svgContainer[0];
+    svg = svgContainer.children[0];
   } else {
+    console.log('THE SADNESS');
+    svgContainer = document.createElement('span');
+    svgContainer.classList.add('svg-container');
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    this.el.appendChild(svg);
+    svgContainer.appendChild(svg);
+    this.el.appendChild(svgContainer);
   }
 
   if (this.type == game.mixins.Shape.Type.POLYGON) {
