@@ -185,6 +185,7 @@ game.Main.prototype.init = function() {
   this.camera_.watch(this.player_);
   this.camera_.addLayer(this.backDrop_, 0.3);
 
+  this.player_.registerCollider('player', game.Player);
   this.leftwall_.registerCollider('leftwall', game.Platform);
   this.player_.registerCollidesWith(
       'leftwall', this.player_.collisionWithPlatform.bind(this.player_));

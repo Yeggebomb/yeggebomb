@@ -54,6 +54,11 @@ game.Projectile.prototype.create = function(pos, vel, scale, power) {
   this.registerCollidesWith('ceiling', this.collisionWithPlatform.bind(this));
   this.registerCollidesWith('leftwall', this.collisionWithPlatform.bind(this));
   this.registerCollidesWith('rightwall', this.collisionWithPlatform.bind(this));
+  game.core.Entity.forEach(function(entity) {
+    if (entity instanceof game.Player) {
+      this.registerCollidesWith('player', this.playerCollision.bind(this));
+    }
+  }.bind(this));
 };
 
 
@@ -61,6 +66,18 @@ game.Projectile.prototype.create = function(pos, vel, scale, power) {
  * @type {String}
  */
 game.Projectile.CLASS_NAME = 'projectile';
+
+
+/**
+ * Callback for when projectile collides with player.
+ *
+ * @param {!game.core.Entity} other
+ * @param {!game.core.math.Response} response
+ * @param {number} delta
+ */
+game.Projectile.prototype.playerCollision = function(other, response, delta) {
+  this.disappear();
+};
 
 
 /**
