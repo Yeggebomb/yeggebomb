@@ -125,6 +125,7 @@ game.Player.prototype.init = function() {
   this.setMass(game.Player.DEFAULT_MASS);
   this.scale = new game.core.math.Vector(0, 0);
   this.health = 1.0;
+  this.renderScale = new game.core.math.Vector(1, 1);
 };
 
 
@@ -132,6 +133,7 @@ game.Player.prototype.init = function() {
 game.Player.prototype.alignLeft = function() {
   this.scale.x = -1;
   this.scale.normalize();
+  this.renderScale.x = 1;
 };
 
 
@@ -139,6 +141,7 @@ game.Player.prototype.alignLeft = function() {
 game.Player.prototype.alignRight = function() {
   this.scale.x = 1;
   this.scale.normalize();
+  this.renderScale.x = -1;
 };
 
 

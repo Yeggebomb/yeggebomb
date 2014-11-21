@@ -246,7 +246,7 @@ game.mixins.Shape.prototype.setPosition = function(x, y, opt_relativeTo) {
   }
 
   if (this.el) {
-    game.core.helper.updateTranslate(this.el, this.pos, this.scale);
+    game.core.helper.updateTranslate(this.el, this.pos, this.renderScale);
   }
 
   this.isDirty = true;
