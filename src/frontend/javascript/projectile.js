@@ -76,6 +76,7 @@ game.Projectile.CLASS_NAME = 'projectile';
  * @param {number} delta
  */
 game.Projectile.prototype.playerCollision = function(other, response, delta) {
+  other.hit();
   this.disappear();
 };
 

@@ -66,12 +66,30 @@ game.Player = function() {
    * @type {Object}
    */
   this.user = null;
+
   /**
    * If in playback mode or not.
    *
    * @type {boolean}
    */
   this.isPlayingBack = false;
+
+  /**
+   * The health of the user.
+   *
+   * @type {number}
+   */
+  this.health = 1.0;
+
+  this.healthBar = document.createElement('span');
+  this.healthBar.classList.add('health-bar');
+  this.el.appendChild(this.healthBar);
+
+  this.healthBarValue = document.createElement('span');
+  this.healthBarValue.classList.add('health-value');
+  this.healthBar.appendChild(this.healthBarValue);
+
+  this.hideHealth();
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
@@ -105,6 +123,7 @@ game.Player.prototype.init = function() {
   // Sets initial mass of object.
   this.setMass(game.Player.DEFAULT_MASS);
   this.scale = new game.core.math.Vector(0, 0);
+  this.health = 1.0;
 };
 
 
@@ -171,6 +190,7 @@ game.Player.prototype.moveDown = function() {
  */
 game.Player.prototype.update = function(dt, currentTick) {
   this.keyHandler_.currentTick = currentTick;
+  this.manageHealthBar();
   if (this.isPlayingBack) {
     this.playRecordedKeys(currentTick);
   }
@@ -179,6 +199,51 @@ game.Player.prototype.update = function(dt, currentTick) {
   if (this.keyHandler_.isDown(Keycodes.LEFT)) this.moveLeft();
   if (this.keyHandler_.isDown(Keycodes.UP)) this.moveUp();
   if (this.keyHandler_.isDown(Keycodes.DOWN)) this.moveDown();
+};
+
+
+/**
+ * Remove health from the user from a collision.
+ */
+game.Player.prototype.hit = function() {
+  if (this.isPlayingBack) {
+    this.health -= 0.1;
+    this.isDirty = true;
+    var barWidth = (this.health * 100);
+    this.healthBarValue.style.width = barWidth + '%';
+  }
+};
+
+
+/**
+ * Ensure health bar correct state.
+ */
+game.Player.prototype.manageHealthBar = function() {
+  if (this.isPlayingBack &&
+      this.healthBarValue.style.visibility != 'visible') {
+    this.showHealth();
+  } else if (!this.isPlayingBack &&
+      this.healthBarValue.style.visibility != 'hidden') {
+    this.hideHealth();
+  }
+};
+
+
+/**
+ * Hide the health bar.
+ */
+game.Player.prototype.hideHealth = function() {
+  this.healthBarValue.style.visibility = 'hidden';
+  this.healthBar.style.visibility = 'hidden';
+};
+
+
+/**
+ * Show health bar.
+ */
+game.Player.prototype.showHealth = function() {
+  this.healthBarValue.style.visibility = 'visible';
+  this.healthBar.style.visibility = 'visible';
 };
 
 
