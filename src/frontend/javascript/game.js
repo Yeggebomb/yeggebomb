@@ -133,7 +133,7 @@ game.Main.prototype.init = function() {
   this.board_.setRectangle(0, 0, 1920, 802);
   this.backDrop_.setRectangle(0, 0, 1920, 802);
 
-  this.player_.setPolygon(new game.core.math.Vector(0, 0), [
+  this.player_.setPolygon(new game.core.math.Vector(5, 5), [
     new game.core.math.Vector(0, 37),
     new game.core.math.Vector(0, 42),
     new game.core.math.Vector(22, 50),

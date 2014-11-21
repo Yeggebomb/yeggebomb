@@ -53,7 +53,9 @@ game.core.helper.poly2path = function(polygon) {
 game.core.helper.updateTranslate = function(element, position, scale) {
   var transform = '';
   if (_.isObject(position)) {
-    transform += 'translate(' + position.x + 'px, ' + position.y + 'px) ';
+    transform += 'translate(' +
+        position.x.toFixed(1) + 'px, ' +
+        position.y.toFixed(1) + 'px) ';
   }
 
   // if (_.isObject(scale)) {
