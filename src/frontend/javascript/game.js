@@ -465,6 +465,9 @@ game.Main.prototype.stateChangeToPlayback = function() {
       entity.setMass(game.Player.DEFAULT_MASS);
       entity.isPlayingBack = true;
     }
+    if (entity instanceof game.Projectile) {
+      entity.disappear();
+    }
   }.bind(this));
 };
 

@@ -39,8 +39,15 @@ game.mixins.entity.Dissapearing.prototype.update = function(deltaTime) {
   this.dissapearInSec -= deltaTime;
   //console.log('dissapearing in: ' + this.dissapearInSec);
   if (this.dissapearInSec < 0) {
-    this.projectilePool.returnToPool(this);
+    this.disappear();
   }
 };
 
+
+/**
+ * Delete the projectile from the game.
+ */
+game.mixins.entity.Dissapearing.prototype.disappear = function() {
+  this.projectilePool.returnToPool(this);
+};
 
