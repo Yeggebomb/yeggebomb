@@ -47,3 +47,11 @@ game.constants.BULLET_DELAY = 60;
  * @const {string}
  */
 game.constants.FIREBASE_URL = 'https://yegge-bomb.firebaseio.com';
+
+
+/**
+ * The number of allowed users it takes to start a game.
+ *
+ * @const {string}
+ */
+game.constants.NUM_USERS_ALLOWED_TO_START_A_GAME = 2;
