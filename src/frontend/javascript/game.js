@@ -380,23 +380,40 @@ game.Main.prototype.stateChangeToPlayback = function() {
 
 
 /**
+ * Handle user authData.
+ *
+ * @param {Object} authData
+ */
+game.Main.prototype.handleCreds = function(authData) {
+  this.primaryUser_ = {
+    userId: authData.uid,
+    userToken: authData.token,
+    userName: authData.google.displayName
+  };
+  // Eventually we will need an add player function.
+  this.player_.user = this.primaryUser_;
+  game.Main.Users.push(this.primaryUser_);
+  this.startGame();
+};
+
+
+/**
  * Login
  */
 game.Main.prototype.loginCallback = function() {
+  var authData = window.localStorage.getItem('authData');
+  if (authData !== null) {
+    this.handleCreds(JSON.parse(authData));
+    return;
+  }
+
   this.firebase_.authWithOAuthPopup('google', function(error, authData) {
     if (error) {
       console.warn(error);
       return;
     }
-    this.primaryUser_ = {
-      userId: authData.uid,
-      userToken: authData.token,
-      userName: authData.google.displayName
-    };
-    // Eventually we will need an add player function.
-    this.player_.user = this.primaryUser_;
-    game.Main.Users.push(this.primaryUser_);
-    this.startGame();
+    window.localStorage.setItem('authData', JSON.stringify(authData));
+    this.handleCreds(authData);
   }.bind(this));
 };
 
