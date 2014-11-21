@@ -72,6 +72,7 @@ game.Player = function() {
    * @type {boolean}
    */
   this.isPlayingBack = false;
+  this.fillColor = 'transparent';
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
@@ -79,7 +80,7 @@ game.core.helper.inherit(game.Player, game.core.Entity);
 /**
  * @type {String}
  */
-game.Player.CLASS_NAME = 'sdzjgh';
+game.Player.CLASS_NAME = 'player';
 
 
 /**

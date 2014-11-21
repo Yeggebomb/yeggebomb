@@ -22,6 +22,7 @@ game.core.Entity = function(opt_x, opt_y, opt_w, opt_h) {
   this.isDirty = true;
   /** @private {string} */
   this.id_ = 'entity-' + game.core.Entity.ID_COUNT++;
+  this.fillColor = 'black';
   /** @type {!Element} */
   this.el = document.createElement('span');
   this.el.id = this.id_;
@@ -173,6 +174,7 @@ game.core.Entity.prototype.draw = function() {
       svg.appendChild(path);
     }
     path.setAttributeNS(null, 'd', game.core.helper.poly2path(this));
+    path.setAttributeNS(null, 'fill', this.fillColor);
   }
 
   if (this.type == game.mixins.Shape.Type.CIRCLE) {
@@ -186,7 +188,7 @@ game.core.Entity.prototype.draw = function() {
     circle.setAttributeNS(null, 'r', this.r);
     circle.setAttributeNS(null, 'cx', this.r);
     circle.setAttributeNS(null, 'cy', this.r);
-    circle.setAttributeNS(null, 'fill', 'black');
+    circle.setAttributeNS(null, 'fill', this.fillColor);
   }
 
 
