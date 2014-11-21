@@ -23,8 +23,6 @@ game.Main = function() {
   this.window_ = new game.core.Window();
   /** @private {!game.core.Root} */
   this.viewport_ = new game.core.Root();
-  /** @private {!game.Player} */
-  this.player_ = new game.Player();
   /** @private {!game.core.Camera} */
   this.camera_ = new game.core.Camera();
   /** @private {!game.Board} */
@@ -130,7 +128,12 @@ game.Main.prototype.init = function() {
   this.firebaseGames_.on('child_added', this.gameAdded.bind(this));
   this.firebaseGames_.on('child_removed', this.gamesDeleted.bind(this));
 
+  this.camera_.addLayer(this.backDrop_, 0.3);
 
+  this.leftwall_.registerCollider('leftwall', game.Platform);
+  this.rightwall_.registerCollider('rightwall', game.Platform);
+  this.ground_.registerCollider('ground', game.Platform);
+  this.ceiling_.registerCollider('ceiling', game.Platform);
 
   this.meter_ = new FPSMeter({
     theme: 'light',
@@ -164,40 +167,6 @@ game.Main.prototype.init = function() {
   this.rightwall_.el.classList.add('wall');
   this.board_.setRectangle(0, 0, 1920, 802);
   this.backDrop_.setRectangle(0, 0, 1920, 802);
-
-  this.player_.setPolygon(new game.core.math.Vector(5, 5), [
-    new game.core.math.Vector(0, 37),
-    new game.core.math.Vector(0, 42),
-    new game.core.math.Vector(22, 50),
-    new game.core.math.Vector(32, 58),
-    new game.core.math.Vector(52, 58),
-    new game.core.math.Vector(63, 50),
-    new game.core.math.Vector(85, 42),
-    new game.core.math.Vector(85, 37),
-    new game.core.math.Vector(58, 20),
-    new game.core.math.Vector(58, 7),
-    new game.core.math.Vector(42, 0),
-    new game.core.math.Vector(32, 7),
-    new game.core.math.Vector(28, 20)
-  ]);
-  this.player_.setSize(85, 89);
-
-  this.camera_.watch(this.player_);
-  this.camera_.addLayer(this.backDrop_, 0.3);
-
-  this.player_.registerCollider('player', game.Player);
-  this.leftwall_.registerCollider('leftwall', game.Platform);
-  this.player_.registerCollidesWith(
-      'leftwall', this.player_.collisionWithPlatform.bind(this.player_));
-  this.rightwall_.registerCollider('rightwall', game.Platform);
-  this.player_.registerCollidesWith(
-      'rightwall', this.player_.collisionWithPlatform.bind(this.player_));
-  this.ground_.registerCollider('ground', game.Platform);
-  this.player_.registerCollidesWith(
-      'ground', this.player_.collisionWithPlatform.bind(this.player_));
-  this.ceiling_.registerCollider('ceiling', game.Platform);
-  this.player_.registerCollidesWith(
-      'ceiling', this.player_.collisionWithPlatform.bind(this.player_));
 };
 
 
@@ -220,13 +189,58 @@ game.Main.prototype.attach = function() {
   this.viewport_.attach(document.body);
   this.backDrop_.attach(this.viewport_);
   this.board_.attach(this.viewport_);
-  this.player_.attach(this.board_);
+
   this.ground_.attach(this.board_);
   this.ceiling_.attach(this.board_);
   this.leftwall_.attach(this.board_);
   this.rightwall_.attach(this.board_);
   this.rotatedPlatform_.attach(this.board_);
   this.userInterface_.attach(this.viewport_);
+};
+
+
+/**
+ * Add a player
+ *
+ * @param {Object} userData
+ * @param {boolean} isPrimaryUser
+ */
+game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
+  var player = new game.Player();
+  player.user = userData;
+  var x = game.core.helper.getRandomInt(85, this.board_.width - 85);
+  var y = game.core.helper.getRandomInt(89, this.board_.height - 89);
+  player.setPolygon(new game.core.math.Vector(x, y), [
+    new game.core.math.Vector(0, 37),
+    new game.core.math.Vector(0, 42),
+    new game.core.math.Vector(22, 50),
+    new game.core.math.Vector(32, 58),
+    new game.core.math.Vector(52, 58),
+    new game.core.math.Vector(63, 50),
+    new game.core.math.Vector(85, 42),
+    new game.core.math.Vector(85, 37),
+    new game.core.math.Vector(58, 20),
+    new game.core.math.Vector(58, 7),
+    new game.core.math.Vector(42, 0),
+    new game.core.math.Vector(32, 7),
+    new game.core.math.Vector(28, 20)
+  ]);
+  player.setSize(85, 89);
+
+  if (isPrimaryUser) {
+    this.camera_.watch(player);
+  }
+
+  player.registerCollidesWith(
+      'leftwall', player.collisionWithPlatform.bind(player));
+  player.registerCollidesWith(
+      'rightwall', player.collisionWithPlatform.bind(player));
+  player.registerCollidesWith(
+      'ground', player.collisionWithPlatform.bind(player));
+  player.registerCollidesWith(
+      'ceiling', player.collisionWithPlatform.bind(player));
+
+  player.attach(this.board_);
 };
 
 
@@ -331,11 +345,13 @@ game.Main.prototype.inGameStateAdvancer = function(currentTick) {
           child(this.turnNumber_ - 1).transaction(function(currentData) {
             if (currentData) { return; }
 
-            // function to get world state!
             var worldState = {};
-            worldState['user:foo'] = { position: [0 , 1] };
-            worldState['user:bar'] = { position: [22 , 431] };
-            worldState['user:baz'] = { position: [2232 , 41] };
+            game.core.Entity.forEach(function(entity) {
+              if (entity instanceof game.Player) {
+                debugger;
+                worldState[entity.user.userId] = entity.getPosition();
+              }
+            });
 
             return worldState;
           }.bind(this), function(error, committed, snapshot) {
@@ -483,7 +499,7 @@ game.Main.prototype.handleCreds = function(authData) {
     userName: authData.google.displayName
   };
   // Eventually we will need an add player function.
-  this.player_.user = this.primaryUser_;
+  this.addPlayer(this.primaryUser_, true);
   game.Main.Users.push(this.primaryUser_);
 
   this.firebaseUsers_.child(this.primaryUser_.userId).set({
@@ -518,6 +534,7 @@ game.Main.prototype.loginCallback = function() {
     this.handleCreds(authData);
   }.bind(this));
 };
+
 
 //
 //

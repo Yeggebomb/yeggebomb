@@ -265,3 +265,15 @@ game.core.helper.string.startsWith = function(str, starts) {
   str = String(str); starts = String(starts);
   return str.length >= starts.length && str.slice(0, starts.length) === starts;
 };
+
+
+/**
+ * Generates a random integer between one and zero.
+ *
+ * @param {number} min
+ * @param {number} max
+ * @return {number} Number between 0 and 1
+ */
+game.core.helper.getRandomInt = function(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
