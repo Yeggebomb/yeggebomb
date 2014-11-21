@@ -226,12 +226,3 @@ game.Player.prototype.playRecordedKeys = function(currentTick) {
   }.bind(this));
 };
 
-
-/**
- * If I should ignore keys.
- *
- * @param {boolean} value
- */
-game.Player.prototype.ignoreKeys = function(value) {
-  this.keyHandler_.ignoreKeys = value;
-};
