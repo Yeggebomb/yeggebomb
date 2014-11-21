@@ -137,7 +137,9 @@ game.core.KeyHandler.prototype.stopRecording = function() {
   _.each(this.pressed, function(value, keyCode) {
     this.addRecord_(keyCode, false);
   }.bind(this));
+  this.pressed = {};
   this.isRecording = false;
+  this.ignoreKeys = true;
 };
 
 
@@ -147,6 +149,7 @@ game.core.KeyHandler.prototype.stopRecording = function() {
 game.core.KeyHandler.prototype.startRecording = function() {
   game.core.KeyHandler.records = {};
   this.isRecording = true;
+  this.ignoreKeys = false;
 };
 
 

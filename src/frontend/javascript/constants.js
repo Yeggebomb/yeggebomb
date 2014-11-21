@@ -54,4 +54,4 @@ game.constants.FIREBASE_URL = 'https://yegge-bomb.firebaseio.com';
  *
  * @const {string}
  */
-game.constants.NUM_USERS_ALLOWED_TO_START_A_GAME = 2;
+game.constants.NUM_USERS_ALLOWED_TO_START_A_GAME = 1;

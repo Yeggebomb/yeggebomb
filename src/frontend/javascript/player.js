@@ -90,6 +90,7 @@ game.Player = function() {
   this.healthBar.appendChild(this.healthBarValue);
 
   this.hideHealth();
+  this.fillColor = 'transparent';
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
 
@@ -97,7 +98,7 @@ game.core.helper.inherit(game.Player, game.core.Entity);
 /**
  * @type {String}
  */
-game.Player.CLASS_NAME = 'sdzjgh';
+game.Player.CLASS_NAME = 'player';
 
 
 /**
@@ -291,12 +292,3 @@ game.Player.prototype.playRecordedKeys = function(currentTick) {
   }.bind(this));
 };
 
-
-/**
- * If I should ignore keys.
- *
- * @param {boolean} value
- */
-game.Player.prototype.ignoreKeys = function(value) {
-  this.keyHandler_.ignoreKeys = value;
-};

@@ -421,7 +421,6 @@ game.Main.prototype.stateChangeToRecording = function() {
         console.log('error of this much:',
             entity.getPosition().distanceTo(endPosition));
       }
-      entity.ignoreKeys(false);
       entity.initialPosition = entity.getPosition().clone();
     }
   }.bind(this));
@@ -438,7 +437,6 @@ game.Main.prototype.stateChangeToSyncing = function() {
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
       entity.endPosition = entity.getPosition().clone();
-      entity.ignoreKeys(true);
       entity.setVelocity(new game.core.math.Vector());
       entity.setAcceleration(new game.core.math.Vector());
       entity.setMass(0);
