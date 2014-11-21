@@ -35,7 +35,7 @@ game.core.helper.inherit(game.Projectile, game.core.Entity);
  */
 game.Projectile.prototype.create = function(pos, vel, scale, power) {
   this.setMass(1);
-  this.setRectangle(0, 0, 5, 5);
+  this.setRectangle(0, 0, 30, 30);
 
   var position = this.getPosition();
   var velocity = this.getVelocity();
