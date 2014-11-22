@@ -203,8 +203,7 @@ game.Main.prototype.attach = function() {
  * @return {!game.Player}
  */
 game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
-  var player = new game.Player();
-  player.user = userData;
+  var player = new game.Player(userData);
   var x = game.core.helper.getRandomInt(85, this.board_.width - 85);
   var y = game.core.helper.getRandomInt(89, this.board_.height - 89);
   player.setPolygon(new game.core.math.Vector(x, y), [

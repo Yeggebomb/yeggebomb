@@ -9,10 +9,12 @@ goog.require('game.core.helper');
 /**
  * A player.
  *
+ * @param {Object} userData
+ *
  * @constructor
  * @extends {Game.Entity}
  */
-game.Player = function() {
+game.Player = function(userData) {
   game.core.helper.mixin(
       this, 'shape', 'reset', 'fourway', 'physical', 'projectilecreator');
   game.Player.base(this, 'constructor');
@@ -65,7 +67,7 @@ game.Player = function() {
    *
    * @type {Object}
    */
-  this.user = null;
+  this.user = userData;
   /**
    * Is this the primary user?
    *
@@ -100,6 +102,12 @@ game.Player = function() {
   this.healthBar.appendChild(this.healthBarValue);
 
   this.hideHealth();
+
+  this.playerName = document.createElement('span');
+  this.playerName.classList.add('player-name');
+  this.playerName.innerText = this.user.name;
+  this.el.appendChild(this.playerName);
+
   this.fillColor = 'transparent';
 };
 game.core.helper.inherit(game.Player, game.core.Entity);
