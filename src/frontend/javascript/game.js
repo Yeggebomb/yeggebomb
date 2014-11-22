@@ -620,11 +620,8 @@ game.Main.prototype.eventsChangedOrAdded = function(eventData) {
   // console.log('numberOfPlayersWhoAddedData', numberOfPlayersWhoAddedData);
   // console.log('userInGame', userInGame.length, userInGame);
   if (numberOfPlayersWhoAddedData >= userInGame.length) {
-    _.each(eventGameData[this.turnNumber_], function(turnData, userId) {
-      console.log('added records to', userId);
-      if (turnData.records) {
-        this.userList_[userId].player.keyHandler_.records = turnData.records;
-      }
+    _.each(eventGameData[this.turnNumber_], function(events, userId) {
+      this.userList_[userId].player.keyHandler_.records = events;
     }.bind(this));
     this.turnNumber_++;
     // Switching to PLayback.
