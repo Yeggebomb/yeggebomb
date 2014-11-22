@@ -242,8 +242,6 @@ game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
       'ceiling', player.collisionWithPlatform.bind(player));
   player.registerCollidesWith(
       'cloud', player.collisionWithPlatform.bind(player));
-  player.registerCollidesWith(
-      'cloud', player.collisionWithPlatform.bind(player));
 
   player.attach(this.board_);
   return player;
@@ -398,7 +396,6 @@ game.Main.prototype.stateChangeToPending = function() {};
  * Change the users state to not ready. TODO(jstanton): UI for this.
  */
 game.Main.prototype.stateChangeToNotReady = function() {
-  // console.log('state switched to not ready, no ui, lets go to ready state');
   this.switchGameStateTo(game.Main.State.READY);
 };
 
@@ -612,25 +609,15 @@ game.Main.prototype.eventsChangedOrAdded = function(eventData) {
   var eventGameId = eventData.key();
   var eventGameData = eventData.val();
 
-
-
   if (!this.primaryUser_) return;
-  // console.log(
-  //  'firebase event happened', eventGameId, this.primaryUser_.gameId);
   if (this.primaryUser_.gameId != eventGameId) return;
-  // console.log('with game data', eventGameData);
   if (!eventGameData[this.turnNumber_]) return;
   var numberOfPlayersWhoAddedData =
       Object.keys(eventGameData[this.turnNumber_]).length;
   var userInGame = this.getUsersInGame(eventGameId, this.userList_);
-  // console.log('numberOfPlayersWhoAddedData', numberOfPlayersWhoAddedData);
-  // console.log('userInGame', userInGame.length, userInGame);
   if (numberOfPlayersWhoAddedData >= userInGame.length) {
-    _.each(eventGameData[this.turnNumber_], function(turnData, userId) {
-      console.log('added records to', userId);
-      if (turnData.records) {
-        this.userList_[userId].player.keyHandler_.records = turnData.records;
-      }
+    _.each(eventGameData[this.turnNumber_], function(events, userId) {
+      this.userList_[userId].player.keyHandler_.records = events;
     }.bind(this));
     this.turnNumber_++;
     // Switching to PLayback.
@@ -677,11 +664,9 @@ game.Main.prototype.gameAdded = function(addedGame) {
             child(this.primaryUser_.userId).remove();
         return;
       }
-
       this.currentGame_ = gameData;
       this.currentGame_.gameId = gameId;
 
-      // console.log('I can haz game id');
       this.firebaseGames_.
           child(gameId).
           child('users').
@@ -711,7 +696,6 @@ game.Main.prototype.gamesDeleted = function(game) {
  */
 game.Main.prototype.checkIfWeShouldStartAGame = function() {
   var readyUsers = this.getReadyUser();
-  // console.log('userWhoAreReady', readyUsers.length);
 
   return this.gameState_ == game.Main.State.READY &&
       readyUsers.length >= game.constants.NUM_USERS_ALLOWED_TO_START_A_GAME;
@@ -736,28 +720,23 @@ game.Main.prototype.attemptStartGame = function() {
     _.each(sortedUserList, function(user) {
       var msg = ' while attempting to add him to a game';
       if (!currentData[user.userId]) {
-        // console.log(user.userId, 'doesn\'t exists' + msg);
         shouldAbort = true;
       }
 
       if (currentData[user.userId].state != game.Main.State.READY) {
-        // console.log(user.userId, 'state was already changed' + msg);
         shouldAbort = true;
       }
 
       if (currentData[user.userId].gameId) {
-        // console.log(user.userId, 'user already in a game' + msg);
         shouldAbort = true;
       }
     });
 
     if (shouldAbort) {
-      // console.log('ABORTING START GAME TRANSACTION.');
       return;
     }
 
     var randomNumber = this.uniqueishId();
-    // console.log('MY RANDOM NUMBER', randomNumber);
     _.each(sortedUserList, function(user) {
       currentData[user.userId].state = game.Main.State.IN_GAME_RECORDING;
       currentData[user.userId].gameId = randomNumber;
@@ -770,13 +749,10 @@ game.Main.prototype.attemptStartGame = function() {
       return;
     }
     if (!committed) {
-      // console.log('I did not commit abort');
       return;
     }
 
-    // console.log(snapshot);
     var gameId = snapshot.val()[this.primaryUser_.userId].gameId;
-    // console.log('GAME ID', gameId);
     var users = this.getUsersInGame(gameId, snapshot.val());
 
     this.createGame(gameId, users);
