@@ -66,7 +66,12 @@ game.Player = function() {
    * @type {Object}
    */
   this.user = null;
-
+  /**
+   * Is this the primary user?
+   *
+   * @type {boolean}
+   */
+  this.isPrimaryUser = false;
   /**
    * If in playback mode or not.
    *
@@ -193,10 +198,13 @@ game.Player.prototype.moveDown = function() {
  * @param {number} currentTick The current tick we are on.
  */
 game.Player.prototype.update = function(dt, currentTick) {
+
   this.keyHandler_.currentTick = currentTick;
   this.manageHealthBar();
   if (this.isPlayingBack) {
     this.playRecordedKeys(currentTick);
+  } else if (!this.isPrimaryUser) {
+    return;
   }
   var Keycodes = game.core.KeyHandler.Keycodes;
   if (this.keyHandler_.isDown(Keycodes.RIGHT)) this.moveRight();
