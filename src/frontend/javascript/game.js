@@ -44,7 +44,14 @@ game.Main = function() {
   /** @private {!Array.<!game.Cloud>} */
   this.clouds_ = [];
   this.clouds_.push(new game.Cloud(new game.core.math.Vector(160, 120)));
-  this.clouds_.push(new game.Cloud(new game.core.math.Vector(600, 120)));
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(500, 200)));
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(230, 10)));
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(780, 90)));
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(800, 200)));
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(990, 100)));
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(1200, 210)));
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(1440, 500)));
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(1600, 100)));
   /** @private {number} */
   this.gameTime_ = null;
   /** @private {!game.UserInterface} */
