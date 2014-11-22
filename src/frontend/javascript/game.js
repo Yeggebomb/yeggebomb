@@ -78,7 +78,6 @@ game.Main = function() {
   /** @private {game.Main.State} */
   this.gameState_ = null;
 
-
   this.attach();
   this.init();
   this.switchGameStateTo(game.Main.State.PENDING);
@@ -159,6 +158,12 @@ game.Main.prototype.init = function() {
   this.board_.setRectangle(0, 0, 1920, 802);
   this.chat_.setRectangle(0, 0, 500, 500);
   this.backDrop_.setRectangle(0, 0, 1920, 802);
+
+
+  this.initialPosition = {
+    x: game.core.helper.getRandomInt(85, this.board_.width - 85),
+    y: game.core.helper.getRandomInt(89, this.board_.height - 89)
+  };
 };
 
 
@@ -205,8 +210,14 @@ game.Main.prototype.attach = function() {
  */
 game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
   var player = new game.Player(userData);
-  var x = game.core.helper.getRandomInt(85, this.board_.width - 85);
-  var y = game.core.helper.getRandomInt(89, this.board_.height - 89);
+  var x, y;
+  if (isPrimaryUser) {
+    x = this.initialPosition.x;
+    y = this.initialPosition.y;
+  } else {
+    x = userData.initialPosition.x;
+    y = userData.initialPosition.y;
+  }
   player.setPolygon(new game.core.math.Vector(x, y), [
     new game.core.math.Vector(0, 37),
     new game.core.math.Vector(0, 42),
@@ -521,14 +532,16 @@ game.Main.prototype.handleCreds = function(authData) {
   this.primaryUser_ = {
     userId: authData.uid,
     userToken: authData.token,
-    userName: authData.google.displayName
+    userName: authData.google.displayName,
+    initialPosition: this.initialPosition
   };
 
   this.firebaseUsers_.child(this.primaryUser_.userId).set({
     userId: authData.uid,
     name: authData.google.displayName,
     joinedOn: Firebase.ServerValue.TIMESTAMP,
-    state: game.Main.State.NOT_READY
+    state: game.Main.State.NOT_READY,
+    initialPosition: this.initialPosition
   }, function() {
     this.switchGameStateTo(game.Main.State.NOT_READY);
   }.bind(this));
