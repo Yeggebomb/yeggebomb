@@ -36,7 +36,7 @@ game.Cloud.CLASS_NAME = 'cloud';
  * Initialize function.
  */
 game.Cloud.prototype.init = function() {
-  this.fillColor = '#B5AEA5';
+  this.fillColor = 'transparent';
   this.setPolygon(this.cloudPosition_, [
     new game.core.math.Vector(0, 60),
     new game.core.math.Vector(20, 10),

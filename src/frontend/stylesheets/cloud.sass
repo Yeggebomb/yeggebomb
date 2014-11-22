@@ -1,3 +1,13 @@
-.cloud
-  //background-color: blue
-  //border: 1px solid black
+.cloud .svg-container
+  background: url(/images/google-cloud.png) no-repeat 100% 0%
+  background-size: 100%
+  display: block
+  width: 100px
+  height: 60px
+  z-index: 1
+  &:before, &:after
+    display: block
+    content: ""
+    width: 100px
+    height: 60px
+    position: absolute
