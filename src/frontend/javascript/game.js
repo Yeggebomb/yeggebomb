@@ -673,11 +673,11 @@ game.Main.prototype.gameChanged = function(addedGame) {
 game.Main.prototype.gameAdded = function(addedGame) {
   var gameId = addedGame.key();
   var gameData = addedGame.val();
+  gameData.gameId = gameId;
   this.games_[gameId] = gameData;
 
   if (this.primaryUser_) {
     if (this.primaryUser_.gameId && this.primaryUser_.gameId == gameId) {
-
       if (this.gameState_ != game.Main.State.READY) {
         console.error('A game was just added with my id but I am not ready');
         this.firebaseGames_.child(gameId).child('users').
@@ -768,6 +768,7 @@ game.Main.prototype.attemptStartGame = function() {
       console.error('Transaction failed abnormally', error);
       return;
     }
+
     if (!committed) {
       return;
     }
