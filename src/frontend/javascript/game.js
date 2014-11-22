@@ -43,6 +43,7 @@ game.Main = function() {
   this.rightwall_ = new game.Platform();
   /** @private {!Array.<!game.Cloud>} */
   this.clouds_ = [];
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(160, 120)));
   /** @private {number} */
   this.gameTime_ = null;
   /** @private {!game.UserInterface} */
@@ -75,7 +76,6 @@ game.Main = function() {
   this.games_ = {};
   /** @private {game.Main.State} */
   this.gameState_ = null;
-
 
 
   this.attach();
@@ -143,7 +143,9 @@ game.Main.prototype.init = function() {
             this.window_, 1920, 802, 800, 461);
       }.bind(this), true);
 
-  this.clouds_.push(new game.Cloud(new game.core.math.Vector(160, 120)));
+  for (var i = 0; i < this.clouds_.length; i++) {
+    this.clouds_[i].registerCollider('cloud', game.Platform);
+  }
 
   this.ceiling_.setRectangle(0, -10, 1920, 10);
   this.ceiling_.el.classList.add('ceiling');
@@ -186,8 +188,9 @@ game.Main.prototype.attach = function() {
   this.rightwall_.attach(this.board_);
   this.userInterface_.attach(this.viewport_);
 
-  for (var cloud in this.clouds_) {
-    cloud.attach(this.board_);
+  for (var i = 0; i < this.clouds_.length; i++) {
+    console.log('attach cloud');
+    this.clouds_[i].attach(this.board_);
   }
 };
 
