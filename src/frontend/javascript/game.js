@@ -434,6 +434,11 @@ game.Main.prototype.stateChangeToSyncing = function() {
   this.userInterface_.updateTimerText('Syncing data');
 
   this.keyHandler_.stopRecording();
+  var toSend = game.core.KeyHandler.records;
+  if (!game.core.KeyHandler.records ||
+      !_.isArray(game.core.KeyHandler.records)) {
+    toSend = false;
+  }
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
       entity.endPosition = entity.getPosition().clone();
@@ -445,7 +450,7 @@ game.Main.prototype.stateChangeToSyncing = function() {
       this.firebaseEvents_.
           child(this.primaryUser_.gameId).
           child(this.turnNumber_).
-          child(this.primaryUser_.userId).set(game.core.KeyHandler.records);
+          child(this.primaryUser_.userId).set(toSend);
     }
   }.bind(this));
 };

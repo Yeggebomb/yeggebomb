@@ -44,11 +44,6 @@ game.ProjectilePool.prototype.get = function() {
 game.ProjectilePool.prototype.returnToPool = function(projectile) {
   var len = this.available.length;
   this.available[len] = projectile;
-
-  console.log('return');
-  if (!projectile.el.parentNode) {
-    debugger;
-  }
   projectile.isActive_ = false;
   projectile.detach();//.parentNode.removeChild(this.el);
 };
