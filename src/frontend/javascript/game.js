@@ -202,7 +202,6 @@ game.Main.prototype.attach = function() {
   this.userInterface_.attach(this.viewport_);
 
   for (var i = 0; i < this.clouds_.length; i++) {
-    console.log('attach cloud');
     this.clouds_[i].attach(this.board_);
   }
 };
