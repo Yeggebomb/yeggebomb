@@ -454,7 +454,6 @@ game.Main.prototype.stateChangeToRecording = function() {
     if (entity instanceof game.Player) {
       if (entity.health < 0) {
         // Player is dead! Die!
-        
       }
       entity.isPlayingBack = false;
       entity.ignoreKeys = false;
@@ -502,7 +501,7 @@ game.Main.prototype.stateChangeToSyncing = function() {
           child(this.primaryUser_.gameId).
           child(this.turnNumber_).
           child(this.primaryUser_.userId).
-          set(this.primaryUser_.player.keyHandler_.records);
+          set(toSend);
     }
   }.bind(this));
 };
