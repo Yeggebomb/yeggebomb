@@ -27,14 +27,9 @@ game.Chat = function() {
 
   this.el.style.zIndex = 5;
   this.el.classList.add(game.Chat.CLASS_NAME);
-  this.el.style.display = 'flex';
-  this.el.style.flexDirection = 'column';
   this.textArea = document.createElement('textarea');
   this.textArea.readOnly = true;
-  this.textArea.style.flexGrow = '1';
   this.input = document.createElement('input');
-  this.input.style.height = '1.3em';
-  this.input.style.fontSize = '1em';
   this.el.appendChild(this.textArea);
   this.el.appendChild(this.input);
 
