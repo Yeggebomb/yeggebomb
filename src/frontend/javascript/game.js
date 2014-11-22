@@ -181,6 +181,7 @@ game.Main.prototype.startGame = function() {
   this.switchGameStateTo(game.Main.State.IN_GAME_RECORDING);
   this.physicsLoop();
   this.renderLoop();
+  new window.Audio('/audio/background.mp3').play();
 };
 
 

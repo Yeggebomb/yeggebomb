@@ -3,6 +3,9 @@ runtime: go
 api_version: go1
 
 handlers:
+- url: /audio
+  static_dir: frontend/static/audio/
+  application_readable: true
 - url: /js
   static_dir: frontend/static/js_compiled/
   application_readable: true
