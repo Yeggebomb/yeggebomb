@@ -1,5 +1,4 @@
 goog.provide('game.core.KeyHandler');
-goog.provide('game.core.KeyHandler.Keycodes');
 
 
 
@@ -33,18 +32,15 @@ game.core.KeyHandler = function() {
   this.ignoreKeys = false;
   /**
    * Object that tracks what is currently being pressed.
-   * @type {!Object.<!game.core.KeyHandler.Keycodes, boolean>}
+   * @type {!Object.<!game.constants.KEYCODES, boolean>}
    */
   this.pressed = {};
+  /**
+   * The records
+   * @type {object}
+   */
+  this.records = {};
 };
-
-
-/**
- * Records of key events.
- *
- * @type {Array.<Object>}
- */
-game.core.KeyHandler.records = {};
 
 
 /**
@@ -95,7 +91,7 @@ game.core.KeyHandler.prototype.mouseDown_ = function(evt) {
 /**
  * Returns true if the given keyCode is currently being pressed.
  *
- * @param {!game.core.KeyHandler.Keycodes} keyCode
+ * @param {!game.constants.KEYCODES} keyCode
  * @return {boolean} true if key is down.
  */
 game.core.KeyHandler.prototype.isDown = function(keyCode) {
@@ -149,7 +145,7 @@ game.core.KeyHandler.prototype.stopRecording = function() {
  * Allows recording of keys
  */
 game.core.KeyHandler.prototype.startRecording = function() {
-  game.core.KeyHandler.records = {};
+  this.records = {};
   this.isRecording = true;
   this.ignoreKeys = false;
 };
@@ -165,33 +161,13 @@ game.core.KeyHandler.prototype.startRecording = function() {
 game.core.KeyHandler.prototype.addRecord_ = function(keyCode, value) {
   if (!this.isRecording) return;
   var currentTick = this.currentTick;
-  if (!_.isArray(game.core.KeyHandler.records[currentTick])) {
-    game.core.KeyHandler.records[currentTick] = [];
+  if (!_.isArray(this.records[currentTick])) {
+    this.records[currentTick] = [];
   }
 
-  game.core.KeyHandler.records[currentTick].push({
+  this.records[currentTick].push({
     keyCode: keyCode,
     value: value
   });
 };
 
-
-/**
- * Key codes for common characters in this game.
- *
- * @enum {number}
- */
-game.core.KeyHandler.Keycodes = {
-  BACKSPACE: 8,
-  TAB: 9,
-  ENTER: 13,
-  SHIFT: 16,
-  CTRL: 17,
-  ALT: 18,
-  ESC: 27,
-  SPACE: 32,
-  LEFT: 37,
-  UP: 38,
-  RIGHT: 39,
-  DOWN: 40
-};

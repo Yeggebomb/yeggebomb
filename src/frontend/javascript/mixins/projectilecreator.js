@@ -1,6 +1,7 @@
 goog.provide('game.mixins.ProjectileCreator');
 
 goog.require('game.ProjectilePool');
+goog.require('game.constants');
 goog.require('game.core.KeyHandler');
 goog.require('game.core.helper');
 
@@ -49,7 +50,7 @@ game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
  * Update function
  */
 game.mixins.ProjectileCreator.prototype.update = function() {
-  var Keycodes = game.core.KeyHandler.Keycodes;
+  var Keycodes = game.constants.KEYCODES;
   this.ticksSinceLastBullet += 1;
   if (this.readyToShoot &&
       !this.keyHandler_.isDown(Keycodes.SPACE) &&

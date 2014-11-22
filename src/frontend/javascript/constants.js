@@ -55,3 +55,24 @@ game.constants.FIREBASE_URL = 'https://yegge-bomb.firebaseio.com';
  * @const {string}
  */
 game.constants.NUM_USERS_ALLOWED_TO_START_A_GAME = 2;
+
+
+/**
+ * Key codes for common characters in this game.
+ *
+ * @enum {number}
+ */
+game.constants.KEYCODES = {
+  BACKSPACE: 8,
+  TAB: 9,
+  ENTER: 13,
+  SHIFT: 16,
+  CTRL: 17,
+  ALT: 18,
+  ESC: 27,
+  SPACE: 32,
+  LEFT: 37,
+  UP: 38,
+  RIGHT: 39,
+  DOWN: 40
+};

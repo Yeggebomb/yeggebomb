@@ -219,7 +219,7 @@ game.Player.prototype.update = function(dt, currentTick) {
   } else if (!this.isPrimaryUser) {
     return;
   }
-  var Keycodes = game.core.KeyHandler.Keycodes;
+  var Keycodes = game.constants.KEYCODES;
   if (this.keyHandler_.isDown(Keycodes.RIGHT)) this.moveRight();
   if (this.keyHandler_.isDown(Keycodes.LEFT)) this.moveLeft();
   if (this.keyHandler_.isDown(Keycodes.UP)) this.moveUp();
