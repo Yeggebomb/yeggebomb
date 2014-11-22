@@ -2,6 +2,7 @@ goog.provide('game.Main');
 
 goog.require('game.Backdrop');
 goog.require('game.Board');
+goog.require('game.Chat');
 goog.require('game.Platform');
 goog.require('game.Player');
 goog.require('game.UserInterface');
@@ -27,7 +28,9 @@ game.Main = function() {
   this.camera_ = new game.core.Camera();
   /** @private {!game.Board} */
   this.board_ = new game.Board();
-  /** @private {!game.Board} */
+  /** @private {!game.Chat} */
+  this.chat_ = new game.Chat();
+  /** @private {!game.Backdrop} */
   this.backDrop_ = new game.Backdrop();
   /** @private {!game.Platform} */
   this.ceiling_ = new game.Platform();
@@ -156,6 +159,7 @@ game.Main.prototype.init = function() {
   this.rightwall_.setRectangle(1910, 0, 10, 802);
   this.rightwall_.el.classList.add('wall');
   this.board_.setRectangle(0, 0, 1920, 802);
+  this.chat_.setRectangle(0, 0, 500, 500);
   this.backDrop_.setRectangle(0, 0, 1920, 802);
 };
 
@@ -179,6 +183,7 @@ game.Main.prototype.attach = function() {
   this.viewport_.attach(document.body);
   this.backDrop_.attach(this.viewport_);
   this.board_.attach(this.viewport_);
+  this.chat_.attach(this.viewport_);
 
   this.ground_.attach(this.board_);
   this.ceiling_.attach(this.board_);
