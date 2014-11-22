@@ -36,11 +36,16 @@ game.Cloud.CLASS_NAME = 'cloud';
  * Initialize function.
  */
 game.Cloud.prototype.init = function() {
+  this.fillColor = '#B5AEA5';
   this.setPolygon(this.cloudPosition_, [
-    new game.core.math.Vector(0, 0),
-    new game.core.math.Vector(60, 0),
-    new game.core.math.Vector(100, 40),
-    new game.core.math.Vector(60, 80),
-    new game.core.math.Vector(0, 80)
+    new game.core.math.Vector(0, 60),
+    new game.core.math.Vector(20, 10),
+    new game.core.math.Vector(50, 10),
+    new game.core.math.Vector(60, 20),
+    new game.core.math.Vector(65, 40),
+    new game.core.math.Vector(70, 30),
+    new game.core.math.Vector(85, 30),
+    new game.core.math.Vector(90, 40),
+    new game.core.math.Vector(100, 60)
   ]);
 };

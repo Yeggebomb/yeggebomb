@@ -54,6 +54,7 @@ game.Projectile.prototype.create = function(pos, vel, scale, power) {
   this.registerCollidesWith('ceiling', this.collisionWithPlatform.bind(this));
   this.registerCollidesWith('leftwall', this.collisionWithPlatform.bind(this));
   this.registerCollidesWith('rightwall', this.collisionWithPlatform.bind(this));
+  this.registerCollidesWith('cloud', this.collisionWithPlatform.bind(this));
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
       this.registerCollidesWith('player', this.playerCollision.bind(this));

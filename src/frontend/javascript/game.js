@@ -44,6 +44,7 @@ game.Main = function() {
   /** @private {!Array.<!game.Cloud>} */
   this.clouds_ = [];
   this.clouds_.push(new game.Cloud(new game.core.math.Vector(160, 120)));
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(600, 120)));
   /** @private {number} */
   this.gameTime_ = null;
   /** @private {!game.UserInterface} */
@@ -143,9 +144,8 @@ game.Main.prototype.init = function() {
             this.window_, 1920, 802, 800, 461);
       }.bind(this), true);
 
-  for (var i = 0; i < this.clouds_.length; i++) {
-    this.clouds_[i].registerCollider('cloud', game.Platform);
-  }
+  this.clouds_[0].registerCollider('cloud0', game.Cloud);
+  this.clouds_[1].registerCollider('cloud1', game.Cloud);
 
   this.ceiling_.setRectangle(0, -10, 1920, 10);
   this.ceiling_.el.classList.add('ceiling');
@@ -238,6 +238,10 @@ game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
       'ground', player.collisionWithPlatform.bind(player));
   player.registerCollidesWith(
       'ceiling', player.collisionWithPlatform.bind(player));
+  player.registerCollidesWith(
+      'cloud0', player.collisionWithPlatform.bind(player));
+  player.registerCollidesWith(
+      'cloud1', player.collisionWithPlatform.bind(player));
 
   player.attach(this.board_);
   return player;
