@@ -2,3 +2,10 @@
 
 .chat
   border: 1px solid black
+  display: flex
+  +flex-direction(column)
+  & textarea
+    +flex-grow(1)
+  & input
+    height: 1.3em
+    font-size: 1em
