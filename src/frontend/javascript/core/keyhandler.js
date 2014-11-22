@@ -9,9 +9,6 @@ goog.provide('game.core.KeyHandler.Keycodes');
  * @constructor
  */
 game.core.KeyHandler = function() {
-  if (game.core.KeyHandler.prototype._singletonInstance) {
-    return game.core.KeyHandler.prototype._singletonInstance;
-  }
   /**
    * The current tick to record by.
    *
@@ -34,21 +31,11 @@ game.core.KeyHandler = function() {
    * @type {Boolean}
    */
   this.ignoreKeys = false;
-
-  game.core.KeyHandler.prototype._singletonInstance = this;
   /**
    * Object that tracks what is currently being pressed.
    * @type {!Object.<!game.core.KeyHandler.Keycodes, boolean>}
    */
   this.pressed = {};
-
-  // Add event listeners.
-  window.addEventListener('keyup', this.onKeyup_.bind(this), false);
-  window.addEventListener('keydown', this.onKeydown_.bind(this), false);
-  // Right clicking
-  document.addEventListener(
-      'visibilitychange', this.visibilityChanged_.bind(this));
-  document.addEventListener('mousedown', this.mouseDown_.bind(this));
 };
 
 
@@ -58,6 +45,21 @@ game.core.KeyHandler = function() {
  * @type {Array.<Object>}
  */
 game.core.KeyHandler.records = {};
+
+
+/**
+ * Doesn't happen by default! Needs to be called (i.e. only for primary user).
+ */
+game.core.KeyHandler.prototype.setupEventListeners = function() {
+  console.log('HAPPENS HOPEFULLY ONLY ONCE');
+  // Add event listeners.
+  window.addEventListener('keyup', this.onKeyup_.bind(this), false);
+  window.addEventListener('keydown', this.onKeydown_.bind(this), false);
+  // Right clicking
+  document.addEventListener(
+      'visibilitychange', this.visibilityChanged_.bind(this));
+  document.addEventListener('mousedown', this.mouseDown_.bind(this));
+};
 
 
 /**

@@ -78,7 +78,12 @@ game.Player = function() {
    * @type {boolean}
    */
   this.isPlayingBack = false;
-
+  /**
+   * Key handler
+   *
+   * @private {!game.core.KeyHandler}
+   */
+  this.keyHandler_ = new game.core.KeyHandler();
   /**
    * The health of the user.
    *
@@ -131,6 +136,14 @@ game.Player.prototype.init = function() {
   this.scale = new game.core.math.Vector(0, 0);
   this.health = 1.0;
   this.renderScale = new game.core.math.Vector(1, 1);
+};
+
+
+/**
+ * Doesn't happen by default only for primary user if called.
+ */
+game.Player.prototype.setKeyHandlers = function() {
+  this.keyHandler_.setupEventListeners();
 };
 
 

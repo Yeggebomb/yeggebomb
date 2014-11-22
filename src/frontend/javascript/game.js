@@ -223,6 +223,7 @@ game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
   if (isPrimaryUser) {
     this.camera_.watch(player);
     player.isPrimaryUser = true;
+    player.setKeyHandlers();
   }
 
   player.registerCollidesWith(
