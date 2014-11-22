@@ -2,6 +2,7 @@ goog.provide('game.Main');
 
 goog.require('game.Backdrop');
 goog.require('game.Board');
+goog.require('game.Chat');
 goog.require('game.Cloud');
 goog.require('game.Platform');
 goog.require('game.Player');
@@ -28,7 +29,9 @@ game.Main = function() {
   this.camera_ = new game.core.Camera();
   /** @private {!game.Board} */
   this.board_ = new game.Board();
-  /** @private {!game.Board} */
+  /** @private {!game.Chat} */
+  this.chat_ = new game.Chat();
+  /** @private {!game.Backdrop} */
   this.backDrop_ = new game.Backdrop();
   /** @private {!game.Platform} */
   this.ceiling_ = new game.Platform();
@@ -151,6 +154,7 @@ game.Main.prototype.init = function() {
   this.rightwall_.setRectangle(1910, 0, 10, 802);
   this.rightwall_.el.classList.add('wall');
   this.board_.setRectangle(0, 0, 1920, 802);
+  this.chat_.setRectangle(0, 0, 500, 500);
   this.backDrop_.setRectangle(0, 0, 1920, 802);
 };
 
@@ -174,6 +178,7 @@ game.Main.prototype.attach = function() {
   this.viewport_.attach(document.body);
   this.backDrop_.attach(this.viewport_);
   this.board_.attach(this.viewport_);
+  this.chat_.attach(this.viewport_);
 
   this.ground_.attach(this.board_);
   this.ceiling_.attach(this.board_);
@@ -597,6 +602,8 @@ game.Main.prototype.eventsChangedOrAdded = function(eventData) {
   var eventGameId = eventData.key();
   var eventGameData = eventData.val();
 
+
+
   if (!this.primaryUser_) return;
   // console.log(
   //  'firebase event happened', eventGameId, this.primaryUser_.gameId);
@@ -609,9 +616,13 @@ game.Main.prototype.eventsChangedOrAdded = function(eventData) {
   // console.log('numberOfPlayersWhoAddedData', numberOfPlayersWhoAddedData);
   // console.log('userInGame', userInGame.length, userInGame);
   if (numberOfPlayersWhoAddedData >= userInGame.length) {
+    _.each(eventGameData[this.turnNumber_], function(turnData, userId) {
+      console.log('added records to', userId);
+      if (turnData.records) {
+        this.userList_[userId].player.keyHandler_.records = turnData.records;
+      }
+    }.bind(this));
     this.turnNumber_++;
-    // console.log('NEW TURN NUMBER', this.turnNumber_, 'START PLAYBACK!');
-
     // Switching to PLayback.
     this.switchGameStateTo(game.Main.State.IN_GAME_PLAYBACK);
   }
