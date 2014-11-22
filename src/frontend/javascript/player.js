@@ -307,7 +307,7 @@ game.Player.prototype.collisionWithPlatform = function(other, response, delta) {
  * @param {number} currentTick The current tick we are on.
  */
 game.Player.prototype.playRecordedKeys = function(currentTick) {
-  _.each(game.core.KeyHandler.records[currentTick], function(record) {
+  _.each(this.keyHandler_.records[currentTick], function(record) {
     if (_.isBoolean(record.value)) {
       this.keyHandler_.pressed[record.keyCode] = record.value;
     } else {
