@@ -35,15 +35,12 @@ game.core.KeyHandler = function() {
    * @type {!Object.<!game.constants.KEYCODES, boolean>}
    */
   this.pressed = {};
+  /**
+   * The records
+   * @type {object}
+   */
+  this.records = {};
 };
-
-
-/**
- * Records of key events.
- *
- * @type {Array.<Object>}
- */
-game.core.KeyHandler.records = {};
 
 
 /**
@@ -148,7 +145,7 @@ game.core.KeyHandler.prototype.stopRecording = function() {
  * Allows recording of keys
  */
 game.core.KeyHandler.prototype.startRecording = function() {
-  game.core.KeyHandler.records = {};
+  this.records = {};
   this.isRecording = true;
   this.ignoreKeys = false;
 };
@@ -164,11 +161,11 @@ game.core.KeyHandler.prototype.startRecording = function() {
 game.core.KeyHandler.prototype.addRecord_ = function(keyCode, value) {
   if (!this.isRecording) return;
   var currentTick = this.currentTick;
-  if (!_.isArray(game.core.KeyHandler.records[currentTick])) {
-    game.core.KeyHandler.records[currentTick] = [];
+  if (!_.isArray(this.records[currentTick])) {
+    this.records[currentTick] = [];
   }
 
-  game.core.KeyHandler.records[currentTick].push({
+  this.records[currentTick].push({
     keyCode: keyCode,
     value: value
   });

@@ -43,8 +43,6 @@ game.Main = function() {
   this.gameTime_ = null;
   /** @private {!game.UserInterface} */
   this.userInterface_ = new game.UserInterface();
-  /** @private {!game.core.KeyHandler} */
-  this.keyHandler_ = new game.core.KeyHandler();
   /** @private {number} */
   this.globalTick_ = 0;
 
@@ -424,7 +422,7 @@ game.Main.prototype.stateChangeToRecording = function() {
 
   this.createUserIfNotAlreadyCreatedAndInThisGame();
 
-  this.keyHandler_.startRecording();
+  this.primaryUser_.player.keyHandler_.startRecording();
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
       entity.isPlayingBack = false;
@@ -455,10 +453,10 @@ game.Main.prototype.stateChangeToRecording = function() {
 game.Main.prototype.stateChangeToSyncing = function() {
   this.userInterface_.updateTimerText('Syncing data');
 
-  this.keyHandler_.stopRecording();
-  var toSend = game.core.KeyHandler.records;
-  if (!game.core.KeyHandler.records ||
-      !_.isArray(game.core.KeyHandler.records)) {
+  this.primaryUser_.player.keyHandler_.stopRecording();
+  var toSend = this.primaryUser_.player.keyHandler_;
+  if (!this.primaryUser_.player.keyHandler_.records ||
+      !_.isObject(this.primaryUser_.player.keyHandler_.records)) {
     toSend = false;
   }
   game.core.Entity.forEach(function(entity) {
