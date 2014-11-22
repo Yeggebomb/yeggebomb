@@ -144,8 +144,8 @@ game.Main.prototype.init = function() {
             this.window_, 1920, 802, 800, 461);
       }.bind(this), true);
 
-  this.clouds_[0].registerCollider('cloud0', game.Cloud);
-  this.clouds_[1].registerCollider('cloud1', game.Cloud);
+  this.clouds_[0].registerCollider('cloud', game.Cloud);
+  this.clouds_[1].registerCollider('cloud', game.Cloud);
 
   this.ceiling_.setRectangle(0, -10, 1920, 10);
   this.ceiling_.el.classList.add('ceiling');
@@ -238,9 +238,9 @@ game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
   player.registerCollidesWith(
       'ceiling', player.collisionWithPlatform.bind(player));
   player.registerCollidesWith(
-      'cloud0', player.collisionWithPlatform.bind(player));
+      'cloud', player.collisionWithPlatform.bind(player));
   player.registerCollidesWith(
-      'cloud1', player.collisionWithPlatform.bind(player));
+      'cloud', player.collisionWithPlatform.bind(player));
 
   player.attach(this.board_);
   return player;
