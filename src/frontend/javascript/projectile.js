@@ -1,5 +1,6 @@
 goog.provide('game.Projectile');
 
+goog.require('game.constants');
 goog.require('game.core.Entity');
 goog.require('game.core.helper');
 
@@ -49,7 +50,7 @@ game.Projectile.prototype.create = function(pos, vel, scale, power) {
   velocity.x = vel.x + scale.x * 100 * power;
   velocity.y = vel.y + scale.y * 100 * power;
 
-  this.setToDissapearIn(10);
+  this.setToDissapearIn(game.constants.PLAY_TIME / 1000);
   this.registerCollidesWith('ground', this.collisionWithPlatform.bind(this));
   this.registerCollidesWith('ceiling', this.collisionWithPlatform.bind(this));
   this.registerCollidesWith('leftwall', this.collisionWithPlatform.bind(this));
