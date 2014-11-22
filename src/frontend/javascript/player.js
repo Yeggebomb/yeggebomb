@@ -66,14 +66,24 @@ game.Player = function() {
    * @type {Object}
    */
   this.user = null;
-
+  /**
+   * Is this the primary user?
+   *
+   * @type {boolean}
+   */
+  this.isPrimaryUser = false;
   /**
    * If in playback mode or not.
    *
    * @type {boolean}
    */
   this.isPlayingBack = false;
-
+  /**
+   * Key handler
+   *
+   * @private {!game.core.KeyHandler}
+   */
+  this.keyHandler_ = new game.core.KeyHandler();
   /**
    * The health of the user.
    *
@@ -126,6 +136,14 @@ game.Player.prototype.init = function() {
   this.scale = new game.core.math.Vector(0, 0);
   this.health = 1.0;
   this.renderScale = new game.core.math.Vector(1, 1);
+};
+
+
+/**
+ * Doesn't happen by default only for primary user if called.
+ */
+game.Player.prototype.setKeyHandlers = function() {
+  this.keyHandler_.setupEventListeners();
 };
 
 
@@ -193,10 +211,13 @@ game.Player.prototype.moveDown = function() {
  * @param {number} currentTick The current tick we are on.
  */
 game.Player.prototype.update = function(dt, currentTick) {
+
   this.keyHandler_.currentTick = currentTick;
   this.manageHealthBar();
   if (this.isPlayingBack) {
     this.playRecordedKeys(currentTick);
+  } else if (!this.isPrimaryUser) {
+    return;
   }
   var Keycodes = game.core.KeyHandler.Keycodes;
   if (this.keyHandler_.isDown(Keycodes.RIGHT)) this.moveRight();

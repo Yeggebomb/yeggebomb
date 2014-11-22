@@ -220,6 +220,8 @@ game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
 
   if (isPrimaryUser) {
     this.camera_.watch(player);
+    player.isPrimaryUser = true;
+    player.setKeyHandlers();
   }
 
   player.registerCollidesWith(
@@ -232,7 +234,6 @@ game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
       'ceiling', player.collisionWithPlatform.bind(player));
 
   player.attach(this.board_);
-
   return player;
 };
 
