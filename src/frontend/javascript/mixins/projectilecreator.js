@@ -41,8 +41,8 @@ game.mixins.ProjectileCreator.prototype.throwProjectile = function() {
   var projectile = this.projectilePool.get();
   projectile.attach(this.el.parentNode);
   projectile.create(this.getPosition(), vel, this.scale, shootingPower);
-  vel.x += this.scale.x * -80;
-  vel.y += this.scale.y * 80;
+  vel.x += this.scale.x * -600;
+  vel.y += this.scale.y * 600;
 };
 
 
