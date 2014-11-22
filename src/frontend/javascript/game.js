@@ -476,7 +476,8 @@ game.Main.prototype.stateChangeToSyncing = function() {
       this.firebaseEvents_.
           child(this.primaryUser_.gameId).
           child(this.turnNumber_).
-          child(this.primaryUser_.userId).set(game.core.KeyHandler.records);
+          child(this.primaryUser_.userId).
+          set(this.primaryUser_.player.keyHandler_.records);
     }
   }.bind(this));
 };
