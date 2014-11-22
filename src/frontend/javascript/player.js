@@ -155,6 +155,13 @@ game.Player.prototype.setKeyHandlers = function() {
 };
 
 
+/**
+ * Make shocked.
+ */
+game.Player.prototype.makeShocked = function() {
+};
+
+
 /** alignLeft */
 game.Player.prototype.alignLeft = function() {
   this.scale.x = -1;
@@ -240,7 +247,7 @@ game.Player.prototype.update = function(dt, currentTick) {
  */
 game.Player.prototype.hit = function() {
   if (this.isPlayingBack) {
-    this.health -= 0.1;
+    this.health -= 0.20;
     this.isDirty = true;
     var barWidth = (this.health * 100);
     this.healthBarValue.style.width = barWidth + '%';

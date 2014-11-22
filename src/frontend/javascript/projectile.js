@@ -40,10 +40,10 @@ game.Projectile.prototype.create = function(pos, vel, scale, power) {
   var position = this.getPosition();
   var velocity = this.getVelocity();
 
-  var transformX = -5;
-  if (scale.x > 0) transformX += 90;
-  var transformY = -10;
-  if (scale.y > -0.2) transformY += 30;
+  var transformX = -30;
+  if (scale.x > 0) transformX += 120;
+  var transformY = -40;
+  if (scale.y > -0.2) transformY += 60;
   position.x = pos.x + transformX;
   position.y = pos.y + transformY;
   velocity.x = vel.x + scale.x * 100 * power;

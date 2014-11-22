@@ -452,6 +452,10 @@ game.Main.prototype.stateChangeToRecording = function() {
   this.primaryUser_.player.keyHandler_.startRecording();
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
+      if (entity.health < 0) {
+        // Player is dead! Die!
+        
+      }
       entity.isPlayingBack = false;
       entity.ignoreKeys = false;
 
