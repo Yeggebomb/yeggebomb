@@ -33,7 +33,17 @@ game.core.Entity = function(opt_x, opt_y, opt_w, opt_h) {
   game.core.helper.mixin(this, 'shape');
   this.setPosition(opt_x, opt_y, opt_w, opt_h);
 
+  /**
+   * @private {boolean}
+   */
   this.isActive_ = true;
+
+  /**
+   * In the dom.
+   * @type {boolean}
+   */
+  this.isInDom = false;
+
 
   this.init();
 };
@@ -114,6 +124,7 @@ game.core.Entity.prototype.attach = function(parent) {
 
   if (!document.getElementById(this.id_)) {
     parent.appendChild(this.el);
+    this.isInDom = true;
   } else {
     console.warn('Attempted to attach dom element multiple times:', this.el);
   }
@@ -127,6 +138,7 @@ game.core.Entity.prototype.attach = function(parent) {
 game.core.Entity.prototype.detach = function() {
   if (this.el.parentNode) {
     this.el.parentNode.removeChild(this.el);
+    this.isInDom = false;
   } else {
     console.warn(
         'Attempted to remove dom element when it has no parent', this.el);
@@ -157,12 +169,17 @@ game.core.Entity.prototype.draw = function() {
   this.isDirty = false;
   if (this.type == game.mixins.Shape.Type.RECTANGLE) return;
 
-  var svg = this.el.getElementsByTagName('svg');
-  if (svg.length == 1) {
-    svg = svg[0];
+  var svgContainer = this.el.getElementsByClassName('svg-container');
+  var svg;
+  if (svgContainer.length == 1) {
+    svgContainer = svgContainer[0];
+    svg = svgContainer.children[0];
   } else {
+    svgContainer = document.createElement('span');
+    svgContainer.classList.add('svg-container');
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    this.el.appendChild(svg);
+    svgContainer.appendChild(svg);
+    this.el.appendChild(svgContainer);
   }
 
   if (this.type == game.mixins.Shape.Type.POLYGON) {

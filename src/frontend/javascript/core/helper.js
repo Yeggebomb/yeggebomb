@@ -45,6 +45,23 @@ game.core.helper.poly2path = function(polygon) {
 
 
 /**
+ * Updates the transform on a given element.
+ * @param {Element} element
+ * @param {string} transform
+ */
+game.core.helper.updateTransform = function(element, transform) {
+  if (!_.isObject(element)) return;
+  var style = element.style;
+  if (!_.isObject(style)) return;
+  style.webkitTransform = transform;
+  style.MozTransform = transform;
+  style.msTransform = transform;
+  style.OTransform = transform;
+  style.transform = transform;
+};
+
+
+/**
  * Updates the translate transform on a given element.
  * @param {Element} element
  * @param  {!game.core.math.Vector} position
@@ -57,21 +74,23 @@ game.core.helper.updateTranslate = function(element, position, renderScale) {
         position.x.toFixed(1) + 'px, ' +
         position.y.toFixed(1) + 'px) ';
   }
+  game.core.helper.updateTransform(element, transform);
 
-  if (_.isObject(renderScale)) {
-    if (_.isNumber(renderScale.x)) {
-      transform += ' scaleX(' + renderScale.x + ')';
-    }
-    if (_.isNumber(renderScale.y)) {
-      transform += ' scaleY(' + renderScale.y + ')';
-    }
+  var scaleTransform = '';
+  var scaleElement = element.getElementsByClassName('svg-container');
+  if (!_.isObject(renderScale)) {
+    return;
   }
-
-  element.style.webkitTransform = transform;
-  element.style.MozTransform = transform;
-  element.style.msTransform = transform;
-  element.style.OTransform = transform;
-  element.style.transform = transform;
+  if (_.isNumber(renderScale.x)) {
+    scaleTransform += ' scaleX(' + renderScale.x + ')';
+  }
+  if (_.isNumber(renderScale.y)) {
+    scaleTransform += ' scaleY(' + renderScale.y + ')';
+  }
+  if (_.isObject(scaleElement)) {
+    scaleElement = scaleElement[0];
+  }
+  game.core.helper.updateTransform(scaleElement, scaleTransform);
 };
 
 
@@ -245,4 +264,16 @@ game.core.helper.string.startsWith = function(str, starts) {
   if (str == null || starts == null) return false;
   str = String(str); starts = String(starts);
   return str.length >= starts.length && str.slice(0, starts.length) === starts;
+};
+
+
+/**
+ * Generates a random integer between one and zero.
+ *
+ * @param {number} min
+ * @param {number} max
+ * @return {number} Number between 0 and 1
+ */
+game.core.helper.getRandomInt = function(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
