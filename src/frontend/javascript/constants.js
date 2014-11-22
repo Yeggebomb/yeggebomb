@@ -22,7 +22,7 @@ game.constants.Physics = {
  *
  * @const {number}
  */
-game.constants.PLAY_TIME = 10000;
+game.constants.PLAY_TIME = 5000;
 
 
 /**
