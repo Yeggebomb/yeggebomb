@@ -2,6 +2,7 @@ goog.provide('game.Main');
 
 goog.require('game.Backdrop');
 goog.require('game.Board');
+goog.require('game.Cloud');
 goog.require('game.Platform');
 goog.require('game.Player');
 goog.require('game.UserInterface');
@@ -37,8 +38,8 @@ game.Main = function() {
   this.leftwall_ = new game.Platform();
   /** @private {!game.Platform} */
   this.rightwall_ = new game.Platform();
-  /** @private {!game.Platform} */
-  this.rotatedPlatform_ = new game.Platform();
+  /** @private {!Array.<!game.Cloud>} */
+  this.clouds_ = [];
   /** @private {number} */
   this.gameTime_ = null;
   /** @private {!game.UserInterface} */
@@ -141,13 +142,7 @@ game.Main.prototype.init = function() {
             this.window_, 1920, 802, 800, 461);
       }.bind(this), true);
 
-  this.rotatedPlatform_.setPolygon(new game.core.math.Vector(160, 120), [
-    new game.core.math.Vector(0, 0),
-    new game.core.math.Vector(60, 0),
-    new game.core.math.Vector(100, 40),
-    new game.core.math.Vector(60, 80),
-    new game.core.math.Vector(0, 80)
-  ]);
+  this.clouds_.push(new game.Cloud(new game.core.math.Vector(160, 120)));
 
   this.ceiling_.setRectangle(0, -10, 1920, 10);
   this.ceiling_.el.classList.add('ceiling');
@@ -186,8 +181,11 @@ game.Main.prototype.attach = function() {
   this.ceiling_.attach(this.board_);
   this.leftwall_.attach(this.board_);
   this.rightwall_.attach(this.board_);
-  this.rotatedPlatform_.attach(this.board_);
   this.userInterface_.attach(this.viewport_);
+
+  for (var cloud in this.clouds_) {
+    cloud.attach(this.board_);
+  }
 };
 
 
