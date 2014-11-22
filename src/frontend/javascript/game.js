@@ -343,7 +343,6 @@ game.Main.prototype.inGameStateAdvancer = function(currentTick) {
             var worldState = {};
             game.core.Entity.forEach(function(entity) {
               if (entity instanceof game.Player) {
-                debugger;
                 worldState[entity.user.userId] = entity.getPosition();
               }
             });
@@ -422,12 +421,13 @@ game.Main.prototype.stateChangeToRecording = function() {
   var usersInGame = this.getUsersInGame(
       this.primaryUser_.gameId, this.userList_);
 
+  this.createUserIfNotAlreadyCreatedAndInThisGame();
 
   this.keyHandler_.startRecording();
   game.core.Entity.forEach(function(entity) {
     if (entity instanceof game.Player) {
       entity.isPlayingBack = false;
-      entity.ignoreKeys(false);
+      entity.ignoreKeys = false;
 
       // Only set velocity, acceleration, and mass for current player.
       // Everyone else should just be floating.
@@ -565,10 +565,6 @@ game.Main.prototype.usersChangedOrAdded = function(user) {
   }
   this.userList_[userId] = userData;
   this.userList_[userId].player = playerReference;
-
-  if (userData.gameId) {
-    this.createUserIfNotAlreadyCreatedAndInThisGame(userData.gameId);
-  }
 
   if (this.primaryUser_ && userId == this.primaryUser_.userId) {
     this.primaryUser_ = userData;
@@ -822,23 +818,26 @@ game.Main.prototype.uniqueishId = function() {
 
 
 /**
- * Foo
- *
- * @param {string} gameId
+ * createUserIfNotAlreadyCreatedAndInThisGame
  */
-game.Main.prototype.createUserIfNotAlreadyCreatedAndInThisGame =
-    function(gameId) {
-  var usersNotCreated = _.filter(this.userList_, function(user) {
-    return !_.isObject(user.player) ||
-        (_.isObject(user.player) && !user.player.isInDom) &&
-        this.currentGame_ && this.currentGame_.gameId == user.gameId == gameId;
+game.Main.prototype.createUserIfNotAlreadyCreatedAndInThisGame = function() {
+  if (!this.primaryUser_) return;
+  console.log(this.primaryUser_.gameId);
+  if (!this.primaryUser_.gameId) return;
+  var usersInThisGame =
+      this.getUsersInGame(this.primaryUser_.gameId, this.userList_);
+  _.each(usersInThisGame, function(user) {
+    console.log(user.gameId);
+    if (!user.gameId) return;
+    if (user.gameId != this.primaryUser_.gameId) return;
+    console.log(user.player);
+    if (!user.player) {
+      user.player = this.addPlayer(
+          user, user.userId == this.primaryUser_.userId);
+    }
   }.bind(this));
 
-  _.each(usersNotCreated, function(user) {
-    console.log('CREATED USER', user.userId, gameId);
-    var playerObj = this.addPlayer(user);
-    user.player = playerObj;
-  }.bind(this));
+
 };
 
 

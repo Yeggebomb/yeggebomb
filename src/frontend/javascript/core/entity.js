@@ -175,7 +175,6 @@ game.core.Entity.prototype.draw = function() {
     svgContainer = svgContainer[0];
     svg = svgContainer.children[0];
   } else {
-    console.log('THE SADNESS');
     svgContainer = document.createElement('span');
     svgContainer.classList.add('svg-container');
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
