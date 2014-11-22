@@ -484,9 +484,8 @@ game.Main.prototype.stateChangeToSyncing = function() {
   this.userInterface_.updateTimerText('Syncing data');
 
   this.primaryUser_.player.keyHandler_.stopRecording();
-  var toSend = this.primaryUser_.player.keyHandler_;
-  if (!this.primaryUser_.player.keyHandler_.records ||
-      !_.isObject(this.primaryUser_.player.keyHandler_.records)) {
+  var toSend = this.primaryUser_.player.keyHandler_.records;
+  if (!toSend) {
     toSend = false;
   }
   game.core.Entity.forEach(function(entity) {
