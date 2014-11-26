@@ -468,7 +468,7 @@ game.Main.prototype.stateChangeToRecording = function() {
 
       var endPosition = entity.endPosition;
       if (endPosition) {
-        console.log('error of this much:',
+        // console.log('error of this much:',
             entity.getPosition().distanceTo(endPosition));
       }
       entity.initialPosition = entity.getPosition().clone();
@@ -844,15 +844,15 @@ game.Main.prototype.uniqueishId = function() {
  */
 game.Main.prototype.createUserIfNotAlreadyCreatedAndInThisGame = function() {
   if (!this.primaryUser_) return;
-  console.log(this.primaryUser_.gameId);
+  // console.log(this.primaryUser_.gameId);
   if (!this.primaryUser_.gameId) return;
   var usersInThisGame =
       this.getUsersInGame(this.primaryUser_.gameId, this.userList_);
   _.each(usersInThisGame, function(user) {
-    console.log(user.gameId);
+    // console.log(user.gameId);
     if (!user.gameId) return;
     if (user.gameId != this.primaryUser_.gameId) return;
-    console.log(user.player);
+    // console.log(user.player);
     if (!user.player) {
       user.player = this.addPlayer(
           user, user.userId == this.primaryUser_.userId);
