@@ -24,3 +24,10 @@ body
     +filter(grayscale(100%))
   & .board
     opacity: 0
+
+
+.entity.player
+  +transition(-webkit-filter 500ms linear)
+
+.root.state-recording .entity.player:not(.primary-user)
+  +filter(grayscale(100%))

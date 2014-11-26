@@ -246,6 +246,7 @@ game.Main.prototype.addPlayer = function(userData, isPrimaryUser) {
     this.camera_.watch(player);
     player.isPrimaryUser = true;
     player.setKeyHandlers();
+    player.el.classList.add('primary-user');
   }
 
   player.registerCollider('player', game.Player);
