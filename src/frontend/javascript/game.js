@@ -741,6 +741,10 @@ game.Main.prototype.attemptStartGame = function() {
     return user.joinedOn;
   });
 
+  // Ah found the real bug i just haven't updated the code for it. Basically
+  // this isn't neccesary if I tell firebaseUsers_'s transaction to not update
+  // locally. That was triggering even if it fails or not! which was starting
+  // my game with the wrong id!
   var shouldIStartTheGame = false;
   var userIds = [];
   _.each(sortedUserList, function(user) {
