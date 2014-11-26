@@ -468,7 +468,7 @@ game.Main.prototype.stateChangeToRecording = function() {
 
       var endPosition = entity.endPosition;
       if (endPosition) {
-        // console.log('error of this much:',
+        console.log('error of this much:',
             entity.getPosition().distanceTo(endPosition));
       }
       entity.initialPosition = entity.getPosition().clone();
@@ -580,6 +580,28 @@ game.Main.prototype.loginCallback = function() {
 };
 
 
+/**
+ * Firebase on my game was added.
+ *
+ *
+ * @param {Object} addedGame
+ * @private
+ */
+game.Main.prototype.gameWasCreated_ = function(addedGame) {
+  var gameId = addedGame.key();
+  var gameData = addedGame.val();
+  this.currentGame_ = gameData;
+  this.currentGame_.gameId = gameId;
+
+  this.firebaseGames_.
+      child(gameId).
+      child('users').
+      child(this.primaryUser_.userId).onDisconnect().remove();
+
+  // Sets the state, starts the physics and render loops.
+  this.startGame();
+};
+
 //
 //
 // Firebase!
@@ -595,6 +617,8 @@ game.Main.prototype.loginCallback = function() {
 game.Main.prototype.usersChangedOrAdded = function(user) {
   var userId = user.key();
   var userData = user.val();
+
+
   var playerReference;
   if (this.userList_[userId]) {
     playerReference = this.userList_[userId].player;
@@ -603,6 +627,10 @@ game.Main.prototype.usersChangedOrAdded = function(user) {
   this.userList_[userId].player = playerReference;
 
   if (this.primaryUser_ && userId == this.primaryUser_.userId) {
+    if (!this.primaryUser_.gameId && !!userData.gameId) {
+      this.firebaseGames_.child(
+          userData.gameId).on('child_added', this.gameWasCreated_.bind(this));
+    }
     this.primaryUser_ = userData;
   }
 
@@ -661,7 +689,6 @@ game.Main.prototype.gameChanged = function(addedGame) {
 
   if (this.primaryUser_) {
     if (this.primaryUser_.gameId && this.primaryUser_.gameId == gameId) {
-      // console.log('A game I am in just got updated');
     }
   }
 };
@@ -677,27 +704,6 @@ game.Main.prototype.gameAdded = function(addedGame) {
   var gameData = addedGame.val();
   gameData.gameId = gameId;
   this.games_[gameId] = gameData;
-
-  if (this.primaryUser_) {
-    if (this.primaryUser_.gameId && this.primaryUser_.gameId == gameId) {
-      if (this.gameState_ != game.Main.State.READY) {
-        console.error('A game was just added with my id but I am not ready');
-        this.firebaseGames_.child(gameId).child('users').
-            child(this.primaryUser_.userId).remove();
-        return;
-      }
-      this.currentGame_ = gameData;
-      this.currentGame_.gameId = gameId;
-
-      this.firebaseGames_.
-          child(gameId).
-          child('users').
-          child(this.primaryUser_.userId).onDisconnect().remove();
-
-      // Sets the state, starts the physics and render loops.
-      this.startGame();
-    }
-  }
 };
 
 
@@ -734,6 +740,19 @@ game.Main.prototype.attemptStartGame = function() {
     return user.joinedOn;
   });
 
+  var shouldIStartTheGame = false;
+  var userIds = [];
+  _.each(sortedUserList, function(user) {
+    userIds.push(user.userId);
+  });
+
+  if (userIds[0] != this.primaryUser_.userId) {
+    // my transaction is failing me every time. I found a bug with firebase
+    // My solution is to have both clients agree on which user should start the
+    // game.
+    return;
+  }
+
   // Warning BUG. If someone sets the data right before this happens, I think
   // the transaction will bash over it :(
   this.firebaseUsers_.transaction(function(currentData) {
@@ -749,7 +768,7 @@ game.Main.prototype.attemptStartGame = function() {
         shouldAbort = true;
       }
 
-      if (currentData[user.userId].gameId) {
+      if (_.isString(currentData[user.userId].gameId)) {
         shouldAbort = true;
       }
     });
@@ -770,7 +789,6 @@ game.Main.prototype.attemptStartGame = function() {
       console.error('Transaction failed abnormally', error);
       return;
     }
-
     if (!committed) {
       return;
     }
@@ -844,15 +862,12 @@ game.Main.prototype.uniqueishId = function() {
  */
 game.Main.prototype.createUserIfNotAlreadyCreatedAndInThisGame = function() {
   if (!this.primaryUser_) return;
-  // console.log(this.primaryUser_.gameId);
   if (!this.primaryUser_.gameId) return;
   var usersInThisGame =
       this.getUsersInGame(this.primaryUser_.gameId, this.userList_);
   _.each(usersInThisGame, function(user) {
-    // console.log(user.gameId);
     if (!user.gameId) return;
     if (user.gameId != this.primaryUser_.gameId) return;
-    // console.log(user.player);
     if (!user.player) {
       user.player = this.addPlayer(
           user, user.userId == this.primaryUser_.userId);
